@@ -3,4 +3,4 @@ cvut\gartnkry\SystemInfo.class
 cvut\gartnkry\view\View.class
 module-info.class
 cvut\gartnkry\Data.class
-cvut\gartnkry\App.class
+cvut\gartnkry\AppController.class

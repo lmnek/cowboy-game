@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 public class View {
 
-    private final Stage stage; // window
+    private final Stage stage;
     private Canvas canvas;
 
     public View(Stage stage) {
@@ -17,12 +17,12 @@ public class View {
     }
 
     public void init(){
-        canvas = new Canvas();
-
-        Pane pane = new Pane(canvas);
+        canvas = new Canvas(); // container for all contents
+        Pane pane = new Pane(canvas); // for layout with absolute positions
         Scene scene = new Scene(pane);
-        stage.setScene(scene);
 
+        // stage = window
+        stage.setScene(scene);
         stage.setTitle(Settings.TITLE);
         stage.centerOnScreen();
         stage.setResizable(false);

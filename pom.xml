@@ -13,7 +13,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>17.0.1</version>
+            <version>17.0.2</version>
         </dependency>
     </dependencies>
     <build>
@@ -36,7 +36,7 @@
                         <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>cvut.gartnkry.App</mainClass>
+                            <mainClass>cvut.gartnkry.AppController</mainClass>
                         </configuration>
                     </execution>
                 </executions>
