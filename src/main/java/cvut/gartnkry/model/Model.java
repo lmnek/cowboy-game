@@ -13,7 +13,7 @@ public class Model {
     }
 
     public void update(){
-
+        player.update();
     }
 
     public Player getPlayer() {

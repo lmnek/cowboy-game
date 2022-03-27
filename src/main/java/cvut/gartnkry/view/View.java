@@ -3,10 +3,12 @@ package cvut.gartnkry.view;
 import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Sprite;
+import cvut.gartnkry.model.entities.Player;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -25,6 +27,10 @@ public class View {
         canvas = new Canvas(500,500); // container for all contents
         Pane pane = new Pane(canvas); // for layout with absolute positions
         Scene scene = new Scene(pane);
+
+        // Event handlers
+        scene.setOnKeyPressed(event -> model.getPlayer().onKeyPressed(event.getCode()));
+        scene.setOnKeyReleased(event -> model.getPlayer().onKeyReleased(event.getCode()));
 
         // stage = window
         stage.setScene(scene);

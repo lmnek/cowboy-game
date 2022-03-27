@@ -1,5 +1,6 @@
 cvut\gartnkry\model\Model.class
 cvut\gartnkry\model\entities\Entity.class
+cvut\gartnkry\KeyEventHandler.class
 cvut\gartnkry\view\View.class
 module-info.class
 cvut\gartnkry\model\Sprite.class

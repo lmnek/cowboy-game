@@ -1,5 +1,6 @@
 package cvut.gartnkry.model;
 
+import cvut.gartnkry.Settings;
 import cvut.gartnkry.view.Images;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
@@ -28,5 +29,9 @@ public class Sprite {
 
     public double getY(){
         return  coords.getY();
+    }
+
+    public void addXY(double x, double y) {
+        coords = coords.add(x * Settings.SCALE, y * Settings.SCALE);
     }
 }

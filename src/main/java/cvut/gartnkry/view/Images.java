@@ -11,17 +11,20 @@ public enum Images {
     String filename;
     Image image;
 
-    private Images(String filename){
+    private Images(String filename) {
         this.filename = filename;
     }
 
-    public void loadImage(){
+    /**
+     *  Load and scale Images from resource folder
+     */
+    public void loadImage() {
         // TODO: find a better way to scale image + smooth true/false ?
-        Image nonscaled_image = new Image(filename);
-        image = new Image(filename, nonscaled_image.getWidth() * Settings.SCALE, nonscaled_image.getHeight() * Settings.SCALE, false, false);
+        Image unscaled_image = new Image(filename);
+        image = new Image(filename, unscaled_image.getWidth() * Settings.SCALE, unscaled_image.getHeight() * Settings.SCALE, false, false);
     }
 
-    public Image getImage(){
+    public Image getImage() {
         return image;
     }
 }

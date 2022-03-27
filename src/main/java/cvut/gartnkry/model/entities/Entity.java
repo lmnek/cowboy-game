@@ -4,7 +4,7 @@ import cvut.gartnkry.Data;
 import cvut.gartnkry.model.Sprite;
 
 public  class Entity {
-    private final Sprite sprite;
+    protected final Sprite sprite;
 
     public Entity(Sprite sprite) {
         this.sprite = sprite;

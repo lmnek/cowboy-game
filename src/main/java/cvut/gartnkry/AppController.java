@@ -5,6 +5,8 @@ import cvut.gartnkry.view.Images;
 import cvut.gartnkry.view.View;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -53,9 +55,5 @@ public class AppController extends Application {
         };
 
         loopTimer.start();
-
     }
-
-
-
 }
