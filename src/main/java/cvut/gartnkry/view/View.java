@@ -24,7 +24,12 @@ public class View {
     }
 
     public void initialization(){
-        canvas = new Canvas(500,500); // container for all contents
+        // Compute screen size
+        int pixelTileSize = 16 * Settings.SCALE;
+        int screenWidth = pixelTileSize * Settings.TILES_COUNT_WIDTH;
+        int screenHeight = pixelTileSize * Settings.TILES_COUNT_HEIGHT;
+
+        canvas = new Canvas(screenWidth,screenHeight); // container for all contents
         Pane pane = new Pane(canvas); // for layout with absolute positions
         Scene scene = new Scene(pane);
 
@@ -47,6 +52,7 @@ public class View {
     }
 
     private void drawTiles(GraphicsContext gc) {
+        gc.fillRect(0, 0, 500, 500);
     }
 
     private void drawEntities(GraphicsContext gc) {

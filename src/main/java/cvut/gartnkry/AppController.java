@@ -1,12 +1,11 @@
 package cvut.gartnkry;
 
 import cvut.gartnkry.model.Model;
-import cvut.gartnkry.view.Images;
+import cvut.gartnkry.view.assets.Animations;
+import cvut.gartnkry.view.assets.Images;
 import cvut.gartnkry.view.View;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -23,11 +22,8 @@ public class AppController extends Application {
 
     @Override
     public void start(Stage stage) {
-        // load images
-        for (Images img :
-                Images.values()) {
-            img.loadImage();
-        }
+
+        loadResource();
 
         Data data = new Data("none.json");
         model = new Model(data);
@@ -35,13 +31,13 @@ public class AppController extends Application {
 
         view.initialization();
 
-        AnimationTimer loopTimer = new AnimationTimer(){
+        AnimationTimer loopTimer = new AnimationTimer() {
             private long lastUpdate = 0;
 
             // game loop
             @Override
             public void handle(long now) {
-                if(now - lastUpdate >= Settings.LOOP_INTERVAL){
+                if (now - lastUpdate >= Settings.LOOP_INTERVAL) {
 
                     // Render and draw graphics
                     view.render();
@@ -55,5 +51,23 @@ public class AppController extends Application {
         };
 
         loopTimer.start();
+    }
+
+    /**
+     * This method loads all resources:
+     * Assets, Animations, Tiles, ...
+     * <p>
+     * It is called only once at the start
+     */
+    private void loadResource() {
+        // load images
+        for (Images img : Images.values()) {
+            img.loadImage();
+        }
+
+        // load animations
+        for (Animations ani : Animations.values()) {
+            ani.loadAnimation();
+        }
     }
 }
