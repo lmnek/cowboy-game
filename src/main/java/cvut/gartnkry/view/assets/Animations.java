@@ -5,13 +5,13 @@ import javafx.scene.image.Image;
 public enum Animations {
     PLAYER_DOWN("Player", "player_forward", 4, 10),
     PLAYER_UP("Player", "player_no_gun", 1, 15),
-    PLAYER_LEFT("Player", "player_left", 2, 15),
-    PLAYER_RIGHT("Player", "player_right", 2, 15);;
+    PLAYER_LEFT("Player", "player_left", 2, 10),
+    PLAYER_RIGHT("Player", "player_right", 2, 10);
 
-    String folder;
-    String filename;
-    int frameCount;
-    int ticksPerFrame;
+    private final String folder;
+    private final String filename;
+    private final int frameCount;
+    private final int ticksPerFrame;
 
     private Image[] frames;
     private int currentFrame;

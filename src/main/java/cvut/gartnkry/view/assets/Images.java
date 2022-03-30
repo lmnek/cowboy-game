@@ -6,8 +6,8 @@ public enum Images {
     PLAYER_DEFAULT("Player", "player_no_gun1"),
     CACTUS("", "cactus");
 
-    String folder;
-    String filename;
+    private final String folder;
+    private final String filename;
     private Image image;
 
     private Images(String folder, String filename) {

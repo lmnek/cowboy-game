@@ -8,6 +8,7 @@ import cvut.gartnkry.view.assets.Images;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 
+import java.io.NotActiveException;
 import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,13 +49,13 @@ public class Player extends Entity {
     }
 
     /**
-     *  Update coordinates of player's sprite.
-     *  Includes swapping frames for animation.
+     * Update coordinates of player's sprite.
+     * Includes swapping frames for animation.
      */
     public void update() {
 
-        int directionX = (directions.get(D) - directions.get(A));
-        int directionY = (directions.get(S) - directions.get(W));
+        int directionX = directions.get(D) - directions.get(A);
+        int directionY = directions.get(S) - directions.get(W);
 
         boolean changedDirection = !(previousDirectionX == directionX && previousDirectionY == directionY);
         previousDirectionX = directionX;
@@ -82,7 +83,6 @@ public class Player extends Entity {
                 animation = chooseAnimation(directionX, directionY);
                 sprite.setImage(animation.getFrame());
                 tickCounter = 0;
-
             } else if (tickCounter >= animation.getTicksPerFrame()) {
                 // next frame
                 sprite.setImage(animation.getNextFrame());
@@ -94,20 +94,22 @@ public class Player extends Entity {
         } else if (changedDirection) {
             sprite.setImage(Images.PLAYER_DEFAULT.getImage());
         }
+
     }
 
+
     private Animations chooseAnimation(int directionX, int directionY) {
-        if (directionX > 0) {
+        if (directionX == 1) {
             return Animations.PLAYER_RIGHT;
-        } else if (directionX < 0) {
+        } else if (directionX == -1) {
             return Animations.PLAYER_LEFT;
         }
-        if (directionY > 0) {
+        if (directionY == 1) {
             return Animations.PLAYER_DOWN;
-        } else if (directionY < 0) {
+        } else if (directionY == -1) {
             return Animations.PLAYER_UP;
         }
-        return null;         //TODO: return
+        return null; // TODO: return val / exception ?
     }
 
 }

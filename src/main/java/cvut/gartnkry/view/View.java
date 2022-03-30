@@ -3,12 +3,9 @@ package cvut.gartnkry.view;
 import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Sprite;
-import cvut.gartnkry.model.entities.Player;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -29,7 +26,7 @@ public class View {
         int screenWidth = pixelTileSize * Settings.TILES_COUNT_WIDTH;
         int screenHeight = pixelTileSize * Settings.TILES_COUNT_HEIGHT;
 
-        canvas = new Canvas(screenWidth,screenHeight); // container for all contents
+        canvas = new Canvas(screenWidth,screenHeight); // container for all drawing components
         Pane pane = new Pane(canvas); // for layout with absolute positions
         Scene scene = new Scene(pane);
 
@@ -52,7 +49,7 @@ public class View {
     }
 
     private void drawTiles(GraphicsContext gc) {
-        gc.fillRect(0, 0, 500, 500);
+        gc.fillRect(0, 0, 1000, 1000);
     }
 
     private void drawEntities(GraphicsContext gc) {
