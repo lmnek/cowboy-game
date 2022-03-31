@@ -1,7 +1,6 @@
 package cvut.gartnkry.model;
 
 import cvut.gartnkry.Settings;
-import cvut.gartnkry.view.assets.Images;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 
@@ -12,6 +11,10 @@ import javafx.scene.image.Image;
 public class Sprite {
     private Point2D coords;
     private Image image;
+
+    public Sprite(Point2D coords) {
+        this(null, coords);
+    }
 
     public Sprite(Image image, Point2D coords) {
         this.image = image;

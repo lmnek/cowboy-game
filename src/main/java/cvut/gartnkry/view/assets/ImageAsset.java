@@ -2,7 +2,7 @@ package cvut.gartnkry.view.assets;
 
 import javafx.scene.image.Image;
 
-public enum Images {
+public enum ImageAsset {
     PLAYER_DEFAULT("Player", "player_no_gun1"),
     CACTUS("", "cactus");
 
@@ -10,14 +10,15 @@ public enum Images {
     private final String filename;
     private Image image;
 
-    private Images(String folder, String filename) {
+    private ImageAsset(String folder, String filename) {
         this.folder = folder;
         this.filename = filename;
+
+        // load image
+        image = AssetsUtils.loadAsset(folder, filename);
     }
 
     public Image getImage() {
         return image;
     }
-
-    public void loadImage(){ this.image = AssetsUtils.loadAsset(folder, filename);};
 }

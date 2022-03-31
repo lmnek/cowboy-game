@@ -18,4 +18,8 @@ public class Data {
     public Point2D getPlayerCoords() {
         return playerCoords;
     }
+
+    public String getMapFilename() {
+        return "map1.csv"; // TODO
+    }
 }

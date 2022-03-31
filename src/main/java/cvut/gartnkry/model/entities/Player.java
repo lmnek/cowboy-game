@@ -3,13 +3,10 @@ package cvut.gartnkry.model.entities;
 import cvut.gartnkry.Data;
 import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.Sprite;
-import cvut.gartnkry.view.assets.Animations;
-import cvut.gartnkry.view.assets.Images;
-import javafx.geometry.Point2D;
+import cvut.gartnkry.view.assets.Animation;
+import cvut.gartnkry.view.assets.ImageAsset;
 import javafx.scene.input.KeyCode;
 
-import java.io.NotActiveException;
-import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,10 +14,10 @@ import static javafx.scene.input.KeyCode.*;
 
 public class Player extends Entity {
 
-    private Map<KeyCode, Integer> directions;
-    private double sidewaysVelocity;
+    private final Map<KeyCode, Integer> directions;
+    private final double sidewaysVelocity;
 
-    private Animations animation;
+    private Animation animation;
     private int tickCounter;
     private int previousDirectionX;
     private int previousDirectionY;
@@ -37,6 +34,8 @@ public class Player extends Entity {
         sidewaysVelocity = Math.sqrt(0.5); // compute in advance
         tickCounter = 0;
         previousDirectionX = previousDirectionY = 0;
+        animation = null;
+
         //this.data = data;
     }
 
@@ -63,53 +62,67 @@ public class Player extends Entity {
 
         // update sprite coords only when moving
         if (directionX != 0 || directionY != 0) {
+
             ++tickCounter;
+
+            // first frame from new animation
+            if (changedDirection && setAnimation(directionX, directionY)) {
+                tickCounter = animation.getTicksPerFrame() - 3;
+                sprite.setImage(animation.getFirstFrame());
+            }
+            // next frame in animation
+            else if (tickCounter >= animation.getTicksPerFrame()) {
+                sprite.setImage(animation.getNextFrame());
+                tickCounter = 0;
+            }
 
             // compute velocities
             double velocityX, velocityY;
-            boolean sideways = directionX != 0 && directionY != 0;
-
             velocityX = directionX;
             velocityY = directionY;
-            if (sideways) {
-                // fixes faster movement sideways -> pythagoras theorem
+            // fixes faster movement sideways -> pythagoras theorem
+            if (directionX != 0 && directionY != 0) {
                 velocityX *= sidewaysVelocity;
                 velocityY *= sidewaysVelocity;
             }
+            // move sprite
+            sprite.addXY(velocityX * Settings.PLAYER_SPEED, velocityY * Settings.PLAYER_SPEED);
 
-            // set image frame from animation
-            if (changedDirection && !sideways) {
-                // set new animation
-                animation = chooseAnimation(directionX, directionY);
-                sprite.setImage(animation.getFrame());
-                tickCounter = 0;
-            } else if (tickCounter >= animation.getTicksPerFrame()) {
-                // next frame
-                sprite.setImage(animation.getNextFrame());
-                System.out.println(tickCounter);
-                tickCounter = 0;
-            }
-
-            sprite.addXY(velocityX * Settings.PLAYER_SPEED, velocityY * Settings.PLAYER_SPEED); // move sprite
         } else if (changedDirection) {
-            sprite.setImage(Images.PLAYER_DEFAULT.getImage());
+            sprite.setImage(ImageAsset.PLAYER_DEFAULT.getImage());
+            animation = null;
         }
-
     }
 
+    // Set new animation, if it is necessary
+    // Return boolean whether new animation was set
+    private boolean setAnimation(int directionX, int directionY) {
+        Animation an1 = chooseAnimationX(directionX);
+        Animation an2 = chooseAnimationY(directionY);
 
-    private Animations chooseAnimation(int directionX, int directionY) {
+        if (animation == null // starting to move
+                || (an1 != animation && an2 != animation)) { // completely change directions
+            animation = (an1 == null) ? an2 : an1; // new animation
+            return true;
+        }
+        return false;
+    }
+
+    private Animation chooseAnimationX(int directionX) {
         if (directionX == 1) {
-            return Animations.PLAYER_RIGHT;
+            return Animation.PLAYER_RIGHT;
         } else if (directionX == -1) {
-            return Animations.PLAYER_LEFT;
+            return Animation.PLAYER_LEFT;
         }
-        if (directionY == 1) {
-            return Animations.PLAYER_DOWN;
-        } else if (directionY == -1) {
-            return Animations.PLAYER_UP;
-        }
-        return null; // TODO: return val / exception ?
+        return null;
     }
 
+    private Animation chooseAnimationY(int directionY) {
+        if (directionY == 1) {
+            return Animation.PLAYER_DOWN;
+        } else if (directionY == -1) {
+            return Animation.PLAYER_UP;
+        }
+        return null;
+    }
 }

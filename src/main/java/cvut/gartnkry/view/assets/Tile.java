@@ -2,14 +2,21 @@ package cvut.gartnkry.view.assets;
 
 import javafx.scene.image.Image;
 
-public class Tile{
-    private final boolean hasHitbox;
-    private final int code;
-    private Image image;
+public class Tile {
+     private final boolean hasHitbox;
+     private final Image image;
 
-    public Tile(String filename, boolean hasHitboxes, int code) {
-        this.hasHitbox = hasHitboxes;
-        this.code = code;
-        this.image = AssetsUtils.loadAsset("a", filename);
+    public Tile(String filename, boolean hasHitbox) {
+        this.hasHitbox = hasHitbox;
+        // load image
+        this.image = AssetsUtils.loadAsset("Tiles", filename);
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public boolean hasHitbox() {
+        return hasHitbox;
     }
 }
