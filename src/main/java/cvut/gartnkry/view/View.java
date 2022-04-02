@@ -3,10 +3,15 @@ package cvut.gartnkry.view;
 import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Sprite;
+import cvut.gartnkry.model.entities.Player;
+import cvut.gartnkry.view.assets.ImageAsset;
 import cvut.gartnkry.view.assets.Tile;
+import javafx.application.Platform;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -18,19 +23,29 @@ public class View {
 
     private static final int pixelTileSize = 16 * Settings.SCALE;
 
+    private double playerScreenX;
+    private double playerScreenY;
+
     public View(Stage stage, Model model) {
         this.stage = stage;
         this.model = model;
     }
 
-    public void initialization(){
+    public void initialization() {
         // Compute screen size
         int screenWidth = pixelTileSize * Settings.TILES_COUNT_WIDTH;
         int screenHeight = pixelTileSize * Settings.TILES_COUNT_HEIGHT;
 
-        canvas = new Canvas(screenWidth,screenHeight); // container for all drawing components
+        System.out.println(screenWidth);
+
+        canvas = new Canvas(screenWidth, screenHeight); // container for all drawing components
         Pane pane = new Pane(canvas); // for layout with absolute positions
         Scene scene = new Scene(pane);
+
+        // player in the middle of the screen
+        Image playerImage = model.getPlayer().getSprite().getImage();
+        playerScreenX = screenWidth / 2 - playerImage.getWidth() / 2;
+        playerScreenY = screenHeight / 2 - playerImage.getHeight() / 2;
 
         // stage = window
         stage.setScene(scene);
@@ -42,17 +57,18 @@ public class View {
 
     /**
      * Render game in current model state:
-     *  1. draw background
-     *  2. draw tiles
-     *  3. draw entities (items, player, enemies)
+     * 1. draw background
+     * 2. draw tiles
+     * 3. draw entities (items, player, enemies)
      */
-    public void render(){
+    public void render() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         drawTiles(gc);
         drawEntities(gc);
     }
 
-    private void drawTiles(GraphicsContext gc) {
+    @Deprecated
+    private void drawTiles2(GraphicsContext gc) {
 
         Tile[][] tileMap = model.getMap().getTileMap();
         int rows = tileMap.length;
@@ -60,6 +76,37 @@ public class View {
         for (int x = 0; x < rows; x++) {
             for (int y = 0; y < cols; y++) {
                 gc.drawImage(tileMap[x][y].getImage(), y * pixelTileSize, x * pixelTileSize);
+            }
+        }
+    }
+
+    private void drawTiles(GraphicsContext gc) {
+        Tile[][] tileMap = model.getMap().getTileMap();
+        Sprite playerSprite = model.getPlayer().getSprite();
+
+        // inspiration for implementing camera:
+        // https://www.javacodegeeks.com/2013/01/writing-a-tile-engine-in-javafx.html
+
+        double cameraX = playerSprite.getXCenter() - stage.getWidth() / 2;
+        double cameraY = playerSprite.getYCenter() - stage.getHeight() / 2;
+
+        // index of the first tile to show
+        int startX = (int) (cameraX / pixelTileSize);
+        int startY = (int) (cameraY / pixelTileSize);
+
+        // offset of a tile in pixels
+        int offsetX = (int) (cameraX % pixelTileSize);
+        int offsetY = (int) (cameraY % pixelTileSize);
+
+        for (int i = 0; i < Settings.TILES_COUNT_HEIGHT + 1; i++) {
+            int iIndex = i + startY;
+            if (iIndex >= 0 && iIndex < tileMap.length) {
+                for (int j = 0; j < Settings.TILES_COUNT_WIDTH + 1; j++) {
+                    int jIndex = j + startX;
+                    if (jIndex >= 0 && jIndex < tileMap[0].length) {
+                        gc.drawImage(tileMap[iIndex][jIndex].getImage(), j * pixelTileSize - offsetX, i * pixelTileSize - offsetY);
+                    }
+                }
             }
         }
     }
@@ -72,7 +119,7 @@ public class View {
     private void drawPlayer(GraphicsContext gc) {
         // image -> resources
         Sprite sprite = model.getPlayer().getSprite();
-        gc.drawImage(sprite.getImage(), sprite.getX(), sprite.getY());
+        gc.drawImage(sprite.getImage(), playerScreenX, playerScreenY);
     }
 
     private void drawEnemies(GraphicsContext gc) {

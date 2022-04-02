@@ -5,8 +5,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 
 /**
- *
- *  Class for keeping image and its coordinates
+ * Class for keeping image and its coordinates
  */
 public class Sprite {
     private Point2D coords;
@@ -24,7 +23,8 @@ public class Sprite {
     public Image getImage() {
         return image;
     }
-    public void setImage(Image image){
+
+    public void setImage(Image image) {
         this.image = image;
     }
 
@@ -32,11 +32,23 @@ public class Sprite {
         return coords.getX();
     }
 
-    public double getY(){
-        return  coords.getY();
+    public double getXCenter() {
+        return coords.getX() + image.getWidth() / 2;
+    }
+
+    public double getY() {
+        return coords.getY();
+    }
+
+    public double getYCenter() {
+        return coords.getY() + image.getHeight() / 2;
     }
 
     public void addXY(double x, double y) {
         coords = coords.add(x * Settings.SCALE, y * Settings.SCALE);
+    }
+
+    public Point2D getCoords() {
+        return coords;
     }
 }

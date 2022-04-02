@@ -21,8 +21,6 @@ public class TileManager {
         // Load and parse JSON file with tiles info
         try {
             // Load
-            // URI uri = TileManager.class.getResource("/Tiles/tiles.json").toURI();
-            // String json = new String(Files.readAllBytes(Paths.get(uri)));
             BufferedReader br = AssetsUtils.getRecourcesReader("/Tiles/tiles.json");
             // Parse
             JSONArray tileTypes = (JSONArray) new JSONParser().parse(br);

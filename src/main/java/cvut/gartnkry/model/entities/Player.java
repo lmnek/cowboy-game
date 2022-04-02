@@ -3,6 +3,7 @@ package cvut.gartnkry.model.entities;
 import cvut.gartnkry.Data;
 import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.Sprite;
+import cvut.gartnkry.view.View;
 import cvut.gartnkry.view.assets.Animation;
 import cvut.gartnkry.view.assets.ImageAsset;
 import javafx.scene.input.KeyCode;
@@ -33,7 +34,9 @@ public class Player extends Entity {
 
         sidewaysVelocity = Math.sqrt(0.5); // compute in advance
         tickCounter = 0;
-        previousDirectionX = previousDirectionY = 1;
+        previousDirectionX = previousDirectionY = 0;
+
+        sprite.setImage(ImageAsset.PLAYER_DEFAULT.getImage());
         animation = null;
 
         //this.data = data;

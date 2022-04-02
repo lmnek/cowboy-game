@@ -2,7 +2,9 @@ package cvut.gartnkry;
 
 import javafx.geometry.Point2D;
 
-// Class for loading saves from files
+/**
+ *  Class for loading saves from JSON files
+ */
 public class Data {
     private Point2D playerCoords;
 
@@ -12,7 +14,7 @@ public class Data {
 
     private void loadFromJSON(String filename) {
         // TODO: loading from json file
-        this.playerCoords = new Point2D(200, 130);
+        this.playerCoords = new Point2D(1000, 1000);
     }
 
     public Point2D getPlayerCoords() {
@@ -20,6 +22,6 @@ public class Data {
     }
 
     public String getMapFilename() {
-        return "map1.csv"; // TODO
+        return "map2.csv";
     }
 }
