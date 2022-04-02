@@ -12,7 +12,7 @@ public class Data {
 
     private void loadFromJSON(String filename) {
         // TODO: loading from json file
-        this.playerCoords = new Point2D(100, 100);
+        this.playerCoords = new Point2D(200, 130);
     }
 
     public Point2D getPlayerCoords() {

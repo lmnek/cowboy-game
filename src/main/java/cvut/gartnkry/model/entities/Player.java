@@ -33,7 +33,7 @@ public class Player extends Entity {
 
         sidewaysVelocity = Math.sqrt(0.5); // compute in advance
         tickCounter = 0;
-        previousDirectionX = previousDirectionY = 0;
+        previousDirectionX = previousDirectionY = 1;
         animation = null;
 
         //this.data = data;
@@ -62,7 +62,6 @@ public class Player extends Entity {
 
         // update sprite coords only when moving
         if (directionX != 0 || directionY != 0) {
-
             ++tickCounter;
 
             // first frame from new animation

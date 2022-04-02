@@ -3,10 +3,10 @@ package cvut.gartnkry.view.assets;
 import javafx.scene.image.Image;
 
 public enum Animation {
-    PLAYER_DOWN("Player", "player_forward", 4, 10),
-    PLAYER_UP("Player", "player_no_gun", 1, 15),
-    PLAYER_LEFT("Player", "player_left", 2, 10),
-    PLAYER_RIGHT("Player", "player_right", 2, 10);
+    PLAYER_DOWN("Player", "player_forward", 5, 9),
+    PLAYER_UP("Player", "player_backwards", 7, 6),
+    PLAYER_LEFT("Player", "player_left", 4, 10),
+    PLAYER_RIGHT("Player", "player_right", 4, 10);
 
     private final String folder;
     private final String filename;

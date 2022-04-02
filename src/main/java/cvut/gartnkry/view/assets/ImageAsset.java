@@ -3,8 +3,8 @@ package cvut.gartnkry.view.assets;
 import javafx.scene.image.Image;
 
 public enum ImageAsset {
-    PLAYER_DEFAULT("Player", "player_no_gun1"),
-    CACTUS("", "cactus");
+    PLAYER_DEFAULT("Player", "player_default"),
+    CACTUS("Props", "cactus");
 
     private final String folder;
     private final String filename;

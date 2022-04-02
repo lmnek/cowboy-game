@@ -20,6 +20,11 @@
     "hasHitbox": false
   },
   {
+    "filename": "sand4",
+    "code": "s4",
+    "hasHitbox": false
+  },
+  {
     "filename": "sand_rock",
     "code": "sro",
     "hasHitbox": true
@@ -62,6 +67,26 @@
   {
     "filename": "sand_right_top",
     "code": "srt",
+    "hasHitbox": true
+  },
+  {
+    "filename": "sand_inner_left_bottom",
+    "code": "silb",
+    "hasHitbox": true
+  },
+  {
+    "filename": "sand_inner_right_bottom",
+    "code": "sirb",
+    "hasHitbox": true
+  },
+  {
+    "filename": "sand_inner_left_top",
+    "code": "silt",
+    "hasHitbox": true
+  },
+  {
+    "filename": "sand_inner_right_top",
+    "code": "sirt",
     "hasHitbox": true
   }
 ]
