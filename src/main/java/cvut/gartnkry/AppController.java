@@ -4,6 +4,7 @@ import cvut.gartnkry.model.Model;
 import cvut.gartnkry.view.View;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -27,11 +28,7 @@ public class AppController extends Application {
         view = new View(stage, model);
         view.initialization();
 
-        // Event handlers
-        Scene scene = view.getStage().getScene();
-        scene.setOnKeyPressed(event -> model.getPlayer().onKeyPressed(event.getCode()));
-        scene.setOnKeyReleased(event -> model.getPlayer().onKeyReleased(event.getCode()));
-
+        setEvents(stage);
 
         AnimationTimer loopTimer = new AnimationTimer() {
             private long lastUpdate = 0;
@@ -40,18 +37,29 @@ public class AppController extends Application {
             @Override
             public void handle(long now) {
                 if (now - lastUpdate >= Settings.LOOP_INTERVAL) {
-
                     // Render and draw graphics
                     view.render();
-
                     // Set states
                     model.update();
-
                     lastUpdate = now;
                 }
             }
         };
 
         loopTimer.start();
+    }
+
+    private void setEvents(Stage stage) {
+        Scene scene = stage.getScene();
+
+        // player movement - W A S D
+        scene.setOnKeyPressed(event -> model.getPlayer().onKeyPressed(event.getCode()));
+        scene.setOnKeyReleased(event -> model.getPlayer().onKeyReleased(event.getCode()));
+
+        stage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
+        });
+
     }
 }

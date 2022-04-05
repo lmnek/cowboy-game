@@ -1,0 +1,23 @@
+ - collisions
+ - props
+ - inventory, health, XP
+ - pickup items, keys ?
+ - enemies
+ - load/save game data (JSON file)
+ - fighting system (shooting)
+ - loggers
+ - threads for enemy intelligence
+ - try/catch
+
+
+ - go through all TODOS
+ - go through all warnings
+ - complete JAVADOC
+
+?
+ - main menu
+ - open dialog for JSON
+
+
+ Wiki
+ - Art: pridat animace, screen ze hry

@@ -8,24 +8,31 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+/**
+ *  Class for loading and managing Tiles.
+ *  Firstly statically loads "tiles.json" from which it gets filename of Tiles assets, code
+ *  and hitbox value. The images are then loaded and hashmap of all Tiles is constructed.
+ *  This hashmap has code of the tile as a key and Tile as a value.
+ */
 public class TileManager {
 
-    // many thanks to:
-    // https://stackoverflow.com/questions/8811815/is-it-possible-to-assign-numeric-value-to-an-enum-in-java
-    // @Michael Sims <333
     private static final HashMap<String, Tile> TileMap;
 
+    /**
+     * Load all Tiles and store them in the hashmap
+     */
     static {
         TileMap = new HashMap<>();
 
         // Load and parse JSON file with tiles info
         try {
             // Load
-            BufferedReader br = AssetsUtils.getRecourcesReader("/Tiles/tiles.json");
+            BufferedReader br = AssetsUtils.getResourcesReader("/Maps/Tiles/tiles.json");
             // Parse
             JSONArray tileTypes = (JSONArray) new JSONParser().parse(br);
             br.close();
 
+            // Loop each tile
             tileTypes.forEach(_t -> {
                         JSONObject t = (JSONObject) _t;
                         // parse tile
@@ -45,6 +52,13 @@ public class TileManager {
         }
     }
 
+    /**
+     * This method is usually used to get Tile
+     * from tile code used in a CSV map file.
+     * This Tile is then used to construct in-game Map.
+     * @param code code of the Tile
+     * @return Tile corresponding to the code
+     */
     public static Tile getTile(String code) {
         return TileMap.get(code);
     }

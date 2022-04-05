@@ -3,7 +3,6 @@ package cvut.gartnkry.model.entities;
 import cvut.gartnkry.Data;
 import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.Sprite;
-import cvut.gartnkry.view.View;
 import cvut.gartnkry.view.assets.Animation;
 import cvut.gartnkry.view.assets.ImageAsset;
 import javafx.scene.input.KeyCode;
@@ -13,6 +12,22 @@ import java.util.Map;
 
 import static javafx.scene.input.KeyCode.*;
 
+//TODO: go through JAVADOC when program is done
+/**
+ * Player class is responsible for:
+ * <ul>
+ * <li> Keeping player's data (position, velocity, players movement direction, ...)
+ * <li> Handling keyboard input (WASD movement)
+ * <li> Animating player's movement
+ * </ul>
+ * Keys for controlling player's movement direction are:
+ * <ul>
+ * <li> W - forward
+ * <li> A - left
+ * <li> S - bottom
+ * <li> D - right
+ * </ul>
+ */
 public class Player extends Entity {
 
     private final Map<KeyCode, Integer> directions;
@@ -23,8 +38,15 @@ public class Player extends Entity {
     private int previousDirectionX;
     private int previousDirectionY;
 
-    public Player(Data data, Sprite sprite) {
-        super(sprite);
+    /**
+     * Class constructor.
+     * Load position of player from data and set a sprite.
+     * Player is initialized not moving, with default static image and no animation.
+     * @param data data object loaded from input save file
+     */
+    public Player(Data data) {
+        super(new Sprite(ImageAsset.PLAYER_DEFAULT.getImage(), data.getPlayerCoords()));
+        animation = null;
 
         directions = new HashMap<>();
         directions.put(W, 0);
@@ -35,23 +57,26 @@ public class Player extends Entity {
         sidewaysVelocity = Math.sqrt(0.5); // compute in advance
         tickCounter = 0;
         previousDirectionX = previousDirectionY = 0;
-
-        sprite.setImage(ImageAsset.PLAYER_DEFAULT.getImage());
-        animation = null;
-
-        //this.data = data;
     }
 
+    /**
+     * When key is pressed, player starts to move in the supposed direction.
+     * @param code code of key that is pressed
+     */
     public void onKeyPressed(KeyCode code) {
         directions.replace(code, 1);
     }
 
+    /**
+     * When key is released, player stops to move in the supposed direction.
+     * @param code code of key that is released
+     */
     public void onKeyReleased(KeyCode code) {
         directions.replace(code, 0);
     }
 
     /**
-     * Update coordinates of player's sprite.
+     * Update coordinates of player's sprite from direction of movement.
      * Includes swapping frames for animation.
      */
     public void update() {
@@ -96,8 +121,13 @@ public class Player extends Entity {
         }
     }
 
-    // Set new animation, if it is necessary
-    // Return boolean whether new animation was set
+    /**
+     * Set new animation, if player is starting to move
+     * or completely changed directions.
+     * @param directionX x direction movement
+     * @param directionY y direction movement
+     * @return boolean whether new animation was set
+     */
     private boolean setAnimation(int directionX, int directionY) {
         Animation an1 = chooseAnimationX(directionX);
         Animation an2 = chooseAnimationY(directionY);
@@ -110,6 +140,11 @@ public class Player extends Entity {
         return false;
     }
 
+    /**
+     * Choose animation from direction in X axis
+     * @param directionX
+     * @return Animation object or null (if animation was not chosen)
+     */
     private Animation chooseAnimationX(int directionX) {
         if (directionX == 1) {
             return Animation.PLAYER_RIGHT;
@@ -119,6 +154,11 @@ public class Player extends Entity {
         return null;
     }
 
+    /**
+     * Choose animation from direction in Y axis
+     * @param directionY
+     * @return Animation object or null (if animation was not chosen)
+     */
     private Animation chooseAnimationY(int directionY) {
         if (directionY == 1) {
             return Animation.PLAYER_DOWN;
