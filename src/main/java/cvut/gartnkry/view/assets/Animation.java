@@ -7,17 +7,21 @@ public enum Animation {
     PLAYER_DOWN("Player", "player_forward", 5, 9),
     PLAYER_UP("Player", "player_backwards", 7, 6),
     PLAYER_LEFT("Player", "player_left", 4, 10),
-    PLAYER_RIGHT("Player", "player_right", 4, 10);
+    PLAYER_RIGHT("Player", "player_right", 4, 10),
+
+    GHOST("Enemies", "ghost", 7, 5);
 
     private final int frameCount;
     private final int ticksPerFrame;
 
     private final Image[] frames;
+    private final Image defaultImage;
     private int currentFrame;
 
     Animation(String folder, String filename, int frameCount, int ticksPerFrame) {
         this.frameCount = frameCount;
         this.ticksPerFrame = ticksPerFrame;
+        defaultImage = AssetsUtils.loadAsset(folder, filename + "_default");
         frames = new Image[frameCount];
         currentFrame = 0;
 
@@ -25,6 +29,10 @@ public enum Animation {
         for (int i = 0; i < frameCount; i++) {
             frames[i] = AssetsUtils.loadAsset(folder, filename + (i + 1));
         }
+    }
+
+    public Image getDefaultImage(){
+        return defaultImage;
     }
 
     public Image getCurrentFrame() {

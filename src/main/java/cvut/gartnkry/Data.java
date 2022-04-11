@@ -1,27 +1,44 @@
 package cvut.gartnkry;
 
-import javafx.geometry.Point2D;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import cvut.gartnkry.model.Model;
+import cvut.gartnkry.view.assets.AssetsUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  *  Class for loading saves from JSON files
  */
 public class Data {
-    private Point2D playerCoords;
+    private JsonObject json;
 
     public Data(String filename) {
         loadFromJSON(filename);
     }
 
     private void loadFromJSON(String filename) {
-        // TODO: loading from json file
-        this.playerCoords = new Point2D(1000, 1000);
+        JsonParser parser = new JsonParser();
+        BufferedReader br = AssetsUtils.getResourcesReader(filename);
+        json = parser.parse(br).getAsJsonObject();
+        try {
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Point2D getPlayerCoords() {
-        return playerCoords;
+    public void saveToJSON(Model model){
+        // todo: save...
     }
 
-    public String getMapFilename() {
-        return "map2.csv";
+    public JsonArray getEntitiesData(){
+        return json.get("entities").getAsJsonArray();
+    }
+
+    public String getMapFilename(){
+        return json.get("map").getAsString();
     }
 }

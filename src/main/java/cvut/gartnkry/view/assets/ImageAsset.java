@@ -10,8 +10,10 @@ import javafx.scene.image.Image;
  * Images are also being scaled to current window size.
  */
 public enum ImageAsset {
-    PLAYER_DEFAULT("Player", "player_default"),
-    CACTUS("Props", "cactus");
+    CACTUS("Props", "cactus"),
+    SKULL("Props", "skull"),
+    CROSS("Props", "cross"),
+    TREE("Props", "tree");
 
     private final Image image;
 

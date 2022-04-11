@@ -32,7 +32,7 @@ public class Map {
         // Load map from CSV file
         try {
             // Read csv file
-            BufferedReader br = AssetsUtils.getResourcesReader("/Maps/" + filename);
+            BufferedReader br = AssetsUtils.getResourcesReader("Maps/" + filename);
             String[] lines = br.lines().toArray(String[]::new);
             br.close();
 

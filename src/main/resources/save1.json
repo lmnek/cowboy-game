@@ -1,0 +1,27 @@
+{
+  "map": "map2.csv",
+  "entities":[
+    {
+      "name": "player",
+      "positionX": 500,
+      "positionY": 500,
+      "health": 9,
+      "inventory": [
+        "gun",
+        "hat"
+      ]
+    },
+    {
+      "name": "ghost",
+      "positionX": 700,
+      "positionY": 700,
+      "health": 4
+    },
+    {
+      "name": "ghost",
+      "positionX": 1000,
+      "positionY": 1200,
+      "health": 1
+    }
+  ]
+}

@@ -21,3 +21,4 @@
 
  Wiki
  - Art: pridat animace, screen ze hry
+ - pouzity sw / knihovny

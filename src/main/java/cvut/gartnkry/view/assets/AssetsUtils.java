@@ -30,8 +30,7 @@ public class AssetsUtils {
      * @return Buffered Reading in given folder
      */
     public static BufferedReader getResourcesReader(String path){
-        System.out.println(path);
        return new BufferedReader(new InputStreamReader(
-                AssetsUtils.class.getResourceAsStream(path)));
+                AssetsUtils.class.getResourceAsStream("/" + path)));
     }
 }

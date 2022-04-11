@@ -33,8 +33,6 @@ public class View {
         int screenWidth = pixelTileSize * Settings.TILES_COUNT_WIDTH;
         int screenHeight = pixelTileSize * Settings.TILES_COUNT_HEIGHT;
 
-        System.out.println(screenWidth);
-
         canvas = new Canvas(screenWidth, screenHeight); // container for all drawing components
         Pane pane = new Pane(canvas); // for layout with absolute positions
         Scene scene = new Scene(pane);
@@ -98,18 +96,6 @@ public class View {
                         gc.drawImage(tileMap[iIndex][jIndex].getImage(), j * pixelTileSize - offsetX, i * pixelTileSize - offsetY);
                     }
                 }
-            }
-        }
-    }
-
-    @Deprecated
-    private void drawTilesWithoutCamera(GraphicsContext gc) {
-        Tile[][] tileMap = model.getMap().getTileMap();
-        int rows = tileMap.length;
-        int cols = tileMap[0].length;
-        for (int x = 0; x < rows; x++) {
-            for (int y = 0; y < cols; y++) {
-                gc.drawImage(tileMap[x][y].getImage(), y * pixelTileSize, x * pixelTileSize);
             }
         }
     }

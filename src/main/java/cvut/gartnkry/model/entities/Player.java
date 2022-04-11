@@ -1,10 +1,8 @@
 package cvut.gartnkry.model.entities;
 
-import cvut.gartnkry.Data;
+import com.google.gson.JsonObject;
 import cvut.gartnkry.Settings;
-import cvut.gartnkry.model.Sprite;
 import cvut.gartnkry.view.assets.Animation;
-import cvut.gartnkry.view.assets.ImageAsset;
 import javafx.scene.input.KeyCode;
 
 import java.util.HashMap;
@@ -13,6 +11,7 @@ import java.util.Map;
 import static javafx.scene.input.KeyCode.*;
 
 //TODO: go through JAVADOC when program is done
+
 /**
  * Player class is responsible for:
  * <ul>
@@ -29,24 +28,28 @@ import static javafx.scene.input.KeyCode.*;
  * </ul>
  */
 public class Player extends Entity {
+    private static final int MAX_HEALTH = 10;
 
-    private final Map<KeyCode, Integer> directions;
-    private final double sidewaysVelocity;
-
+    private boolean moving;
     private Animation animation;
     private int tickCounter;
     private int previousDirectionX;
     private int previousDirectionY;
 
+    private final Map<KeyCode, Integer> directions;
+    private final double sidewaysVelocity;
+
     /**
      * Class constructor.
      * Load position of player from data and set a sprite.
      * Player is initialized not moving, with default static image and no animation.
-     * @param data data object loaded from input save file
+     *
+     * @param playerData data object loaded from input save file
      */
-    public Player(Data data) {
-        super(new Sprite(ImageAsset.PLAYER_DEFAULT.getImage(), data.getPlayerCoords()));
-        animation = null;
+    public Player(JsonObject playerData) {
+        super(playerData, MAX_HEALTH, Animation.PLAYER_DOWN.getDefaultImage());
+        animation = Animation.PLAYER_DOWN;
+        moving = false;
 
         directions = new HashMap<>();
         directions.put(W, 0);
@@ -61,6 +64,7 @@ public class Player extends Entity {
 
     /**
      * When key is pressed, player starts to move in the supposed direction.
+     *
      * @param code code of key that is pressed
      */
     public void onKeyPressed(KeyCode code) {
@@ -69,6 +73,7 @@ public class Player extends Entity {
 
     /**
      * When key is released, player stops to move in the supposed direction.
+     *
      * @param code code of key that is released
      */
     public void onKeyReleased(KeyCode code) {
@@ -79,6 +84,7 @@ public class Player extends Entity {
      * Update coordinates of player's sprite from direction of movement.
      * Includes swapping frames for animation.
      */
+    @Override
     public void update() {
 
         int directionX = directions.get(D) - directions.get(A);
@@ -114,16 +120,18 @@ public class Player extends Entity {
             }
             // move sprite
             sprite.addXY(velocityX * Settings.PLAYER_SPEED, velocityY * Settings.PLAYER_SPEED);
+            moving = true;
 
         } else if (changedDirection) {
-            sprite.setImage(ImageAsset.PLAYER_DEFAULT.getImage());
-            animation = null;
+            sprite.setImage(animation.getDefaultImage());
+            moving = false;
         }
     }
 
     /**
      * Set new animation, if player is starting to move
      * or completely changed directions.
+     *
      * @param directionX x direction movement
      * @param directionY y direction movement
      * @return boolean whether new animation was set
@@ -132,8 +140,8 @@ public class Player extends Entity {
         Animation an1 = chooseAnimationX(directionX);
         Animation an2 = chooseAnimationY(directionY);
 
-        if (animation == null // starting to move
-                || (an1 != animation && an2 != animation)) { // completely change directions
+        // not moving or completely change directions
+        if (!moving || (an1 != animation && an2 != animation)) {
             animation = (an1 == null) ? an2 : an1; // new animation
             return true;
         }
@@ -142,6 +150,7 @@ public class Player extends Entity {
 
     /**
      * Choose animation from direction in X axis
+     *
      * @param directionX
      * @return Animation object or null (if animation was not chosen)
      */
@@ -156,6 +165,7 @@ public class Player extends Entity {
 
     /**
      * Choose animation from direction in Y axis
+     *
      * @param directionY
      * @return Animation object or null (if animation was not chosen)
      */

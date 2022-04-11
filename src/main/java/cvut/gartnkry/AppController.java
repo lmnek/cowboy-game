@@ -8,6 +8,11 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 /**
  * JavaFX App
  */
@@ -16,14 +21,18 @@ public class AppController extends Application {
     private View view;
     private Model model;
 
+    private static final Logger LOGGER = Logger.getLogger(AppController.class.getName());
+
     public static void main(String[] args) {
         launch();
     }
 
     @Override
     public void start(Stage stage) {
+        //loadLoggerProperties();
+        LOGGER.info("Start loading/initializing the game.");
 
-        Data data = new Data("none.json");
+        Data data = new Data("save1.json");
         model = new Model(data);
         view = new View(stage, model);
         view.initialization();
@@ -47,7 +56,9 @@ public class AppController extends Application {
         };
 
         loopTimer.start();
+        LOGGER.info("Game loop started.");
     }
+
 
     private void setEvents(Stage stage) {
         Scene scene = stage.getScene();
@@ -61,5 +72,14 @@ public class AppController extends Application {
             System.exit(0);
         });
 
+    }
+
+    private void loadLoggerProperties() {
+        try (InputStream is = AppController.class.getClassLoader().
+                getResourceAsStream("logging.properties")) {
+            LogManager.getLogManager().readConfiguration(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
