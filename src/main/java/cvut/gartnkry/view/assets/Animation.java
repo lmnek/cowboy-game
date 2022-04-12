@@ -1,5 +1,6 @@
 package cvut.gartnkry.view.assets;
 
+import cvut.gartnkry.ResourcesUtils;
 import javafx.scene.image.Image;
 
 
@@ -21,13 +22,13 @@ public enum Animation {
     Animation(String folder, String filename, int frameCount, int ticksPerFrame) {
         this.frameCount = frameCount;
         this.ticksPerFrame = ticksPerFrame;
-        defaultImage = AssetsUtils.loadAsset(folder, filename + "_default");
+        defaultImage = ResourcesUtils.loadAsset(folder, filename + "_default");
         frames = new Image[frameCount];
         currentFrame = 0;
 
         // load animation
         for (int i = 0; i < frameCount; i++) {
-            frames[i] = AssetsUtils.loadAsset(folder, filename + (i + 1));
+            frames[i] = ResourcesUtils.loadAsset(folder, filename + (i + 1));
         }
     }
 

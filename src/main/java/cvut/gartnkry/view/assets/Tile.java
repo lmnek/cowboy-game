@@ -1,5 +1,6 @@
 package cvut.gartnkry.view.assets;
 
+import cvut.gartnkry.ResourcesUtils;
 import javafx.scene.image.Image;
 
 /**
@@ -18,7 +19,7 @@ public class Tile {
      */
     public Tile(String filename, boolean hasHitbox) {
         this.hasHitbox = hasHitbox;
-        this.image = AssetsUtils.loadAsset("Maps/Tiles", filename); // load image
+        this.image = ResourcesUtils.loadAsset("Maps/Tiles", filename); // load image
     }
 
     /**

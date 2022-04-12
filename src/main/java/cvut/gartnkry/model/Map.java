@@ -1,6 +1,6 @@
 package cvut.gartnkry.model;
 
-import cvut.gartnkry.view.assets.AssetsUtils;
+import cvut.gartnkry.ResourcesUtils;
 import cvut.gartnkry.view.assets.Tile;
 import cvut.gartnkry.view.assets.TileManager;
 
@@ -32,7 +32,7 @@ public class Map {
         // Load map from CSV file
         try {
             // Read csv file
-            BufferedReader br = AssetsUtils.getResourcesReader("Maps/" + filename);
+            BufferedReader br = ResourcesUtils.getReader("Maps/" + filename);
             String[] lines = br.lines().toArray(String[]::new);
             br.close();
 

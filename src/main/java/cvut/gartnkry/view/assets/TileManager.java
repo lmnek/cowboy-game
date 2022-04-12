@@ -3,6 +3,7 @@ package cvut.gartnkry.view.assets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import cvut.gartnkry.ResourcesUtils;
 
 import java.io.*;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class TileManager {
         // Load and parse JSON file with tiles info
         try {
             // Load
-            BufferedReader br = AssetsUtils.getResourcesReader("Maps/Tiles/tiles.json");
+            BufferedReader br = ResourcesUtils.getReader("Maps/Tiles/tiles.json");
             // Parse
             JsonParser parser = new JsonParser();
             JsonArray tileTypes = parser.parse(br).getAsJsonArray();

@@ -2,7 +2,9 @@ package cvut.gartnkry.view;
 
 import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.Model;
+import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.Sprite;
+import cvut.gartnkry.model.entities.Entity;
 import cvut.gartnkry.view.assets.Tile;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -61,22 +63,22 @@ public class View {
     public void render() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        drawTiles(gc);
-        drawEntities(gc);
+        // top left corner
+        Sprite playerSprite = model.getPlayer().getSprite();
+        double cameraX = playerSprite.getXCenter() - stage.getWidth() / 2;
+        double cameraY = playerSprite.getYCenter() - stage.getHeight() / 2;
+
+        drawTiles(gc, cameraX, cameraY);
+        drawProps(gc, cameraX, cameraY);
+        drawEntities(gc, cameraX, cameraY);
     }
 
-
     // Draw tiles depending on player position - camera
-    private void drawTiles(GraphicsContext gc) {
+    private void drawTiles(GraphicsContext gc, double cameraX, double cameraY) {
         Tile[][] tileMap = model.getMap().getTileMap();
-        Sprite playerSprite = model.getPlayer().getSprite();
 
         // inspiration for implementing camera:
         // https://www.javacodegeeks.com/2013/01/writing-a-tile-engine-in-javafx.html
-
-        // top left corner
-        double cameraX = playerSprite.getXCenter() - stage.getWidth() / 2;
-        double cameraY = playerSprite.getYCenter() - stage.getHeight() / 2;
 
         // index of the first tile to show
         int startX = (int) (cameraX / pixelTileSize);
@@ -100,9 +102,15 @@ public class View {
         }
     }
 
-    private void drawEntities(GraphicsContext gc) {
+    private void drawProps(GraphicsContext gc, double cameraX, double cameraY) {
+        for (Prop prop : model.getProps()) {
+            drawSprite(gc, prop.getSprite(), cameraX, cameraY);
+        }
+    }
+
+    private void drawEntities(GraphicsContext gc, double cameraX, double cameraY) {
         drawPlayer(gc);
-        drawEnemies(gc);
+        drawEnemies(gc, cameraX, cameraY);
     }
 
     private void drawPlayer(GraphicsContext gc) {
@@ -111,12 +119,19 @@ public class View {
         gc.drawImage(sprite.getImage(), playerScreenX, playerScreenY);
     }
 
-    private void drawEnemies(GraphicsContext gc) {
-
+    private void drawEnemies(GraphicsContext gc, double cameraX, double cameraY) {
+        for (Entity entity : model.getEnemies()) {
+            drawSprite(gc, entity.getSprite(), cameraX, cameraY);
+        }
     }
 
-    private void drawBackground(GraphicsContext gc){
-        gc.setFill(Color.rgb(29,22,7));
-        gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
+    private void drawBackground(GraphicsContext gc) {
+        gc.setFill(Color.rgb(29, 22, 7));
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
+
+    private void drawSprite(GraphicsContext gc, Sprite sprite, double cameraX, double cameraY) {
+        // TODO: load only when on screen
+        gc.drawImage(sprite.getImage(), sprite.getX() - cameraX, sprite.getY() - cameraY);
     }
 }

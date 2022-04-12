@@ -3,25 +3,51 @@
   "entities":[
     {
       "name": "player",
-      "positionX": 500,
-      "positionY": 500,
+      "coordX": 500,
+      "coordY": 500,
       "health": 9,
+      "gun": {
+        "bulletSpeed": 10,
+        "fireRate": 10,
+        "bulletSize": 1
+      },
       "inventory": [
-        "gun",
         "hat"
       ]
     },
     {
       "name": "ghost",
-      "positionX": 700,
-      "positionY": 700,
+      "coordX": 700,
+      "coordY": 700,
       "health": 4
     },
     {
       "name": "ghost",
-      "positionX": 1000,
-      "positionY": 1200,
+      "coordX": 1000,
+      "coordY": 1200,
       "health": 1
+    }
+  ],
+  "props": [
+    {
+      "name": "cactus",
+      "coordX": 300,
+      "coordY": 400
+    },
+    {
+      "name": "cactus",
+      "coordX": 1400,
+      "coordY": 200
+    },
+    {
+      "name": "cactus",
+      "coordX": 700,
+      "coordY": 1200
+    },
+    {
+      "name": "skull",
+      "coordX": 1000,
+      "coordY": 800
     }
   ]
 }

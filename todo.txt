@@ -1,7 +1,7 @@
  - collisions
  - props
  - inventory, health, XP
- - pickup items, keys ?
+ - pickup items, (keys ? --> ladder/bridge)
  - enemies
  - load/save game data (JSON file)
  - fighting system (shooting)

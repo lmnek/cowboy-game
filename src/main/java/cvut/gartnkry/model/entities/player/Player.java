@@ -1,11 +1,14 @@
-package cvut.gartnkry.model.entities;
+package cvut.gartnkry.model.entities.player;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import cvut.gartnkry.Settings;
+import cvut.gartnkry.model.entities.Entity;
 import cvut.gartnkry.view.assets.Animation;
 import javafx.scene.input.KeyCode;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import static javafx.scene.input.KeyCode.*;
@@ -36,8 +39,13 @@ public class Player extends Entity {
     private int previousDirectionX;
     private int previousDirectionY;
 
-    private final Map<KeyCode, Integer> directions;
+    private Map<KeyCode, Integer> directions;
     private final double sidewaysVelocity;
+    private Map<KeyCode, Boolean> shooting;
+
+    private Gun gun;
+    private boolean hasHat;
+    private LinkedList<Bullet> bullets;
 
     /**
      * Class constructor.
@@ -48,18 +56,54 @@ public class Player extends Entity {
      */
     public Player(JsonObject playerData) {
         super(playerData, MAX_HEALTH, Animation.PLAYER_DOWN.getDefaultImage());
+        // parse gun
+        if(playerData.get("gun") != null){
+            JsonObject gunJson = playerData.get("gun").getAsJsonObject();
+            gun = new Gun(gunJson.get("bulletSpeed").getAsDouble(),
+                    gunJson.get("fireRate").getAsDouble(),
+                    gunJson.get("bulletSize").getAsInt());
+        }else{
+            gun = null;
+        }
+        // parse inventory
+        for (JsonElement el : playerData.get("inventory").getAsJsonArray()) {
+            pickupItem(el.getAsString());
+        }
+
         animation = Animation.PLAYER_DOWN;
         moving = false;
-
-        directions = new HashMap<>();
-        directions.put(W, 0);
-        directions.put(A, 0);
-        directions.put(S, 0);
-        directions.put(D, 0);
+        bullets = new LinkedList<>();
 
         sidewaysVelocity = Math.sqrt(0.5); // compute in advance
         tickCounter = 0;
         previousDirectionX = previousDirectionY = 0;
+
+        configureKeys();
+    }
+
+    private void configureKeys() {
+        KeyCode[] movementKeys = new KeyCode[]{W, A, S, D};
+        KeyCode[] shootKeys = new KeyCode[]{LEFT, RIGHT, UP, DOWN};
+
+        directions = new HashMap<>();
+        for (KeyCode code : movementKeys) {
+            directions.put(code, 0);
+        }
+        shooting = new HashMap<>();
+        for (KeyCode code : shootKeys) {
+            shooting.put(code, false);
+        }
+    }
+
+    public void pickupItem(String itemName) {
+        switch (itemName) {
+            case "gun":
+                gun = new Gun();
+                break;
+            case "hat":
+                hasHat = true;
+                break;
+        }
     }
 
     /**
@@ -69,6 +113,7 @@ public class Player extends Entity {
      */
     public void onKeyPressed(KeyCode code) {
         directions.replace(code, 1);
+        shooting.replace(code, true);
     }
 
     /**
@@ -78,15 +123,26 @@ public class Player extends Entity {
      */
     public void onKeyReleased(KeyCode code) {
         directions.replace(code, 0);
+        shooting.replace(code, false);
+    }
+
+
+    @Override
+    public void update() {
+        updateMovement();
+        if (gun != null) {
+            handleShooting();
+        }
+    }
+
+    private void handleShooting() {
     }
 
     /**
      * Update coordinates of player's sprite from direction of movement.
      * Includes swapping frames for animation.
      */
-    @Override
-    public void update() {
-
+    private void updateMovement() {
         int directionX = directions.get(D) - directions.get(A);
         int directionY = directions.get(S) - directions.get(W);
 
@@ -176,5 +232,9 @@ public class Player extends Entity {
             return Animation.PLAYER_UP;
         }
         return null;
+    }
+
+    public LinkedList<Bullet> getBullets() {
+        return bullets;
     }
 }

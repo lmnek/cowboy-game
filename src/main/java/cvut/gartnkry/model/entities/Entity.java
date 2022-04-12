@@ -1,16 +1,10 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.Data;
+import cvut.gartnkry.ResourcesUtils;
 import cvut.gartnkry.model.Sprite;
-import cvut.gartnkry.view.assets.ImageAsset;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
-
-import java.util.HashMap;
-
-import static javafx.scene.input.KeyCode.*;
-import static javafx.scene.input.KeyCode.D;
 
 /**
  * Parent class for inherited entities.
@@ -21,10 +15,9 @@ public abstract class Entity {
     protected int health;
     protected int maxHealth;
 
+
     protected Entity(JsonObject entityData, int maxHealth, Image defaultImage) {
-        Point2D coords = new Point2D(entityData.get("positionX").getAsDouble(),
-                entityData.get("positionY").getAsDouble());
-        sprite = new Sprite(defaultImage, coords);
+        sprite = new Sprite(defaultImage, ResourcesUtils.pointFromJson(entityData));
 
         this.maxHealth = maxHealth;
         health = entityData.get("health").getAsInt();

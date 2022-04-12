@@ -1,5 +1,6 @@
 package cvut.gartnkry.view.assets;
 
+import cvut.gartnkry.ResourcesUtils;
 import javafx.scene.image.Image;
 
 /**
@@ -13,7 +14,11 @@ public enum ImageAsset {
     CACTUS("Props", "cactus"),
     SKULL("Props", "skull"),
     CROSS("Props", "cross"),
-    TREE("Props", "tree");
+    TREE("Props", "tree")
+    // GUNS("Items", )
+    ;
+
+    // inventory items...
 
     private final Image image;
 
@@ -24,7 +29,7 @@ public enum ImageAsset {
      * @param filename filename of the image
      */
     ImageAsset(String folder, String filename) {
-        image = AssetsUtils.loadAsset(folder, filename); // load image
+        image = ResourcesUtils.loadAsset(folder, filename); // load image
     }
 
     /**
@@ -32,5 +37,15 @@ public enum ImageAsset {
      */
     public Image getImage() {
         return image;
+    }
+    
+    public static ImageAsset getFromName(String name){
+        for (ImageAsset ia :
+                ImageAsset.values()) {
+            if(ia.name().toLowerCase().equals(name)){
+                return ia;
+            }
+        }
+        return null;
     }
 }
