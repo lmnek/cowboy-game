@@ -147,10 +147,10 @@ public class View {
     private void drawHitboxes(GraphicsContext gc, double cameraX, double cameraY) {
         Color color = new Color(1, 0.3, 0.3, 0.7);
         gc.setFill(color);
-        drawRectangle(gc, model.getPlayer().getHitbox(), cameraX, cameraY);
+        drawRectangle(gc, model.getPlayer().getHitboxRect(), cameraX, cameraY);
 
         for (Prop prop : model.getProps()) {
-            drawRectangle(gc, prop.getHitbox(), cameraX, cameraY);
+            drawRectangle(gc, prop.getHitboxRect(), cameraX, cameraY);
         }
     }
 

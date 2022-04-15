@@ -15,4 +15,7 @@ public class Settings {
 
     public static final double PLAYER_MAX_VELOCITY = 1.2;
     public static final int PLAYER_TICKS_TO_ACCELERATE = 10;
+
+
+    public static final double HITBOX_PADDING = 0.01;
 }

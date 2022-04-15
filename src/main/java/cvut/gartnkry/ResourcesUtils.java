@@ -51,9 +51,4 @@ public class ResourcesUtils {
         return returnElement;
     }
 
-    public static Point2D pointFromJson(JsonObject json){
-        return new Point2D(json.get("coordX").getAsDouble(),
-                json.get("coordY").getAsDouble());
-    }
-
 }

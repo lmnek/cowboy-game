@@ -1,9 +1,7 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.ResourcesUtils;
 import cvut.gartnkry.view.assets.Animation;
-import cvut.gartnkry.view.assets.AssetsManager;
 
 public class Ghost extends Entity{
     private static final int MAX_HEALTH = 5;

@@ -127,8 +127,6 @@ public class Player extends Entity {
     public void update() {
         setSpriteImage();
         sprite.addXY(velocityX, velocityY);
-        addToHitbox(velocityX, velocityY);
-        //updateMovement();
         if (gun != null) {
             handleShooting();
         }
@@ -145,7 +143,7 @@ public class Player extends Entity {
         return directions.get(S) - directions.get(W);
     }
 
-    public Point2D getVelocity() {
+    public void computeVelocities() {
         double add_tmp, max_vel;
         // fixes faster movement sideways -> pythagoras theorem
         if (velocityX != 0 && velocityY != 0) {
@@ -157,13 +155,8 @@ public class Player extends Entity {
         }
         int directionX = getDirectionX();
         int directionY = getDirectionY();
-        return new Point2D(getSingleVelocity(directionX, velocityX, add_tmp, max_vel),
-                getSingleVelocity(directionY, velocityY, add_tmp, max_vel));
-    }
-
-    public void setVelocity(Point2D velocity) {
-        this.velocityX = velocity.getX();
-        this.velocityY = velocity.getY();
+        velocityX = getSingleVelocity(directionX, velocityX, add_tmp, max_vel);
+        velocityY = getSingleVelocity(directionY, velocityY, add_tmp, max_vel);
     }
 
     private double getSingleVelocity(int direction, double velocity, double add_tmp, double max_vel) {
@@ -217,4 +210,20 @@ public class Player extends Entity {
         return bullets;
     }
 
+
+    public double getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(double velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public double getVelocityY() {
+        return velocityY;
+    }
+
+    public void setVelocityY(double velocityY) {
+        this.velocityY = velocityY;
+    }
 }

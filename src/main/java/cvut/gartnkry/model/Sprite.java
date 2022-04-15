@@ -1,7 +1,6 @@
 package cvut.gartnkry.model;
 
 import cvut.gartnkry.Settings;
-import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 
 /**
@@ -9,17 +8,20 @@ import javafx.scene.image.Image;
  * and its coordinates on the map.
  */
 public class Sprite {
-    private Point2D coords;
+    private double X;
+    private double Y;
     private Image image;
 
     /**
      * Class constructor.
-     * @param image loaded Image asset
+     *
+     * @param image  loaded Image asset
      * @param coords coordinates on the map
      */
-    public Sprite(Image image, Point2D coords) {
+    public Sprite(Image image, double coordX, double coordY) {
         this.image = image;
-        this.coords = coords;
+        this.X = coordX;
+        this.Y = coordY;
     }
 
     /**
@@ -32,6 +34,7 @@ public class Sprite {
     /**
      * New image is being set when animation
      * frames are being switched.
+     *
      * @param image new Image
      */
     public void setImage(Image image) {
@@ -39,25 +42,33 @@ public class Sprite {
     }
 
     public double getX() {
-        return coords.getX();
+        return X;
     }
 
     public double getY() {
-        return coords.getY();
+        return Y;
+    }
+
+    public void setX(double coordX) {
+        this.X = coordX;
+    }
+
+    public void setY(double coordY) {
+        this.Y = coordY;
     }
 
     /**
      * @return double value of X coordinate in the center of the sprite
      */
     public double getXCenter() {
-        return coords.getX() + image.getWidth() / 2;
+        return X + image.getWidth() / 2;
     }
 
     /**
      * @return double value of Y coordinate in the center of the sprite
      */
     public double getYCenter() {
-        return coords.getY() + image.getHeight() / 2;
+        return Y + image.getHeight() / 2;
     }
 
     /**
@@ -65,6 +76,7 @@ public class Sprite {
      * @param y double value to add to y coordinate
      */
     public void addXY(double x, double y) {
-        coords = coords.add(x * Settings.SCALE, y * Settings.SCALE);
+        X += x * Settings.SCALE;
+        Y += y * Settings.SCALE;
     }
 }

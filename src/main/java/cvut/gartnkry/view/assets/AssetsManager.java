@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import cvut.gartnkry.ResourcesUtils;
 import cvut.gartnkry.Settings;
+import cvut.gartnkry.model.HitboxInfo;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
@@ -63,21 +64,21 @@ public class AssetsManager {
         return images.get(name);
     }
 
-    public static Rectangle getHitbox(String name) {
-        Rectangle rec = getHitbox(propsData, name);
-        if(rec != null){
-            return rec;
+    public static HitboxInfo getHitboxInfo(String name) {
+        HitboxInfo hbInfo = getHitboxInfoFromData(propsData, name);
+        if (hbInfo != null) {
+            return hbInfo;
         }
-        return getHitbox(entitiesData, name);
+        return getHitboxInfoFromData(entitiesData, name);
     }
 
-    private static Rectangle getHitbox(JsonArray data, String name) {
+    private static HitboxInfo getHitboxInfoFromData(JsonArray data, String name) {
         for (JsonElement en : data) {
             if (en.getAsJsonObject().get("name").getAsString().equals(name)) {
                 JsonElement hitboxElement = en.getAsJsonObject().get("hitbox");
-                if(hitboxElement != null){
+                if (hitboxElement != null) {
                     JsonObject hitboxData = hitboxElement.getAsJsonObject();
-                    return new Rectangle(hitboxData.get("x").getAsInt() * Settings.SCALE,
+                    return new HitboxInfo(hitboxData.get("x").getAsInt() * Settings.SCALE,
                             hitboxData.get("y").getAsInt() * Settings.SCALE,
                             hitboxData.get("width").getAsInt() * Settings.SCALE,
                             hitboxData.get("height").getAsInt() * Settings.SCALE);

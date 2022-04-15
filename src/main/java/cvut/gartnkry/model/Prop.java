@@ -3,25 +3,18 @@ package cvut.gartnkry.model;
 import com.google.gson.JsonObject;
 import cvut.gartnkry.ResourcesUtils;
 import cvut.gartnkry.view.assets.AssetsManager;
-import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
 public class Prop {
     protected Sprite sprite;
-    protected Rectangle hitbox;
+    protected HitboxInfo hitboxInfo;
     private String name;
 
-    public Prop(JsonObject data, Image defaultImage){
+    public Prop(JsonObject data, Image defaultImage) {
         name = data.get("name").getAsString();
-        Point2D coords = ResourcesUtils.pointFromJson(data);
-        sprite = new Sprite(defaultImage, coords);
-        hitbox = AssetsManager.getHitbox(name);
-        if(hitbox != null){
-            hitbox.setY(coords.getY() + hitbox.getY());
-            hitbox.setX(coords.getX() + hitbox.getX());
-        }
-        System.out.println(name + "," +hitbox);
+        sprite = new Sprite(defaultImage, data.get("coordX").getAsDouble(), data.get("coordY").getAsDouble());
+        hitboxInfo = AssetsManager.getHitboxInfo(name);
     }
 
     /**
@@ -31,7 +24,20 @@ public class Prop {
         return sprite;
     }
 
-    public Rectangle getHitbox() {
-        return hitbox;
+    public Rectangle getHitboxRect() {
+        return getHitboxRect(0, 0);
+    }
+
+    public Rectangle getHitboxRect(double velocityX, double velocityY) {
+        if (hitboxInfo != null) {
+            return new Rectangle(hitboxInfo.getX() + sprite.getX() + velocityX,
+                    hitboxInfo.getY() + sprite.getY() + velocityY,
+                    hitboxInfo.getWidth(), hitboxInfo.getHeight());
+        }
+        return null;
+    }
+
+    public HitboxInfo getHitboxInfo() {
+        return hitboxInfo;
     }
 }

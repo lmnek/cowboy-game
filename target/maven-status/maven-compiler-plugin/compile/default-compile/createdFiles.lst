@@ -16,5 +16,6 @@ cvut\gartnkry\model\shooting\Gun.class
 cvut\gartnkry\SystemInfo.class
 cvut\gartnkry\model\Model.class
 cvut\gartnkry\model\entities\Ghost.class
+cvut\gartnkry\model\HitboxInfo.class
 cvut\gartnkry\model\entities\Player.class
 cvut\gartnkry\AppController$1.class

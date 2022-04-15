@@ -1,8 +1,8 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.Prop;
+import cvut.gartnkry.model.Sprite;
 import javafx.scene.image.Image;
 
 /**
@@ -32,8 +32,11 @@ public class Entity extends Prop {
         return health == 0;
     }
 
-    protected void addToHitbox(double velocityX, double velocityY){
-        hitbox.setX(hitbox.getX() + velocityX * Settings.SCALE);
-        hitbox.setY(hitbox.getY() + velocityY * Settings.SCALE);
+    public void collisionSetX(double x) {
+        sprite.setX(sprite.getX() - x);
+    }
+
+    public void collisionSetY(double y) {
+        sprite.setY(sprite.getY() - y);
     }
 }
