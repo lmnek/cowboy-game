@@ -2,15 +2,16 @@ package cvut.gartnkry.model.entities.player;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.entities.Entity;
 import cvut.gartnkry.view.assets.Animation;
 import javafx.scene.input.KeyCode;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
+import static cvut.gartnkry.Settings.PLAYER_MAX_VELOCITY;
+import static cvut.gartnkry.Settings.PLAYER_TICKS_TO_ACCELERATE;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static javafx.scene.input.KeyCode.*;
 
 //TODO: go through JAVADOC when program is done
@@ -33,19 +34,23 @@ import static javafx.scene.input.KeyCode.*;
 public class Player extends Entity {
     private static final int MAX_HEALTH = 10;
 
-    private boolean moving;
     private Animation animation;
     private int tickCounter;
-    private int previousDirectionX;
-    private int previousDirectionY;
 
-    private Map<KeyCode, Integer> directions;
-    private final double sidewaysVelocity;
-    private Map<KeyCode, Boolean> shooting;
+
+
+    private HashMap<KeyCode, Boolean> keyPressed;
+    private final Map<KeyCode, Integer> directions;
+
+    double velocityX, velocityY;
+    private final double maxSidewaysVel;
+    private final double maxVel;
+    private final double addVel;
+    private final double addSidewaysVel;
 
     private Gun gun;
     private boolean hasHat;
-    private LinkedList<Bullet> bullets;
+    private final LinkedList<Bullet> bullets;
 
     /**
      * Class constructor.
@@ -56,6 +61,30 @@ public class Player extends Entity {
      */
     public Player(JsonObject playerData) {
         super(playerData, MAX_HEALTH, Animation.PLAYER_DOWN.getDefaultImage());
+        parseJson(playerData);
+
+        animation = Animation.PLAYER_DOWN;
+        tickCounter = 0;
+        bullets = new LinkedList<>();
+
+
+        maxVel = PLAYER_MAX_VELOCITY;
+        maxSidewaysVel = Math.sqrt(maxVel * maxVel / 2);
+        addVel = maxVel / PLAYER_TICKS_TO_ACCELERATE;
+        addSidewaysVel = maxSidewaysVel / PLAYER_TICKS_TO_ACCELERATE;
+
+
+        velocityX = velocityY = 0;
+
+
+        KeyCode[] keys = new KeyCode[]{W, A, S, D};
+        directions = new HashMap<>(keys.length);
+        for (KeyCode k : keys) {
+            directions.put(k, 0);
+        }
+    }
+
+    private void parseJson(JsonObject playerData) {
         // parse gun
         if(playerData.get("gun") != null){
             JsonObject gunJson = playerData.get("gun").getAsJsonObject();
@@ -68,30 +97,6 @@ public class Player extends Entity {
         // parse inventory
         for (JsonElement el : playerData.get("inventory").getAsJsonArray()) {
             pickupItem(el.getAsString());
-        }
-
-        animation = Animation.PLAYER_DOWN;
-        moving = false;
-        bullets = new LinkedList<>();
-
-        sidewaysVelocity = Math.sqrt(0.5); // compute in advance
-        tickCounter = 0;
-        previousDirectionX = previousDirectionY = 0;
-
-        configureKeys();
-    }
-
-    private void configureKeys() {
-        KeyCode[] movementKeys = new KeyCode[]{W, A, S, D};
-        KeyCode[] shootKeys = new KeyCode[]{LEFT, RIGHT, UP, DOWN};
-
-        directions = new HashMap<>();
-        for (KeyCode code : movementKeys) {
-            directions.put(code, 0);
-        }
-        shooting = new HashMap<>();
-        for (KeyCode code : shootKeys) {
-            shooting.put(code, false);
         }
     }
 
@@ -113,7 +118,6 @@ public class Player extends Entity {
      */
     public void onKeyPressed(KeyCode code) {
         directions.replace(code, 1);
-        shooting.replace(code, true);
     }
 
     /**
@@ -123,7 +127,6 @@ public class Player extends Entity {
      */
     public void onKeyReleased(KeyCode code) {
         directions.replace(code, 0);
-        shooting.replace(code, false);
     }
 
 
@@ -138,6 +141,7 @@ public class Player extends Entity {
     private void handleShooting() {
     }
 
+
     /**
      * Update coordinates of player's sprite from direction of movement.
      * Includes swapping frames for animation.
@@ -146,86 +150,67 @@ public class Player extends Entity {
         int directionX = directions.get(D) - directions.get(A);
         int directionY = directions.get(S) - directions.get(W);
 
-        boolean changedDirection = !(previousDirectionX == directionX && previousDirectionY == directionY);
-        previousDirectionX = directionX;
-        previousDirectionY = directionY;
+//        System.out.println(directionX + "   " + directionY);
 
-        // update sprite coords only when moving
-        if (directionX != 0 || directionY != 0) {
-            ++tickCounter;
+        setSpriteImage(directionX, directionY);
 
-            // first frame from new animation
-            if (changedDirection && setAnimation(directionX, directionY)) {
+        double add_tmp, max_vel;
+        // fixes faster movement sideways -> pythagoras theorem
+        if (velocityX != 0 && velocityY != 0) {
+            max_vel = maxSidewaysVel;
+            add_tmp = addSidewaysVel;
+        }else{
+            max_vel = maxVel;
+            add_tmp = addVel;
+        }
+
+        velocityX = getVelocity(directionX, velocityX, add_tmp, max_vel);
+        velocityY = getVelocity(directionY, velocityY, add_tmp, max_vel);
+
+       // System.out.println(velocityX + "    " + velocityY);
+
+        // move sprite
+        sprite.addXY(velocityX, velocityY);
+    }
+
+    public double getVelocity(int direction, double velocity,double add_tmp, double max_vel){
+        // accelerate to max velocity
+        if(direction != 0){
+            velocity = max(min(max_vel, velocity + (add_tmp * direction)), -max_vel);
+        }
+        // decelerate to zero
+        else if (velocity > 0) {
+            velocity = max(velocity - add_tmp, 0);
+        }
+        else if(velocity < 0){
+            velocity = min(velocity + add_tmp, 0);
+        }
+        return velocity;
+    }
+
+    private void setSpriteImage(int directionX, int directionY) {
+        ++tickCounter;
+        Animation tmp_animation = getAnimation(directionX, directionY);
+        if(tmp_animation != null){
+            if(tmp_animation != animation){
                 tickCounter = animation.getTicksPerFrame() - 3;
+                animation = tmp_animation;
                 sprite.setImage(animation.getFirstFrame());
-            }
-            // next frame in animation
-            else if (tickCounter >= animation.getTicksPerFrame()) {
+            }else if(tickCounter >= animation.getTicksPerFrame()){
                 sprite.setImage(animation.getNextFrame());
                 tickCounter = 0;
             }
-
-            // compute velocities
-            double velocityX, velocityY;
-            velocityX = directionX;
-            velocityY = directionY;
-            // fixes faster movement sideways -> pythagoras theorem
-            if (directionX != 0 && directionY != 0) {
-                velocityX *= sidewaysVelocity;
-                velocityY *= sidewaysVelocity;
-            }
-            // move sprite
-            sprite.addXY(velocityX * Settings.PLAYER_SPEED, velocityY * Settings.PLAYER_SPEED);
-            moving = true;
-
-        } else if (changedDirection) {
+        }else{
             sprite.setImage(animation.getDefaultImage());
-            moving = false;
         }
     }
 
-    /**
-     * Set new animation, if player is starting to move
-     * or completely changed directions.
-     *
-     * @param directionX x direction movement
-     * @param directionY y direction movement
-     * @return boolean whether new animation was set
-     */
-    private boolean setAnimation(int directionX, int directionY) {
-        Animation an1 = chooseAnimationX(directionX);
-        Animation an2 = chooseAnimationY(directionY);
-
-        // not moving or completely change directions
-        if (!moving || (an1 != animation && an2 != animation)) {
-            animation = (an1 == null) ? an2 : an1; // new animation
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Choose animation from direction in X axis
-     *
-     * @param directionX
-     * @return Animation object or null (if animation was not chosen)
-     */
-    private Animation chooseAnimationX(int directionX) {
+    private Animation getAnimation(int directionX, int directionY) {
         if (directionX == 1) {
             return Animation.PLAYER_RIGHT;
         } else if (directionX == -1) {
-            return Animation.PLAYER_LEFT;
+            return  Animation.PLAYER_LEFT;
         }
-        return null;
-    }
-
-    /**
-     * Choose animation from direction in Y axis
-     *
-     * @param directionY
-     * @return Animation object or null (if animation was not chosen)
-     */
-    private Animation chooseAnimationY(int directionY) {
         if (directionY == 1) {
             return Animation.PLAYER_DOWN;
         } else if (directionY == -1) {
