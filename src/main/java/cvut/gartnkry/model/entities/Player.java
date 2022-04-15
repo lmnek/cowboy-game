@@ -1,10 +1,9 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.model.shooting.Bullet;
-import cvut.gartnkry.model.shooting.Gun;
+import cvut.gartnkry.model.combat.Bullet;
+import cvut.gartnkry.model.combat.Gun;
 import cvut.gartnkry.view.assets.Animation;
-import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 
 import java.util.*;

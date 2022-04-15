@@ -1,13 +1,16 @@
-package cvut.gartnkry.view.assets;
+package cvut.gartnkry.model.map;
 
 import cvut.gartnkry.ResourcesUtils;
+import cvut.gartnkry.model.collisions.Collidable;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Tile is used to hold image of the tile and other information
  * - e.g. whether the tile has hitbox/collision.
  */
-public class Tile {
+public class Tile{
+     private final String name;
      private final boolean hasHitbox;
      private final Image image;
 
@@ -18,6 +21,7 @@ public class Tile {
      * @param hasHitbox - boolean value whether the Tile has a hitbox
      */
     public Tile(String filename, boolean hasHitbox) {
+        name = filename;
         this.hasHitbox = hasHitbox;
         this.image = ResourcesUtils.loadAsset("Maps/Tiles", filename); // load image
     }
@@ -34,5 +38,9 @@ public class Tile {
      */
     public boolean hasHitbox() {
         return hasHitbox;
+    }
+
+    public String getName() {
+        return name;
     }
 }

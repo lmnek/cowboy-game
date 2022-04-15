@@ -5,9 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import cvut.gartnkry.ResourcesUtils;
 import cvut.gartnkry.Settings;
-import cvut.gartnkry.model.HitboxInfo;
+import cvut.gartnkry.model.collisions.HitboxInfo;
+import cvut.gartnkry.model.map.Tile;
 import javafx.scene.image.Image;
-import javafx.scene.shape.Rectangle;
 
 import java.util.HashMap;
 

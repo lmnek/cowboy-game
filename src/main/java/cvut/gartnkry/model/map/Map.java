@@ -1,7 +1,6 @@
-package cvut.gartnkry.model;
+package cvut.gartnkry.model.map;
 
 import cvut.gartnkry.ResourcesUtils;
-import cvut.gartnkry.view.assets.Tile;
 import cvut.gartnkry.view.assets.AssetsManager;
 
 import java.io.BufferedReader;

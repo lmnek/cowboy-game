@@ -5,7 +5,7 @@ import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.Sprite;
 import cvut.gartnkry.model.entities.Entity;
-import cvut.gartnkry.view.assets.Tile;
+import cvut.gartnkry.model.map.Tile;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -21,7 +21,7 @@ public class View {
     private Canvas canvas;
     private final Model model;
 
-    private static final int pixelTileSize = 16 * Settings.SCALE;
+    public static final int pixelTileSize = 16 * Settings.SCALE;
 
     private double playerScreenX;
     private double playerScreenY;
@@ -147,10 +147,10 @@ public class View {
     private void drawHitboxes(GraphicsContext gc, double cameraX, double cameraY) {
         Color color = new Color(1, 0.3, 0.3, 0.7);
         gc.setFill(color);
-        drawRectangle(gc, model.getPlayer().getHitboxRect(), cameraX, cameraY);
+        drawRectangle(gc, model.getPlayer().getHitboxRec(), cameraX, cameraY);
 
         for (Prop prop : model.getProps()) {
-            drawRectangle(gc, prop.getHitboxRect(), cameraX, cameraY);
+            drawRectangle(gc, prop.getHitboxRec(), cameraX, cameraY);
         }
     }
 

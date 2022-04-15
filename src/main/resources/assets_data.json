@@ -116,9 +116,9 @@
       "name": "player",
       "hitbox": {
         "x": 3,
-        "y": 15,
+        "y": 19,
         "width": 5,
-        "height": 9
+        "height": 5
       }
     },
     {
