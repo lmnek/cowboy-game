@@ -1,40 +1,25 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.ResourcesUtils;
-import cvut.gartnkry.model.Sprite;
-import javafx.geometry.Point2D;
+import cvut.gartnkry.Settings;
+import cvut.gartnkry.model.Prop;
 import javafx.scene.image.Image;
 
 /**
  * Parent class for inherited entities.
  * Such entities could be player or enemies.
  */
-public abstract class Entity {
-    protected Sprite sprite;
+public class Entity extends Prop {
+    protected static int MAX_HEALTH;
     protected int health;
-    protected int maxHealth;
 
-
-    protected Entity(JsonObject entityData, int maxHealth, Image defaultImage) {
-        sprite = new Sprite(defaultImage, ResourcesUtils.pointFromJson(entityData));
-
-        this.maxHealth = maxHealth;
+    protected Entity(JsonObject entityData, Image defaultImage) {
+        super(entityData, defaultImage);
         health = entityData.get("health").getAsInt();
-        if (health > maxHealth) {
-            health = maxHealth;
+        if (health > MAX_HEALTH) {
+            health = MAX_HEALTH;
         }
     }
-
-    public abstract void update();
-
-    /**
-     * @return Sprite object containing image and entities coordinates
-     */
-    public Sprite getSprite() {
-        return sprite;
-    }
-
 
     public void decreaseHealth(int damagePoints) {
         health -= damagePoints;
@@ -47,4 +32,8 @@ public abstract class Entity {
         return health == 0;
     }
 
+    protected void addToHitbox(double velocityX, double velocityY){
+        hitbox.setX(hitbox.getX() + velocityX * Settings.SCALE);
+        hitbox.setY(hitbox.getY() + velocityY * Settings.SCALE);
+    }
 }

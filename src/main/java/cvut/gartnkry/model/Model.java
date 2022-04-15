@@ -6,8 +6,10 @@ import com.google.gson.JsonObject;
 import cvut.gartnkry.Data;
 import cvut.gartnkry.model.entities.Entity;
 import cvut.gartnkry.model.entities.Ghost;
-import cvut.gartnkry.model.entities.player.Bullet;
-import cvut.gartnkry.model.entities.player.Player;
+import cvut.gartnkry.model.shooting.Bullet;
+import cvut.gartnkry.model.entities.Player;
+import cvut.gartnkry.view.assets.AssetsManager;
+import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -37,19 +39,33 @@ public class Model {
         map = new Map(data.getMapFilename());
 
         JsonArray propsData = data.getPropsData();
-        props = new ArrayList<Prop>(propsData.size());
+        props = new ArrayList<>(propsData.size());
         for (int i = 0; i < propsData.size(); i++) {
-            props.add(i, new Prop(propsData.get(i).getAsJsonObject()));
+            JsonObject prop = propsData.get(i).getAsJsonObject();
+            props.add(i, new Prop(prop, AssetsManager.getImage(prop.get("name").getAsString())));
         }
     }
 
     public void update(){
-        player.update();
         for (Entity enemy : enemies){
-            enemy.update();
+            //enemy.update();
         }
+
         // detect collision for bullets, enemies, props ...
+        handlePlayerCollision();
+
+        player.update();
+
+//        System.out.println(player.getSprite().getXCenter()  + "   " + player.getSprite().getYCenter());
         LinkedList<Bullet> bullets = player.getBullets();
+    }
+
+    private void handlePlayerCollision() {
+        Point2D velocity = player.getVelocity();
+        for (Prop p: props) {
+            //if(p.)
+        }
+        player.setVelocity(velocity);
     }
 
     public Player getPlayer() {

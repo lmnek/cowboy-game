@@ -15,21 +15,14 @@ public class Data {
     private JsonObject json;
 
     public Data(String filename) {
-        loadFromJSON(filename);
+        loadSave(filename);
     }
 
-    private void loadFromJSON(String filename) {
-        JsonParser parser = new JsonParser();
-        BufferedReader br = ResourcesUtils.getReader(filename);
-        json = parser.parse(br).getAsJsonObject();
-        try {
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void loadSave(String filename) {
+        json = ResourcesUtils.readJsonFile(filename).getAsJsonObject();
     }
 
-    public void saveToJSON(Model model){
+    public void saveSave(Model model){
         // todo: save...
     }
 

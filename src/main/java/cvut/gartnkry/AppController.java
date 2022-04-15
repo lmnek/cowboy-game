@@ -54,7 +54,6 @@ public class AppController extends Application {
                 }
             }
         };
-
         loopTimer.start();
         LOGGER.info("Game loop started.");
     }

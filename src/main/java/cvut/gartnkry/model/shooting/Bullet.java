@@ -1,4 +1,4 @@
-package cvut.gartnkry.model.entities.player;
+package cvut.gartnkry.model.shooting;
 
 public class Bullet {
 

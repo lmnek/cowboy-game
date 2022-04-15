@@ -1,3 +1,5 @@
+ - combine Props and Entities?
+
  - collisions
  - props
  - inventory, health, XP

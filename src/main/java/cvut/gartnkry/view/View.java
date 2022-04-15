@@ -12,6 +12,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class View {
@@ -30,6 +31,9 @@ public class View {
         this.model = model;
     }
 
+    private double widthHalf;
+    private double heightHalf;
+
     public void initialization() {
         // Compute screen size
         int screenWidth = pixelTileSize * Settings.TILES_COUNT_WIDTH;
@@ -39,10 +43,12 @@ public class View {
         Pane pane = new Pane(canvas); // for layout with absolute positions
         Scene scene = new Scene(pane);
 
+        widthHalf = 0;
+        heightHalf =0;
         // player in the middle of the screen
         Image playerImage = model.getPlayer().getSprite().getImage();
         playerScreenX = screenWidth / 2 - playerImage.getWidth() / 2;
-        playerScreenY = screenHeight / 2 - playerImage.getHeight() / 2;
+        playerScreenY =  screenHeight / 2 - playerImage.getHeight() / 2;
 
         drawBackground(canvas.getGraphicsContext2D());
 
@@ -71,6 +77,8 @@ public class View {
         drawTiles(gc, cameraX, cameraY);
         drawProps(gc, cameraX, cameraY);
         drawEntities(gc, cameraX, cameraY);
+
+        drawHitboxes(gc, cameraX, cameraY);
     }
 
     // Draw tiles depending on player position - camera
@@ -133,5 +141,22 @@ public class View {
     private void drawSprite(GraphicsContext gc, Sprite sprite, double cameraX, double cameraY) {
         // TODO: load only when on screen
         gc.drawImage(sprite.getImage(), sprite.getX() - cameraX, sprite.getY() - cameraY);
+    }
+
+
+    private void drawHitboxes(GraphicsContext gc, double cameraX, double cameraY) {
+        Color color = new Color(1, 0.3, 0.3, 0.7);
+        gc.setFill(color);
+        drawRectangle(gc, model.getPlayer().getHitbox(), cameraX, cameraY);
+
+        for (Prop prop : model.getProps()) {
+            drawRectangle(gc, prop.getHitbox(), cameraX, cameraY);
+        }
+    }
+
+    private void drawRectangle(GraphicsContext gc, Rectangle rec, double cameraX, double cameraY) {
+        if (rec != null) {
+            gc.fillRect(rec.getX() - cameraX, rec.getY() - cameraY, rec.getWidth(), rec.getHeight());
+        }
     }
 }

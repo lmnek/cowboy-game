@@ -1,9 +1,10 @@
-package cvut.gartnkry.model.entities.player;
+package cvut.gartnkry.model.entities;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import cvut.gartnkry.model.entities.Entity;
+import cvut.gartnkry.model.shooting.Bullet;
+import cvut.gartnkry.model.shooting.Gun;
 import cvut.gartnkry.view.assets.Animation;
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 
 import java.util.*;
@@ -37,12 +38,10 @@ public class Player extends Entity {
     private Animation animation;
     private int tickCounter;
 
-
-
-    private HashMap<KeyCode, Boolean> keyPressed;
+    //private HashMap<KeyCode, Boolean> keyPressed;
     private final Map<KeyCode, Integer> directions;
 
-    double velocityX, velocityY;
+    private double velocityX, velocityY;
     private final double maxSidewaysVel;
     private final double maxVel;
     private final double addVel;
@@ -60,22 +59,18 @@ public class Player extends Entity {
      * @param playerData data object loaded from input save file
      */
     public Player(JsonObject playerData) {
-        super(playerData, MAX_HEALTH, Animation.PLAYER_DOWN.getDefaultImage());
-        parseJson(playerData);
+        super(playerData, Animation.PLAYER_DOWN.getDefaultImage());
+        //parseJson(playerData);
 
         animation = Animation.PLAYER_DOWN;
         tickCounter = 0;
         bullets = new LinkedList<>();
 
-
+        velocityX = velocityY = 0;
         maxVel = PLAYER_MAX_VELOCITY;
         maxSidewaysVel = Math.sqrt(maxVel * maxVel / 2);
         addVel = maxVel / PLAYER_TICKS_TO_ACCELERATE;
         addSidewaysVel = maxSidewaysVel / PLAYER_TICKS_TO_ACCELERATE;
-
-
-        velocityX = velocityY = 0;
-
 
         KeyCode[] keys = new KeyCode[]{W, A, S, D};
         directions = new HashMap<>(keys.length);
@@ -84,7 +79,7 @@ public class Player extends Entity {
         }
     }
 
-    private void parseJson(JsonObject playerData) {
+   /* private void parseJson(JsonObject playerData) {
         // parse gun
         if(playerData.get("gun") != null){
             JsonObject gunJson = playerData.get("gun").getAsJsonObject();
@@ -98,7 +93,7 @@ public class Player extends Entity {
         for (JsonElement el : playerData.get("inventory").getAsJsonArray()) {
             pickupItem(el.getAsString());
         }
-    }
+    }*/
 
     public void pickupItem(String itemName) {
         switch (itemName) {
@@ -129,10 +124,11 @@ public class Player extends Entity {
         directions.replace(code, 0);
     }
 
-
-    @Override
     public void update() {
-        updateMovement();
+        setSpriteImage();
+        sprite.addXY(velocityX, velocityY);
+        addToHitbox(velocityX, velocityY);
+        //updateMovement();
         if (gun != null) {
             handleShooting();
         }
@@ -141,76 +137,74 @@ public class Player extends Entity {
     private void handleShooting() {
     }
 
+    public int getDirectionX() {
+        return directions.get(D) - directions.get(A);
+    }
 
-    /**
-     * Update coordinates of player's sprite from direction of movement.
-     * Includes swapping frames for animation.
-     */
-    private void updateMovement() {
-        int directionX = directions.get(D) - directions.get(A);
-        int directionY = directions.get(S) - directions.get(W);
+    public int getDirectionY() {
+        return directions.get(S) - directions.get(W);
+    }
 
-//        System.out.println(directionX + "   " + directionY);
-
-        setSpriteImage(directionX, directionY);
-
+    public Point2D getVelocity() {
         double add_tmp, max_vel;
         // fixes faster movement sideways -> pythagoras theorem
         if (velocityX != 0 && velocityY != 0) {
             max_vel = maxSidewaysVel;
             add_tmp = addSidewaysVel;
-        }else{
+        } else {
             max_vel = maxVel;
             add_tmp = addVel;
         }
-
-        velocityX = getVelocity(directionX, velocityX, add_tmp, max_vel);
-        velocityY = getVelocity(directionY, velocityY, add_tmp, max_vel);
-
-       // System.out.println(velocityX + "    " + velocityY);
-
-        // move sprite
-        sprite.addXY(velocityX, velocityY);
+        int directionX = getDirectionX();
+        int directionY = getDirectionY();
+        return new Point2D(getSingleVelocity(directionX, velocityX, add_tmp, max_vel),
+                getSingleVelocity(directionY, velocityY, add_tmp, max_vel));
     }
 
-    public double getVelocity(int direction, double velocity,double add_tmp, double max_vel){
+    public void setVelocity(Point2D velocity) {
+        this.velocityX = velocity.getX();
+        this.velocityY = velocity.getY();
+    }
+
+    private double getSingleVelocity(int direction, double velocity, double add_tmp, double max_vel) {
         // accelerate to max velocity
-        if(direction != 0){
+        if (direction != 0) {
             velocity = max(min(max_vel, velocity + (add_tmp * direction)), -max_vel);
         }
         // decelerate to zero
         else if (velocity > 0) {
             velocity = max(velocity - add_tmp, 0);
-        }
-        else if(velocity < 0){
+        } else if (velocity < 0) {
             velocity = min(velocity + add_tmp, 0);
         }
         return velocity;
     }
 
-    private void setSpriteImage(int directionX, int directionY) {
+    private void setSpriteImage() {
         ++tickCounter;
-        Animation tmp_animation = getAnimation(directionX, directionY);
-        if(tmp_animation != null){
-            if(tmp_animation != animation){
+        Animation tmp_animation = getAnimation();
+        if (tmp_animation != null) {
+            if (tmp_animation != animation) {
                 tickCounter = animation.getTicksPerFrame() - 3;
                 animation = tmp_animation;
                 sprite.setImage(animation.getFirstFrame());
-            }else if(tickCounter >= animation.getTicksPerFrame()){
+            } else if (tickCounter >= animation.getTicksPerFrame()) {
                 sprite.setImage(animation.getNextFrame());
                 tickCounter = 0;
             }
-        }else{
+        } else {
             sprite.setImage(animation.getDefaultImage());
         }
     }
 
-    private Animation getAnimation(int directionX, int directionY) {
+    private Animation getAnimation() {
+        int directionX = getDirectionX();
         if (directionX == 1) {
             return Animation.PLAYER_RIGHT;
         } else if (directionX == -1) {
-            return  Animation.PLAYER_LEFT;
+            return Animation.PLAYER_LEFT;
         }
+        int directionY = getDirectionY();
         if (directionY == 1) {
             return Animation.PLAYER_DOWN;
         } else if (directionY == -1) {
@@ -222,4 +216,5 @@ public class Player extends Entity {
     public LinkedList<Bullet> getBullets() {
         return bullets;
     }
+
 }

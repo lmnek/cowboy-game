@@ -1,10 +1,14 @@
 package cvut.gartnkry;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
@@ -35,6 +39,17 @@ public class ResourcesUtils {
                 ResourcesUtils.class.getResourceAsStream("/" + path)));
     }
 
+    public static JsonElement readJsonFile(String path){
+        JsonParser parser = new JsonParser();
+        JsonElement returnElement = null;
+        try(BufferedReader br = ResourcesUtils.getReader(path)){
+            returnElement = parser.parse(br);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnElement;
+    }
 
     public static Point2D pointFromJson(JsonObject json){
         return new Point2D(json.get("coordX").getAsDouble(),

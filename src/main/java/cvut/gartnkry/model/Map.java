@@ -2,7 +2,7 @@ package cvut.gartnkry.model;
 
 import cvut.gartnkry.ResourcesUtils;
 import cvut.gartnkry.view.assets.Tile;
-import cvut.gartnkry.view.assets.TileManager;
+import cvut.gartnkry.view.assets.AssetsManager;
 
 import java.io.BufferedReader;
 
@@ -30,11 +30,9 @@ public class Map {
 
     private void loadMap(String filename) {
         // Load map from CSV file
-        try {
+        try (BufferedReader br = ResourcesUtils.getReader("Maps/" + filename)){
             // Read csv file
-            BufferedReader br = ResourcesUtils.getReader("Maps/" + filename);
             String[] lines = br.lines().toArray(String[]::new);
-            br.close();
 
             // Set dimensions
             tileMap = new Tile[lines.length][lines[0].split(DELIMITER).length];
@@ -43,7 +41,7 @@ public class Map {
             for (int x = 0; x < tileMap.length; x++) {
                 String[] line = lines[x].split(DELIMITER);
                 for (int y = 0; y < tileMap[0].length; y++) {
-                    tileMap[x][y] = TileManager.getTile(line[y]);
+                    tileMap[x][y] = AssetsManager.getTile(line[y]);
                 }
             }
 
