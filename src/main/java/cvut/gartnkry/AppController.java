@@ -60,17 +60,14 @@ public class AppController extends Application {
 
 
     private void setEvents(Stage stage) {
-        Scene scene = stage.getScene();
-
         // player movement - W A S D
-        scene.setOnKeyPressed(event -> model.getPlayer().onKeyPressed(event.getCode()));
-        scene.setOnKeyReleased(event -> model.getPlayer().onKeyReleased(event.getCode()));
+        stage.getScene().setOnKeyPressed(event -> model.getPlayer().onKeyPressed(event.getCode()));
+        stage.getScene().setOnKeyReleased(event -> model.getPlayer().onKeyReleased(event.getCode()));
 
         stage.setOnCloseRequest(t -> {
             Platform.exit();
             System.exit(0);
         });
-
     }
 
     private void loadLoggerProperties() {

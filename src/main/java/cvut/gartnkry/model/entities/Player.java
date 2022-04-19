@@ -33,8 +33,6 @@ import static javafx.scene.input.KeyCode.*;
  */
 public class Player extends Entity {
     private static final int MAX_HEALTH = 10;
-
-    private Animation animation;
     private int tickCounter;
 
     //private HashMap<KeyCode, Boolean> keyPressed;

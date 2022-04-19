@@ -3,6 +3,7 @@ package cvut.gartnkry.model.entities;
 import com.google.gson.JsonObject;
 import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.Sprite;
+import cvut.gartnkry.view.assets.Animation;
 import javafx.scene.image.Image;
 
 /**
@@ -12,6 +13,7 @@ import javafx.scene.image.Image;
 public class Entity extends Prop {
     protected static int MAX_HEALTH;
     protected int health;
+    protected Animation animation;
 
     protected Entity(JsonObject entityData, Image defaultImage) {
         super(entityData, defaultImage);

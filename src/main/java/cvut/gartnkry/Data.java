@@ -2,11 +2,8 @@ package cvut.gartnkry;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import cvut.gartnkry.model.Model;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 
 /**
  *  Class for loading saves from JSON files

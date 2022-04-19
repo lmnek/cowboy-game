@@ -2,6 +2,7 @@ package cvut.gartnkry.model;
 
 import cvut.gartnkry.Settings;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Class for keeping image of this sprite
@@ -16,12 +17,11 @@ public class Sprite {
      * Class constructor.
      *
      * @param image  loaded Image asset
-     * @param coords coordinates on the map
      */
     public Sprite(Image image, double coordX, double coordY) {
         this.image = image;
-        this.X = coordX;
-        this.Y = coordY;
+        this.X = coordX * Settings.SCALE;
+        this.Y = coordY * Settings.SCALE;
     }
 
     /**
@@ -78,5 +78,9 @@ public class Sprite {
     public void addXY(double x, double y) {
         X += x * Settings.SCALE;
         Y += y * Settings.SCALE;
+    }
+
+    public Rectangle getImageRect(){
+        return new Rectangle(X, Y, image.getWidth(), image.getHeight());
     }
 }

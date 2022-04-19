@@ -1,9 +1,7 @@
 package cvut.gartnkry.model.map;
 
 import cvut.gartnkry.ResourcesUtils;
-import cvut.gartnkry.model.collisions.Collidable;
 import javafx.scene.image.Image;
-import javafx.scene.shape.Rectangle;
 
 /**
  * Tile is used to hold image of the tile and other information

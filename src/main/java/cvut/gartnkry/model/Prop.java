@@ -1,16 +1,15 @@
 package cvut.gartnkry.model;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.model.collisions.Collidable;
 import cvut.gartnkry.model.collisions.HitboxInfo;
 import cvut.gartnkry.view.assets.AssetsManager;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
-public class Prop implements Collidable {
+public class Prop {
     protected Sprite sprite;
     protected HitboxInfo hitboxInfo;
-    private String name;
+    private final String name;
 
     public Prop(JsonObject data, Image defaultImage) {
         name = data.get("name").getAsString();
@@ -30,12 +29,9 @@ public class Prop implements Collidable {
     }
 
     public Rectangle getHitboxRec(double velocityX, double velocityY) {
-        if (hitboxInfo != null) {
-            return new Rectangle(hitboxInfo.getX() + sprite.getX() + velocityX,
-                    hitboxInfo.getY() + sprite.getY() + velocityY,
-                    hitboxInfo.getWidth(), hitboxInfo.getHeight());
-        }
-        return null;
+        return new Rectangle(hitboxInfo.getX() + sprite.getX() + velocityX,
+                hitboxInfo.getY() + sprite.getY() + velocityY,
+                hitboxInfo.getWidth(), hitboxInfo.getHeight());
     }
 
     public HitboxInfo getHitboxInfo() {

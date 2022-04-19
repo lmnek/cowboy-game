@@ -19,7 +19,7 @@ public class CollisionManager {
     private final HitboxInfo playerHbInfo;
 
     private final double propsRadius;
-    private final double tilesRadius;
+    private final int tilesRadius;
 
     private double velocityX;
     private double velocityY;
@@ -29,7 +29,7 @@ public class CollisionManager {
         this.player = model.getPlayer();
         tileMap = model.getMap().getTileMap();
         propsRadius = 50 * Settings.SCALE;
-        tilesRadius = 4;
+        tilesRadius = 3;
         playerHbInfo = player.getHitboxInfo();
     }
 
@@ -46,8 +46,8 @@ public class CollisionManager {
         //---TILES---
         int startX = max((int) (playerRec.getX() / View.pixelTileSize) - 1, 0);
         int startY = max((int) (playerRec.getY() / View.pixelTileSize) - 1, 0);
-        int endX = min(startX + 3, tileMap[0].length);
-        int endY = min(startY + 3, tileMap.length);
+        int endX = min(startX + tilesRadius, tileMap[0].length);
+        int endY = min(startY + tilesRadius, tileMap.length);
 //        System.out.println("X od: " + startX + ", do: " + endX);
 //        System.out.println("Y od: " + startY + ", do: " + endY);
         for (int x = startX; x < endX; x++) {
@@ -63,7 +63,7 @@ public class CollisionManager {
         //---PROPS---
         for (Prop p : model.getProps()) {
             Rectangle pRec = p.getHitboxRec();
-            if (pRec != null && activeRec.getBoundsInParent().intersects(pRec.getBoundsInParent())) {
+            if (activeRec.getBoundsInParent().intersects(pRec.getBoundsInParent())) {
                 handlePlayerCollision(pRec);
             }
         }
@@ -79,7 +79,6 @@ public class CollisionManager {
         boolean collidedX = xRec.getBoundsInParent().intersects(cRec.getBoundsInParent());
         boolean collidedY = yRec.getBoundsInParent().intersects(cRec.getBoundsInParent());
         if (collidedX && collidedY) {
-            collided = true;
             double diffX, diffY;
             if (velocityX > 0) {
                 diffX = xRec.getX() - cRec.getX();
@@ -98,15 +97,14 @@ public class CollisionManager {
                 velocityX = checkX(cRec, velocityX, false, playerHbInfo);
                 velocityY = checkY(cRec, velocityY, true, playerHbInfo);
             }
+        } else if (collidedX) {
+            velocityX = checkX(cRec, velocityX, false, playerHbInfo);
+        } else if (collidedY) {
+            velocityY = checkY(cRec, velocityY, false, playerHbInfo);
         } else {
-            collided = true;
-            if (collidedX) {
-                velocityX = checkX(cRec, velocityX, false, playerHbInfo);
-            }
-            if (collidedY) {
-                velocityY = checkY(cRec, velocityY, false, playerHbInfo);
-            }
+            collided = false;
         }
+
         return collided;
     }
 

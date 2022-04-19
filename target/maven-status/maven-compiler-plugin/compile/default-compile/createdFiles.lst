@@ -4,7 +4,6 @@ cvut\gartnkry\Data.class
 cvut\gartnkry\view\View.class
 module-info.class
 cvut\gartnkry\model\Prop.class
-cvut\gartnkry\model\collisions\Collidable.class
 cvut\gartnkry\Settings.class
 cvut\gartnkry\model\collisions\CollisionManager.class
 cvut\gartnkry\view\assets\Animation.class

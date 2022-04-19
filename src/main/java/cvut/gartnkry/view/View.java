@@ -5,6 +5,7 @@ import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.Sprite;
 import cvut.gartnkry.model.entities.Entity;
+import cvut.gartnkry.model.entities.Player;
 import cvut.gartnkry.model.map.Tile;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -14,6 +15,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+
+import static cvut.gartnkry.Settings.*;
 
 public class View {
 
@@ -31,9 +36,6 @@ public class View {
         this.model = model;
     }
 
-    private double widthHalf;
-    private double heightHalf;
-
     public void initialization() {
         // Compute screen size
         int screenWidth = pixelTileSize * Settings.TILES_COUNT_WIDTH;
@@ -43,12 +45,10 @@ public class View {
         Pane pane = new Pane(canvas); // for layout with absolute positions
         Scene scene = new Scene(pane);
 
-        widthHalf = 0;
-        heightHalf =0;
         // player in the middle of the screen
         Image playerImage = model.getPlayer().getSprite().getImage();
         playerScreenX = screenWidth / 2 - playerImage.getWidth() / 2;
-        playerScreenY =  screenHeight / 2 - playerImage.getHeight() / 2;
+        playerScreenY = screenHeight / 2 - playerImage.getHeight() / 2;
 
         drawBackground(canvas.getGraphicsContext2D());
 
@@ -75,10 +75,35 @@ public class View {
         double cameraY = playerSprite.getYCenter() - stage.getHeight() / 2;
 
         drawTiles(gc, cameraX, cameraY);
-        drawProps(gc, cameraX, cameraY);
-        drawEntities(gc, cameraX, cameraY);
 
-        drawHitboxes(gc, cameraX, cameraY);
+        Player player = model.getPlayer();
+        ArrayList<Prop> props = new ArrayList<>();
+
+        for (Prop prop : model.getProps()) {
+            // TODO: only when on screen
+            if (true) {
+                if (prop.getSprite().getImageRect().getBoundsInParent().intersects(player.getSprite().getImageRect().getBoundsInParent())
+                        && prop.getHitboxRec().getY() > player.getHitboxRec().getY() + HITBOX_PADDING) {
+                    props.add(prop);
+                } else {
+                    drawSprite(gc, prop.getSprite(), cameraX, cameraY);
+                }
+            }
+        }
+
+        // Draw player
+        gc.drawImage(player.getSprite().getImage(), playerScreenX, playerScreenY);
+
+        // Draw remaining props
+        for (Prop prop : props) {
+            drawSprite(gc, prop.getSprite(), cameraX, cameraY);
+        }
+
+        drawEnemies(gc, cameraX, cameraY);
+
+        if (DRAW_HITBOXES) {
+            drawHitboxes(gc, cameraX, cameraY);
+        }
     }
 
     // Draw tiles depending on player position - camera
@@ -110,23 +135,6 @@ public class View {
         }
     }
 
-    private void drawProps(GraphicsContext gc, double cameraX, double cameraY) {
-        for (Prop prop : model.getProps()) {
-            drawSprite(gc, prop.getSprite(), cameraX, cameraY);
-        }
-    }
-
-    private void drawEntities(GraphicsContext gc, double cameraX, double cameraY) {
-        drawPlayer(gc);
-        drawEnemies(gc, cameraX, cameraY);
-    }
-
-    private void drawPlayer(GraphicsContext gc) {
-        // image -> resources
-        Sprite sprite = model.getPlayer().getSprite();
-        gc.drawImage(sprite.getImage(), playerScreenX, playerScreenY);
-    }
-
     private void drawEnemies(GraphicsContext gc, double cameraX, double cameraY) {
         for (Entity entity : model.getEnemies()) {
             drawSprite(gc, entity.getSprite(), cameraX, cameraY);
@@ -139,7 +147,6 @@ public class View {
     }
 
     private void drawSprite(GraphicsContext gc, Sprite sprite, double cameraX, double cameraY) {
-        // TODO: load only when on screen
         gc.drawImage(sprite.getImage(), sprite.getX() - cameraX, sprite.getY() - cameraY);
     }
 
@@ -147,16 +154,14 @@ public class View {
     private void drawHitboxes(GraphicsContext gc, double cameraX, double cameraY) {
         Color color = new Color(1, 0.3, 0.3, 0.7);
         gc.setFill(color);
-        drawRectangle(gc, model.getPlayer().getHitboxRec(), cameraX, cameraY);
+        Rectangle rec = model.getPlayer().getHitboxRec();
+        gc.fillRect(rec.getX() - cameraX, rec.getY() - cameraY, rec.getWidth(), rec.getHeight());
 
         for (Prop prop : model.getProps()) {
-            drawRectangle(gc, prop.getHitboxRec(), cameraX, cameraY);
-        }
-    }
-
-    private void drawRectangle(GraphicsContext gc, Rectangle rec, double cameraX, double cameraY) {
-        if (rec != null) {
-            gc.fillRect(rec.getX() - cameraX, rec.getY() - cameraY, rec.getWidth(), rec.getHeight());
+            rec = prop.getHitboxRec();
+            if (rec != null) {
+                gc.fillRect(rec.getX() - cameraX, rec.getY() - cameraY, rec.getWidth(), rec.getHeight());
+            }
         }
     }
 }

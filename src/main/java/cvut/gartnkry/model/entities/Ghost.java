@@ -6,8 +6,6 @@ import cvut.gartnkry.view.assets.Animation;
 public class Ghost extends Entity{
     private static final int MAX_HEALTH = 5;
 
-    private Animation animation;
-
     public Ghost(JsonObject entityData) {
         super(entityData, Animation.GHOST.getDefaultImage());
         animation = Animation.GHOST;

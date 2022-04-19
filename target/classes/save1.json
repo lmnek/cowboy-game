@@ -3,8 +3,8 @@
   "entities":[
     {
       "name": "player",
-      "coordX": 500,
-      "coordY": 500,
+      "coordX": 180,
+      "coordY": 170,
       "health": 9,
       "gun": {
         "bulletSpeed": 10,
@@ -17,37 +17,51 @@
     },
     {
       "name": "ghost",
-      "coordX": 700,
-      "coordY": 700,
+      "coordX": 120,
+      "coordY": 80,
       "health": 4
     },
     {
       "name": "ghost",
-      "coordX": 1000,
-      "coordY": 1200,
+      "coordX": 240,
+      "coordY": 160,
       "health": 1
     }
   ],
   "props": [
     {
       "name": "cactus",
-      "coordX": 300,
-      "coordY": 400
+      "coordX": 50,
+      "coordY": 30
     },
     {
       "name": "cactus",
-      "coordX": 1400,
-      "coordY": 200
-    },
-    {
-      "name": "cactus",
-      "coordX": 700,
-      "coordY": 1200
+      "coordX": 120,
+      "coordY": 190
     },
     {
       "name": "skull",
-      "coordX": 1000,
-      "coordY": 800
+      "coordX": 170,
+      "coordY": 130
+    },
+    {
+      "name": "cross",
+      "coordX": 352,
+      "coordY": 150
+    },
+    {
+      "name": "tree",
+      "coordX": 59,
+      "coordY": 100
+    },
+    {
+      "name": "tree",
+      "coordX": 210,
+      "coordY": 60
+    },    {
+      "name": "tree",
+      "coordX": 170,
+      "coordY": 225
     }
   ]
 }
