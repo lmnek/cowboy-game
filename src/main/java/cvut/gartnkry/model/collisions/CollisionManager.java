@@ -63,7 +63,9 @@ public class CollisionManager {
         //---PROPS---
         for (Prop p : model.getProps()) {
             Rectangle pRec = p.getHitboxRec();
+            // close to the player?
             if (activeRec.getBoundsInParent().intersects(pRec.getBoundsInParent())) {
+                // handle collision
                 handlePlayerCollision(pRec);
             }
         }
@@ -104,7 +106,6 @@ public class CollisionManager {
         } else {
             collided = false;
         }
-
         return collided;
     }
 

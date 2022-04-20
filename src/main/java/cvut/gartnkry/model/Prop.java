@@ -37,4 +37,5 @@ public class Prop {
     public HitboxInfo getHitboxInfo() {
         return hitboxInfo;
     }
+
 }

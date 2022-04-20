@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import static cvut.gartnkry.Settings.*;
 
@@ -68,23 +69,23 @@ public class View {
      */
     public void render() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        Player player = model.getPlayer();
 
         // top left corner
-        Sprite playerSprite = model.getPlayer().getSprite();
-        double cameraX = playerSprite.getXCenter() - stage.getWidth() / 2;
-        double cameraY = playerSprite.getYCenter() - stage.getHeight() / 2;
+        double cameraX = player.getSprite().getXCenter() - stage.getWidth() / 2;
+        double cameraY = player.getSprite().getYCenter() - stage.getHeight() / 2;
 
         drawTiles(gc, cameraX, cameraY);
 
-        Player player = model.getPlayer();
-        ArrayList<Prop> props = new ArrayList<>();
 
+        LinkedList<Prop> frontProps = new LinkedList<>();
+        Rectangle screenRec = new Rectangle(cameraX, cameraY, stage.getWidth(), stage.getHeight());
         for (Prop prop : model.getProps()) {
-            // TODO: only when on screen
-            if (true) {
-                if (prop.getSprite().getImageRect().getBoundsInParent().intersects(player.getSprite().getImageRect().getBoundsInParent())
-                        && prop.getHitboxRec().getY() > player.getHitboxRec().getY() + HITBOX_PADDING) {
-                    props.add(prop);
+            // on screen?
+            if (prop.getSprite().getImageRect().getBoundsInParent().intersects(screenRec.getBoundsInParent())) {
+                // check for props in front of player
+                if (prop.getHitboxRec().getY() > player.getHitboxRec().getY() + HITBOX_PADDING) {
+                    frontProps.add(prop);
                 } else {
                     drawSprite(gc, prop.getSprite(), cameraX, cameraY);
                 }
@@ -95,7 +96,7 @@ public class View {
         gc.drawImage(player.getSprite().getImage(), playerScreenX, playerScreenY);
 
         // Draw remaining props
-        for (Prop prop : props) {
+        for (Prop prop : frontProps) {
             drawSprite(gc, prop.getSprite(), cameraX, cameraY);
         }
 
