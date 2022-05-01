@@ -1,4 +1,4 @@
-package cvut.gartnkry.model.combat;
+package cvut.gartnkry.model.entities;
 
 public class Bullet {
 

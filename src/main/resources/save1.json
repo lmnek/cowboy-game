@@ -1,67 +1,86 @@
 {
   "map": "map2.csv",
-  "entities":[
+  "entities": [
     {
-      "name": "player",
-      "coordX": 180,
-      "coordY": 170,
-      "health": 9,
-      "gun": {
-        "bulletSpeed": 10,
-        "fireRate": 10,
-        "bulletSize": 1
-      },
+      "name": "Player",
+      "x": 180,
+      "y": 170,
+      "health": 7,
+      "max_health": 10,
       "inventory": [
-        "hat"
+        {
+          "name": "Gun",
+          "bulletSpeed": 10,
+          "fireRate": 10,
+          "bulletSize": 1
+        },
+        {
+          "name": "Hat"
+        }
       ]
     },
     {
-      "name": "ghost",
-      "coordX": 120,
-      "coordY": 80,
-      "health": 4
+      "name": "Ghost",
+      "x": 120,
+      "y": 80,
+      "health": 4,
+      "max_health": 10
     },
     {
-      "name": "ghost",
-      "coordX": 240,
-      "coordY": 160,
-      "health": 1
+      "name": "Ghost",
+      "x": 240,
+      "y": 160,
+      "health": 1,
+      "max_health": 10
     }
   ],
   "props": [
     {
-      "name": "cactus",
-      "coordX": 50,
-      "coordY": 30
+      "name": "Cactus",
+      "x": 50,
+      "y": 30
     },
     {
-      "name": "cactus",
-      "coordX": 120,
-      "coordY": 190
+      "name": "Cactus",
+      "x": 120,
+      "y": 190
     },
     {
-      "name": "skull",
-      "coordX": 170,
-      "coordY": 130
+      "name": "Skull",
+      "x": 170,
+      "y": 130
     },
     {
-      "name": "cross",
-      "coordX": 352,
-      "coordY": 150
+      "name": "Cross",
+      "x": 352,
+      "y": 150
     },
     {
-      "name": "tree",
-      "coordX": 59,
-      "coordY": 100
+      "name": "Tree",
+      "x": 59,
+      "y": 100
     },
     {
-      "name": "tree",
-      "coordX": 210,
-      "coordY": 60
-    },    {
-      "name": "tree",
-      "coordX": 170,
-      "coordY": 225
+      "name": "Tree",
+      "x": 210,
+      "y": 60
+    },
+    {
+      "name": "Tree",
+      "x": 170,
+      "y": 225
+    }
+  ],
+  "items": [
+    {
+      "name": "Bottle",
+      "x": 50,
+      "y": 100
+    },
+    {
+      "name": "Gun",
+      "x": 100,
+      "y": 190
     }
   ]
 }

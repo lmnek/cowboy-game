@@ -10,11 +10,16 @@ public class Prop {
     protected Sprite sprite;
     protected HitboxInfo hitboxInfo;
     private final String name;
+    private boolean active;
 
     public Prop(JsonObject data, Image defaultImage) {
         name = data.get("name").getAsString();
-        sprite = new Sprite(defaultImage, data.get("coordX").getAsDouble(), data.get("coordY").getAsDouble());
+        sprite = new Sprite(defaultImage, data.get("x").getAsDouble(), data.get("y").getAsDouble());
         hitboxInfo = AssetsManager.getHitboxInfo(name);
+    }
+
+    public Prop(JsonObject data) {
+        this(data, AssetsManager.getImage(data.get("name").getAsString()));
     }
 
     /**
@@ -38,4 +43,11 @@ public class Prop {
         return hitboxInfo;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }

@@ -1,16 +1,22 @@
- - combine Props and Entities?
 
- - collisions
- - props
- - inventory, health, XP
- - pickup items, (keys ? --> ladder/bridge)
+fixes:
+- have area in which to check for events - attribute "alive" on everything
+- better handlers
+- fix speed when changing scale
+
+sprite fixes:
+- rovna hlava no gun default
+- pistol v prave ruce - right
+
+todo:
  - enemies
+ - inventory, health, XP
+ - pickup items, (keys ? --> ladder/bridge, drops from enemies)
  - load/save game data (JSON file)
  - fighting system (shooting)
  - loggers
  - threads for enemy intelligence
  - try/catch
-
 
  - go through all TODOS
  - go through all warnings
@@ -21,6 +27,6 @@
  - open dialog for JSON
 
 
- Wiki
+Wiki:
  - Art: pridat animace, screen ze hry
  - pouzity sw / knihovny

@@ -1,14 +1,13 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.view.assets.Animation;
+import cvut.gartnkry.view.assets.PlayerAnimation;
 
 public class Ghost extends Entity{
-    private static final int MAX_HEALTH = 5;
 
     public Ghost(JsonObject entityData) {
-        super(entityData, Animation.GHOST.getDefaultImage());
-        animation = Animation.GHOST;
+        super(entityData, PlayerAnimation.PLAYER_DOWN.getDefaultImage());
+        animation = PlayerAnimation.PLAYER_DOWN;
     }
 
     public void update() {

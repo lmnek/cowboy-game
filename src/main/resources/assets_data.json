@@ -93,7 +93,7 @@
   ],
   "props": [
     {
-      "name": "cactus",
+      "name": "Cactus",
       "hitbox": {
         "x": 1,
         "y": 28,
@@ -102,7 +102,7 @@
       }
     },
     {
-      "name": "skull",
+      "name": "Skull",
       "hitbox": {
         "x": 1,
         "y": 4,
@@ -111,7 +111,7 @@
       }
     },
     {
-      "name": "tree",
+      "name": "Tree",
       "hitbox":{
         "x": 5,
         "y": 10,
@@ -120,7 +120,52 @@
       }
     },
     {
-      "name": "cross",
+      "name": "Cross",
+      "hitbox": {
+        "x": 0,
+        "y": 18,
+        "width": 13,
+        "height": 4
+      }
+    },
+    {
+      "name": "Gun",
+      "hitbox": {
+        "x": 0,
+        "y": 18,
+        "width": 13,
+        "height": 4
+      }
+    },
+    {
+      "name": "Hat",
+      "hitbox": {
+        "x": 0,
+        "y": 18,
+        "width": 13,
+        "height": 4
+      }
+    },
+    {
+      "name": "Bottle",
+      "hitbox": {
+        "x": 0,
+        "y": 18,
+        "width": 13,
+        "height": 4
+      }
+    },
+    {
+      "name": "Wood",
+      "hitbox": {
+        "x": 0,
+        "y": 18,
+        "width": 13,
+        "height": 4
+      }
+    },
+    {
+      "name": "Plank",
       "hitbox": {
         "x": 0,
         "y": 18,
@@ -131,7 +176,7 @@
   ],
   "entities": [
     {
-      "name": "player",
+      "name": "Player",
       "hitbox": {
         "x": 3,
         "y": 22,
@@ -140,7 +185,7 @@
       }
     },
     {
-      "name": "ghost",
+      "name": "Ghost",
       "hitbox": {
         "x": 4,
         "y": 19,

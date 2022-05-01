@@ -42,14 +42,11 @@ public class CollisionManager {
         Rectangle activeRec = new Rectangle(playerRec.getX() - propsRadius / 2,
                 playerRec.getY() - propsRadius / 2, propsRadius, propsRadius);
 
-
         //---TILES---
         int startX = max((int) (playerRec.getX() / View.pixelTileSize) - 1, 0);
         int startY = max((int) (playerRec.getY() / View.pixelTileSize) - 1, 0);
         int endX = min(startX + tilesRadius, tileMap[0].length);
         int endY = min(startY + tilesRadius, tileMap.length);
-//        System.out.println("X od: " + startX + ", do: " + endX);
-//        System.out.println("Y od: " + startY + ", do: " + endY);
         for (int x = startX; x < endX; x++) {
             for (int y = startY; y < endY; y++) {
                 Tile tile = tileMap[y][x];
@@ -64,7 +61,7 @@ public class CollisionManager {
         for (Prop p : model.getProps()) {
             Rectangle pRec = p.getHitboxRec();
             // close to the player?
-            if (activeRec.getBoundsInParent().intersects(pRec.getBoundsInParent())) {
+            if (p.isActive() && activeRec.getBoundsInParent().intersects(pRec.getBoundsInParent())) {
                 // handle collision
                 handlePlayerCollision(pRec);
             }

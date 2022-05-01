@@ -17,6 +17,6 @@ public class Settings {
     public static final int PLAYER_TICKS_TO_ACCELERATE = 10;
 
 
-    public static final boolean DRAW_HITBOXES = true;
+    public static final boolean DRAW_HITBOXES = false;
     public static final double HITBOX_PADDING = 0.01 * SCALE;
 }

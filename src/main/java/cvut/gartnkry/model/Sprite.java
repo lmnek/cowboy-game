@@ -83,4 +83,5 @@ public class Sprite {
     public Rectangle getImageRect(){
         return new Rectangle(X, Y, image.getWidth(), image.getHeight());
     }
+
 }

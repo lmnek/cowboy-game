@@ -23,13 +23,12 @@ public class Data {
         // todo: save...
     }
 
-    public JsonArray getEntitiesData(){
-        return json.get("entities").getAsJsonArray();
-    }
 
     public String getMapFilename(){
         return json.get("map").getAsString();
     }
 
-    public JsonArray getPropsData() {return  json.get("props").getAsJsonArray();}
+    public JsonArray getArrayData(String dataName){
+        return json.get(dataName).getAsJsonArray();
+    }
 }

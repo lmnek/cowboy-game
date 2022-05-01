@@ -1,9 +1,9 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.model.combat.Bullet;
-import cvut.gartnkry.model.combat.Gun;
-import cvut.gartnkry.view.assets.Animation;
+import cvut.gartnkry.model.items.Inventory;
+import cvut.gartnkry.model.items.Item;
+import cvut.gartnkry.view.assets.PlayerAnimation;
 import javafx.scene.input.KeyCode;
 
 import java.util.*;
@@ -32,7 +32,6 @@ import static javafx.scene.input.KeyCode.*;
  * </ul>
  */
 public class Player extends Entity {
-    private static final int MAX_HEALTH = 10;
     private int tickCounter;
 
     //private HashMap<KeyCode, Boolean> keyPressed;
@@ -44,8 +43,7 @@ public class Player extends Entity {
     private final double addVel;
     private final double addSidewaysVel;
 
-    private Gun gun;
-    private boolean hasHat;
+    private final Inventory inventory;
     private final LinkedList<Bullet> bullets;
 
     /**
@@ -56,10 +54,9 @@ public class Player extends Entity {
      * @param playerData data object loaded from input save file
      */
     public Player(JsonObject playerData) {
-        super(playerData, Animation.PLAYER_DOWN.getDefaultImage());
-        //parseJson(playerData);
+        super(playerData, null);
 
-        animation = Animation.PLAYER_DOWN;
+        animation = PlayerAnimation.PLAYER_DOWN;
         tickCounter = 0;
         bullets = new LinkedList<>();
 
@@ -74,33 +71,13 @@ public class Player extends Entity {
         for (KeyCode k : keys) {
             directions.put(k, 0);
         }
+
+        inventory = new Inventory(playerData.get("inventory").getAsJsonArray());
+        sprite.setImage(PlayerAnimation.PLAYER_DOWN.getDefaultImage());
     }
 
-   /* private void parseJson(JsonObject playerData) {
-        // parse gun
-        if(playerData.get("gun") != null){
-            JsonObject gunJson = playerData.get("gun").getAsJsonObject();
-            gun = new Gun(gunJson.get("bulletSpeed").getAsDouble(),
-                    gunJson.get("fireRate").getAsDouble(),
-                    gunJson.get("bulletSize").getAsInt());
-        }else{
-            gun = null;
-        }
-        // parse inventory
-        for (JsonElement el : playerData.get("inventory").getAsJsonArray()) {
-            pickupItem(el.getAsString());
-        }
-    }*/
-
-    public void pickupItem(String itemName) {
-        switch (itemName) {
-            case "gun":
-                gun = new Gun();
-                break;
-            case "hat":
-                hasHat = true;
-                break;
-        }
+    public void pickupItem(Item item) {
+        //
     }
 
     /**
@@ -124,9 +101,9 @@ public class Player extends Entity {
     public void update() {
         setSpriteImage();
         sprite.addXY(velocityX, velocityY);
-        if (gun != null) {
-            handleShooting();
-        }
+//        if (gun != null) {
+//            handleShooting();
+//        }
     }
 
     private void handleShooting() {
@@ -172,7 +149,7 @@ public class Player extends Entity {
 
     private void setSpriteImage() {
         ++tickCounter;
-        Animation tmp_animation = getAnimation();
+        PlayerAnimation tmp_animation = getAnimation();
         if (tmp_animation != null) {
             if (tmp_animation != animation) {
                 tickCounter = animation.getTicksPerFrame() - 3;
@@ -187,18 +164,18 @@ public class Player extends Entity {
         }
     }
 
-    private Animation getAnimation() {
+    private PlayerAnimation getAnimation() {
         int directionX = getDirectionX();
         if (directionX == 1) {
-            return Animation.PLAYER_RIGHT;
+            return PlayerAnimation.PLAYER_RIGHT;
         } else if (directionX == -1) {
-            return Animation.PLAYER_LEFT;
+            return PlayerAnimation.PLAYER_LEFT;
         }
         int directionY = getDirectionY();
         if (directionY == 1) {
-            return Animation.PLAYER_DOWN;
+            return PlayerAnimation.PLAYER_DOWN;
         } else if (directionY == -1) {
-            return Animation.PLAYER_UP;
+            return PlayerAnimation.PLAYER_UP;
         }
         return null;
     }

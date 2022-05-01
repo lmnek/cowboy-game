@@ -19,7 +19,7 @@ import java.util.HashMap;
  */
 public class AssetsManager {
 
-    private static HashMap<String, Tile> TileMap;
+    private static HashMap<String, Tile> tileMap;
     private static JsonArray propsData;
     private static JsonArray entitiesData;
 
@@ -41,12 +41,12 @@ public class AssetsManager {
         images = new HashMap<>();
         for (JsonElement el : data) {
             String name = el.getAsJsonObject().get("name").getAsString();
-            images.put(name, ResourcesUtils.loadAsset(folder, name));
+            images.put(name, ResourcesUtils.loadAsset(folder + "/" + name));
         }
     }
 
     private static void loadTileMap(JsonArray tileTypes) {
-        TileMap = new HashMap<>();
+        AssetsManager.tileMap = new HashMap<>();
         // Loop each tile
         tileTypes.forEach(_t -> {
                     JsonObject t = _t.getAsJsonObject();
@@ -55,7 +55,7 @@ public class AssetsManager {
                     String filename = t.get("filename").getAsString();
                     boolean hasHitbox = t.get("hasHitbox").getAsBoolean();
                     // add tile to hashmap
-                    TileMap.put(code, new Tile(filename, hasHitbox));
+                    AssetsManager.tileMap.put(code, new Tile(filename, hasHitbox));
                 }
         );
     }
@@ -97,6 +97,6 @@ public class AssetsManager {
      * @return Tile corresponding to the code
      */
     public static Tile getTile(String code) {
-        return TileMap.get(code);
+        return tileMap.get(code);
     }
 }

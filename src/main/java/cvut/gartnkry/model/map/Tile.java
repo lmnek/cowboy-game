@@ -21,7 +21,7 @@ public class Tile{
     public Tile(String filename, boolean hasHitbox) {
         name = filename;
         this.hasHitbox = hasHitbox;
-        this.image = ResourcesUtils.loadAsset("Maps/Tiles", filename); // load image
+        this.image = ResourcesUtils.loadAsset("Maps/Tiles/" + filename); // load image
     }
 
     /**

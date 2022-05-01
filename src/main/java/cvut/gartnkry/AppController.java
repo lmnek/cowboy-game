@@ -50,6 +50,7 @@ public class AppController extends Application {
                     view.render();
                     // Set states
                     model.update();
+                    view.updateActiveProps();
                     lastUpdate = now;
                 }
             }
