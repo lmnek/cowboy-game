@@ -1,16 +1,20 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
+import cvut.gartnkry.control.collisions.HitboxInfo;
 import cvut.gartnkry.model.Prop;
+import cvut.gartnkry.view.assets.AssetsManager;
 import cvut.gartnkry.view.assets.PlayerAnimation;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Parent class for inherited entities.
  * Such entities could be player or enemies.
  */
 public class Entity extends Prop {
-    protected final int max_health;
+    private final HitboxInfo entityHitboxInfo;
+    private final int max_health;
     private int health;
     protected PlayerAnimation animation;
 
@@ -21,6 +25,7 @@ public class Entity extends Prop {
         if (health > max_health) {
             health = max_health;
         }
+        entityHitboxInfo = AssetsManager.getEntityHitboxInfo(name);
     }
 
     public void decreaseHealth(int damagePoints) {
@@ -42,11 +47,9 @@ public class Entity extends Prop {
         return max_health;
     }
 
-    public void collisionSetX(double x) {
-        sprite.setX(sprite.getX() - x);
-    }
-
-    public void collisionSetY(double y) {
-        sprite.setY(sprite.getY() - y);
+    public Rectangle getEntityHitboxRec() {
+        return new Rectangle(entityHitboxInfo.getX() + sprite.getX(),
+                entityHitboxInfo.getY() + sprite.getY(),
+                entityHitboxInfo.getWidth(), entityHitboxInfo.getHeight());
     }
 }

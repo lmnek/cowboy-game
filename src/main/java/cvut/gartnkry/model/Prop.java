@@ -1,7 +1,7 @@
 package cvut.gartnkry.model;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.model.collisions.HitboxInfo;
+import cvut.gartnkry.control.collisions.HitboxInfo;
 import cvut.gartnkry.view.assets.AssetsManager;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
@@ -9,12 +9,12 @@ import javafx.scene.shape.Rectangle;
 public class Prop {
     protected Sprite sprite;
     protected HitboxInfo hitboxInfo;
-    private final String name;
+    protected final String name;
     private boolean active;
 
-    public Prop(JsonObject data, Image defaultImage) {
-        name = data.get("name").getAsString();
-        sprite = new Sprite(defaultImage, data.get("x").getAsDouble(), data.get("y").getAsDouble());
+    public Prop(JsonObject data, Image image) {
+        this.name = data.get("name").getAsString();
+        sprite = new Sprite(image, data.get("x").getAsDouble(), data.get("y").getAsDouble());
         hitboxInfo = AssetsManager.getHitboxInfo(name);
     }
 
@@ -49,5 +49,9 @@ public class Prop {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getName() {
+        return name;
     }
 }

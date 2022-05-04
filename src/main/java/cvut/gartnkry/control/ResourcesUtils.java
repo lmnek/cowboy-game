@@ -1,8 +1,9 @@
-package cvut.gartnkry;
+package cvut.gartnkry.control;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import cvut.gartnkry.Settings;
 import javafx.scene.image.Image;
 
 import java.io.BufferedReader;
@@ -59,11 +60,11 @@ public class ResourcesUtils {
             packageName += ".";
         }
         try {
-            Constructor itemConstructor = Class.forName(
+            Constructor constructor = Class.forName(
                             "cvut.gartnkry.model." + packageName + json.get("name").getAsString())
                     .getConstructor(JsonObject.class);
             Object[] parameters = {json};
-            return itemConstructor.newInstance(parameters);
+            return constructor.newInstance(parameters);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {

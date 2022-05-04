@@ -5,21 +5,18 @@ import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.Sprite;
 import cvut.gartnkry.model.entities.Entity;
-import cvut.gartnkry.model.items.Item;
 import cvut.gartnkry.model.map.Tile;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import static cvut.gartnkry.Settings.*;
 
@@ -33,7 +30,6 @@ public class View {
     private final Stage stage;
     private Canvas canvas;
     private final Model model;
-    private InventoryUI inventoryUI;
 
     public static final int pixelTileSize = 16 * Settings.SCALE;
 
@@ -52,7 +48,7 @@ public class View {
         int screenHeight = pixelTileSize * Settings.TILES_COUNT_HEIGHT;
 
         canvas = new Canvas(screenWidth, screenHeight); // container for all drawing components
-        Pane pane = new Pane(canvas); // for layout with absolute positions
+        StackPane pane = new StackPane(canvas); // for layout with absolute positions
         Scene scene = new Scene(pane);
 
         // player in the middle of the screen
@@ -67,41 +63,25 @@ public class View {
         stage.setTitle(Settings.TITLE);
         stage.centerOnScreen();
         stage.setResizable(false);
+        stage.sizeToScene();
         stage.show();
 
-        inventoryUI = new InventoryUI(stage, model);
-        updateActiveProps();
-    }
-
-    public void updateActiveProps() {
-        // top left corner
-        camera = new Point2D(model.getPlayer().getSprite().getXCenter() - stage.getWidth() / 2,
-                model.getPlayer().getSprite().getYCenter() - stage.getHeight() / 2);
-
-        Bounds activeBounds = new Rectangle(camera.getX(), camera.getY(),
-                stage.getWidth(), stage.getHeight()).getBoundsInParent();
-        setActiveOnProps(model.getProps(), activeBounds);
-        //setActiveOnProps(model.get, activeBounds);
-    }
-
-    private void setActiveOnProps(List<Prop> props, Bounds activeBounds) {
-        for (Prop p : props) {
-            p.setActive(activeBounds.intersects(p.getSprite().getImageRect().getBoundsInParent()));
-        }
+        setCamera();
+        UI.getInstance().initialize(pane, model.getPlayer().getInventory().size());
+        UI.getInstance().drawHearts(model.getPlayer());
+        UI.getInstance().drawInventoryItems(model.getPlayer().getInventory());
+        UI.getInstance().newSelectedItem(0, 0);
     }
 
     public void render() {
+        setCamera();
+
         GraphicsContext gc = canvas.getGraphicsContext2D();
         drawBackground(gc);
 
         drawTiles(gc);
 
-        for (Item item : model.getItems()) {
-            drawSprite(gc, item.getProp().getSprite());
-        }
-
         LinkedList<Prop> frontProps = new LinkedList<>();
-        Rectangle screenRec = new Rectangle(camera.getX(), camera.getY(), stage.getWidth(), stage.getHeight());
         for (Prop prop : model.getProps()) {
             // on screen?
             if (prop.isActive()) {
@@ -127,8 +107,12 @@ public class View {
         if (DRAW_HITBOXES) {
             drawHitboxes(gc);
         }
+    }
 
-        inventoryUI.draw(gc);
+    private void setCamera() {
+        // top left corner
+        camera = new Point2D(model.getPlayer().getSprite().getXCenter() - stage.getWidth() / 2,
+                model.getPlayer().getSprite().getYCenter() - stage.getHeight() / 2);
     }
 
     // Draw tiles depending on player position - camera
@@ -177,16 +161,29 @@ public class View {
     }
 
     private void drawHitboxes(GraphicsContext gc) {
-        Color color = new Color(1, 0.3, 0.3, 0.7);
-        gc.setFill(color);
+        gc.setFill(new Color(1, 0.3, 0.3, 0.7));
         Rectangle rec = model.getPlayer().getHitboxRec();
-        gc.fillRect(rec.getX() - camera.getX(), rec.getY() - camera.getY(), rec.getWidth(), rec.getHeight());
-
+        drawRectangle(gc, rec);
         for (Prop prop : model.getProps()) {
             if (prop.isActive() && ((rec = prop.getHitboxRec()) != null)) {
-                gc.fillRect(rec.getX() - camera.getX(), rec.getY() - camera.getY(), rec.getWidth(), rec.getHeight());
+                drawRectangle(gc, rec);
+            }
+        }
+
+        gc.setFill(new Color(0.1, 0.2, 1, 0.7));
+        drawRectangle(gc, model.getPlayer().getEntityHitboxRec());
+        for (Entity entity : model.getEntities()) {
+            if (entity.isActive() && ((rec = entity.getEntityHitboxRec()) != null)) {
+                drawRectangle(gc, rec);
             }
         }
     }
 
+    private void drawRectangle(GraphicsContext gc, Rectangle rec){
+        gc.fillRect(rec.getX() - camera.getX(), rec.getY() - camera.getY(), rec.getWidth(), rec.getHeight());
+    }
+
+    public Point2D getCamera() {
+        return camera;
+    }
 }

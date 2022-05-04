@@ -1,6 +1,5 @@
 
 fixes:
-- have area in which to check for events - attribute "alive" on everything
 - better handlers
 - fix speed when changing scale
 
@@ -10,9 +9,9 @@ sprite fixes:
 
 todo:
  - enemies
- - inventory, health, XP
- - pickup items, (keys ? --> ladder/bridge, drops from enemies)
- - load/save game data (JSON file)
+ -  health - invincible interval,  XP ?
+ -  ladder/bridge, drops from enemies ?
+ -  save game data (JSON file)
  - fighting system (shooting)
  - loggers
  - threads for enemy intelligence
@@ -25,6 +24,7 @@ todo:
 ?
  - main menu
  - open dialog for JSON
+
 
 
 Wiki:

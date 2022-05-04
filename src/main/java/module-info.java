@@ -3,4 +3,5 @@ module cvut.gartnkry {
     requires gson;
     requires java.logging;
     exports cvut.gartnkry;
+    exports cvut.gartnkry.control;
 }

@@ -1,10 +1,11 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
+import cvut.gartnkry.control.KeysEventHandler;
+import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.items.Inventory;
-import cvut.gartnkry.model.items.Item;
+import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.view.assets.PlayerAnimation;
-import javafx.scene.input.KeyCode;
 
 import java.util.*;
 
@@ -33,10 +34,6 @@ import static javafx.scene.input.KeyCode.*;
  */
 public class Player extends Entity {
     private int tickCounter;
-
-    //private HashMap<KeyCode, Boolean> keyPressed;
-    private final Map<KeyCode, Integer> directions;
-
     private double velocityX, velocityY;
     private final double maxSidewaysVel;
     private final double maxVel;
@@ -66,36 +63,12 @@ public class Player extends Entity {
         addVel = maxVel / PLAYER_TICKS_TO_ACCELERATE;
         addSidewaysVel = maxSidewaysVel / PLAYER_TICKS_TO_ACCELERATE;
 
-        KeyCode[] keys = new KeyCode[]{W, A, S, D};
-        directions = new HashMap<>(keys.length);
-        for (KeyCode k : keys) {
-            directions.put(k, 0);
-        }
-
         inventory = new Inventory(playerData.get("inventory").getAsJsonArray());
         sprite.setImage(PlayerAnimation.PLAYER_DOWN.getDefaultImage());
     }
 
-    public void pickupItem(Item item) {
-        //
-    }
-
-    /**
-     * When key is pressed, player starts to move in the supposed direction.
-     *
-     * @param code code of key that is pressed
-     */
-    public void onKeyPressed(KeyCode code) {
-        directions.replace(code, 1);
-    }
-
-    /**
-     * When key is released, player stops to move in the supposed direction.
-     *
-     * @param code code of key that is released
-     */
-    public void onKeyReleased(KeyCode code) {
-        directions.replace(code, 0);
+    public void pickupItem(PropItem prop) {
+        inventory.pickup(prop);
     }
 
     public void update() {
@@ -109,12 +82,12 @@ public class Player extends Entity {
     private void handleShooting() {
     }
 
-    public int getDirectionX() {
-        return directions.get(D) - directions.get(A);
+    private int getDirectionX() {
+        return KeysEventHandler.getDirection(D) - KeysEventHandler.getDirection(A);
     }
 
-    public int getDirectionY() {
-        return directions.get(S) - directions.get(W);
+    private int getDirectionY() {
+        return KeysEventHandler.getDirection(S) - KeysEventHandler.getDirection(W);
     }
 
     public void computeVelocities() {
@@ -184,7 +157,6 @@ public class Player extends Entity {
         return bullets;
     }
 
-
     public double getVelocityX() {
         return velocityX;
     }
@@ -199,5 +171,9 @@ public class Player extends Entity {
 
     public void setVelocityY(double velocityY) {
         this.velocityY = velocityY;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 }

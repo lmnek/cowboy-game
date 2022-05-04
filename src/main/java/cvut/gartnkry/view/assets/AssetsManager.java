@@ -3,9 +3,9 @@ package cvut.gartnkry.view.assets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import cvut.gartnkry.ResourcesUtils;
+import cvut.gartnkry.control.ResourcesUtils;
 import cvut.gartnkry.Settings;
-import cvut.gartnkry.model.collisions.HitboxInfo;
+import cvut.gartnkry.control.collisions.HitboxInfo;
 import cvut.gartnkry.model.map.Tile;
 import javafx.scene.image.Image;
 
@@ -65,17 +65,18 @@ public class AssetsManager {
     }
 
     public static HitboxInfo getHitboxInfo(String name) {
-        HitboxInfo hbInfo = getHitboxInfoFromData(propsData, name);
-        if (hbInfo != null) {
-            return hbInfo;
-        }
-        return getHitboxInfoFromData(entitiesData, name);
+        HitboxInfo hbInfo = getHitboxInfoFromJson(propsData, name, "hitbox");
+        return hbInfo == null ? getHitboxInfoFromJson(entitiesData, name, "hitbox") : hbInfo;
     }
 
-    private static HitboxInfo getHitboxInfoFromData(JsonArray data, String name) {
+    public static HitboxInfo getEntityHitboxInfo(String name) {
+        return getHitboxInfoFromJson(entitiesData, name, "entityHitbox");
+    }
+
+    private static HitboxInfo getHitboxInfoFromJson(JsonArray data, String name, String hitboxName) {
         for (JsonElement en : data) {
             if (en.getAsJsonObject().get("name").getAsString().equals(name)) {
-                JsonElement hitboxElement = en.getAsJsonObject().get("hitbox");
+                JsonElement hitboxElement = en.getAsJsonObject().get(hitboxName);
                 if (hitboxElement != null) {
                     JsonObject hitboxData = hitboxElement.getAsJsonObject();
                     return new HitboxInfo(hitboxData.get("x").getAsInt() * Settings.SCALE,
@@ -99,4 +100,5 @@ public class AssetsManager {
     public static Tile getTile(String code) {
         return tileMap.get(code);
     }
+
 }

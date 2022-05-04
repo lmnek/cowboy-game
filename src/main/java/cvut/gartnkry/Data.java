@@ -2,6 +2,7 @@ package cvut.gartnkry;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import cvut.gartnkry.control.ResourcesUtils;
 import cvut.gartnkry.model.Model;
 
 
@@ -19,7 +20,7 @@ public class Data {
         json = ResourcesUtils.readJsonFile(filename).getAsJsonObject();
     }
 
-    public void saveSave(Model model){
+    public static void saveSave(Model model){
         // todo: save...
     }
 

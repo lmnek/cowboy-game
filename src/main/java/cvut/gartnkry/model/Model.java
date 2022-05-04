@@ -2,12 +2,11 @@ package cvut.gartnkry.model;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import cvut.gartnkry.Data;
-import cvut.gartnkry.ResourcesUtils;
-import cvut.gartnkry.model.collisions.CollisionManager;
+import cvut.gartnkry.control.ResourcesUtils;
+import cvut.gartnkry.control.collisions.CollisionManager;
 import cvut.gartnkry.model.entities.Entity;
-import cvut.gartnkry.model.items.Item;
+import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.model.map.Map;
 import cvut.gartnkry.model.entities.Bullet;
 import cvut.gartnkry.model.entities.Player;
@@ -19,13 +18,10 @@ public class Model {
     private Player player;
     private final ArrayList<Entity> entities;
     private final ArrayList<Prop> props;
-    private final ArrayList<Item> items;
     private final Map map;
-    private final CollisionManager collisionManager;
 
     public Model(Data data) {
         map = new Map(data.getMapFilename());
-
         entities = new ArrayList<>();
         // iterate and initialize all entities
         // (loaded from json save file)
@@ -39,26 +35,21 @@ public class Model {
         }
 
         JsonArray propsData = data.getArrayData("props");
-        props = new ArrayList<>(propsData.size());
-        for (int i = 0; i < propsData.size(); i++) {
-            JsonObject prop = propsData.get(i).getAsJsonObject();
-            props.add(i, new Prop(prop));
-        }
-
         JsonArray itemsData = data.getArrayData("items");
-        items = new ArrayList<>(itemsData.size());
-        for (int i = 0; i < itemsData.size(); i++) {
-            items.add(i, (Item) ResourcesUtils.loadReflection(itemsData.get(i).getAsJsonObject(), "items"));
+        props = new ArrayList<>();
+        for (int i = 0; i < propsData.size(); i++) {
+            props.add(new Prop(propsData.get(i).getAsJsonObject()));
         }
-
-        collisionManager = new CollisionManager(this);
+        for (int i = 0; i < itemsData.size(); i++) {
+            props.add(new PropItem(itemsData.get(i).getAsJsonObject()));
+        }
     }
 
     public void update() {
         for (Entity enemy : entities) {
             //enemy.update();
         }
-        collisionManager.handlePlayerCollisions();
+        CollisionManager.handlePlayerCollisions();
         player.update();
 
         LinkedList<Bullet> bullets = player.getBullets();
@@ -78,9 +69,5 @@ public class Model {
 
     public ArrayList<Prop> getProps() {
         return props;
-    }
-
-    public ArrayList<Item> getItems() {
-        return items;
     }
 }

@@ -1,4 +1,4 @@
-package cvut.gartnkry.model.collisions;
+package cvut.gartnkry.control.collisions;
 
 public class HitboxInfo {
     private final int x_offset;
