@@ -10,6 +10,10 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -37,9 +41,14 @@ public class View {
     private double playerScreenY;
     private Point2D camera;
 
+    private ColorAdjust colorAdjust;
+
     public View(Stage stage, Model model) {
         this.stage = stage;
         this.model = model;
+
+        colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(0.3);
     }
 
     public void initialization() {
@@ -94,8 +103,7 @@ public class View {
             }
         }
 
-        // Draw player
-        gc.drawImage(model.getPlayer().getSprite().getImage(), playerScreenX, playerScreenY);
+        drawPlayer(gc);
 
         // Draw remaining props
         for (Prop prop : frontProps) {
@@ -106,6 +114,16 @@ public class View {
 
         if (DRAW_HITBOXES) {
             drawHitboxes(gc);
+        }
+    }
+
+    private void drawPlayer(GraphicsContext gc) {
+        if(model.getPlayer().isInvincible()){
+            gc.setEffect(colorAdjust);
+            gc.drawImage(model.getPlayer().getSprite().getImage(), playerScreenX, playerScreenY);
+            gc.setEffect(null);
+        }else{
+            gc.drawImage(model.getPlayer().getSprite().getImage(), playerScreenX, playerScreenY);
         }
     }
 

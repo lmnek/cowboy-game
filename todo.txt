@@ -2,20 +2,23 @@
 fixes:
 - better handlers
 - fix speed when changing scale
+- items hitboxes
 
 sprite fixes:
 - rovna hlava no gun default
 - pistol v prave ruce - right
 
 todo:
+ - render hat on player
  - enemies
- -  health - invincible interval,  XP ?
- -  ladder/bridge, drops from enemies ?
- -  save game data (JSON file)
+ - ladder/bridge
+ - save game data (JSON file)
  - fighting system (shooting)
+ - death
  - loggers
  - threads for enemy intelligence
  - try/catch
+ - functional test
 
  - go through all TODOS
  - go through all warnings
@@ -24,6 +27,8 @@ todo:
 ?
  - main menu
  - open dialog for JSON
+ - drops from enemies
+ - XP
 
 
 

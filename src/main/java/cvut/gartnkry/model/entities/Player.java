@@ -2,9 +2,9 @@ package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
 import cvut.gartnkry.control.KeysEventHandler;
-import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.items.Inventory;
 import cvut.gartnkry.model.items.PropItem;
+import cvut.gartnkry.view.assets.AssetsManager;
 import cvut.gartnkry.view.assets.PlayerAnimation;
 
 import java.util.*;
@@ -43,6 +43,10 @@ public class Player extends Entity {
     private final Inventory inventory;
     private final LinkedList<Bullet> bullets;
 
+    private boolean invincible;
+    private final int invicibleInterval = 40;
+    private int invincibleCounter;
+
     /**
      * Class constructor.
      * Load position of player from data and set a sprite.
@@ -54,7 +58,6 @@ public class Player extends Entity {
         super(playerData, null);
 
         animation = PlayerAnimation.PLAYER_DOWN;
-        tickCounter = 0;
         bullets = new LinkedList<>();
 
         velocityX = velocityY = 0;
@@ -74,6 +77,15 @@ public class Player extends Entity {
     public void update() {
         setSpriteImage();
         sprite.addXY(velocityX, velocityY);
+
+        if (invincible){
+            ++invincibleCounter;
+            if(invincibleCounter == invicibleInterval){
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
+
 //        if (gun != null) {
 //            handleShooting();
 //        }
@@ -136,6 +148,13 @@ public class Player extends Entity {
             sprite.setImage(animation.getDefaultImage());
         }
     }
+    @Override
+    public void decreaseHealth(int damagePoints) {
+        if(!invincible){
+            super.decreaseHealth(damagePoints);
+            invincible = true;
+        }
+    }
 
     private PlayerAnimation getAnimation() {
         int directionX = getDirectionX();
@@ -175,5 +194,9 @@ public class Player extends Entity {
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public boolean isInvincible() {
+        return invincible;
     }
 }

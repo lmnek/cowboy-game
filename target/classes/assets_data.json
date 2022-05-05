@@ -131,37 +131,37 @@
     {
       "name": "Gun",
       "hitbox": {
-        "x": 0,
-        "y": 18,
-        "width": 13,
-        "height": 4
+        "x": 1,
+        "y": 1,
+        "width": 11,
+        "height": 8
       }
     },
     {
       "name": "Hat",
       "hitbox": {
         "x": 0,
-        "y": 18,
-        "width": 13,
-        "height": 4
+        "y": 0,
+        "width": 5,
+        "height": 5
       }
     },
     {
       "name": "Bottle",
       "hitbox": {
         "x": 0,
-        "y": 18,
-        "width": 13,
-        "height": 4
+        "y": 5,
+        "width": 8,
+        "height": 10
       }
     },
     {
       "name": "Wood",
       "hitbox": {
         "x": 0,
-        "y": 18,
-        "width": 13,
-        "height": 4
+        "y": 0,
+        "width": 5,
+        "height": 5
       }
     },
     {
@@ -182,6 +182,12 @@
         "y": 22,
         "width": 5,
         "height": 2
+      },
+      "entityHitbox": {
+        "x": 3,
+        "y": 7,
+        "width": 5,
+        "height": 12
       }
     },
     {
