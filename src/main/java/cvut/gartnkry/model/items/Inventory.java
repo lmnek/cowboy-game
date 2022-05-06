@@ -3,28 +3,45 @@ package cvut.gartnkry.model.items;
 import com.google.gson.JsonArray;
 import cvut.gartnkry.control.ResourcesUtils;
 import cvut.gartnkry.Settings;
-import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.view.UI;
+import cvut.gartnkry.view.assets.AssetsManager;
 import cvut.gartnkry.view.assets.PlayerAnimation;
-
-import java.util.ArrayList;
 
 public class Inventory {
     private final Item[] items;
     private int selectedIndex;
+    private int hatCount;
 
     public Inventory(JsonArray json) {
         items = new Item[Settings.INVENTORY_SIZE];
         selectedIndex = 0;
 
         for (int i = 0; i < json.size(); i++) {
-            items[i] = (Item) ResourcesUtils.loadReflection(json.get(i).getAsJsonObject(), "items");
+            addItem((Item) ResourcesUtils.loadReflection(json.get(i).getAsJsonObject(), "items"), i);
         }
-        PlayerAnimation.setGunSelected(gunSelected());
     }
 
+
     public void pickup(PropItem propItem) {
-        items[selectedIndex] = propItem.getItem();
+        dropItem(items[selectedIndex]);
+        addItem(propItem.getItem(), selectedIndex);
+        PlayerAnimation.setGunSelected(items[selectedIndex]);
+    }
+
+
+    private void addItem(Item item, int idx) {
+        items[idx] = item;
+        if (item.getName().equals("Hat")) {
+            ++hatCount;
+        }
+    }
+
+    private void dropItem(Item item) {
+        if (item != null) {
+            if (item.getName().equals("Hat")) {
+                --hatCount;
+            }
+        }
     }
 
     public boolean gunSelected() {
@@ -39,7 +56,7 @@ public class Inventory {
         return items;
     }
 
-    public Item getSelectedItem(){
+    public Item getSelectedItem() {
         return items[selectedIndex];
     }
 
@@ -55,9 +72,14 @@ public class Inventory {
         selectItem(selectedIndex - 1);
     }
 
-    private void selectItem(int index){
+    private void selectItem(int index) {
         int tmp = selectedIndex;
         selectedIndex = Math.floorMod(index, items.length);
         UI.getInstance().newSelectedItem(tmp, selectedIndex);
+        PlayerAnimation.setGunSelected(items[selectedIndex]);
+    }
+
+    public boolean hasHat() {
+        return hatCount != 0;
     }
 }

@@ -16,7 +16,7 @@ public class Sprite {
     /**
      * Class constructor.
      *
-     * @param image  loaded Image asset
+     * @param image loaded Image asset
      */
     public Sprite(Image image, double coordX, double coordY) {
         this.image = image;
@@ -75,12 +75,16 @@ public class Sprite {
      * @param x double value to add to x coordinate
      * @param y double value to add to y coordinate
      */
-    public void addXY(double x, double y) {
-        X += x * Settings.SCALE;
-        Y += y * Settings.SCALE;
+    public void addXYScaled(double x, double y) {
+        addXY(x * Settings.SCALE, y * Settings.SCALE);
     }
 
-    public Rectangle getImageRect(){
+    public void addXY(double x, double y) {
+        X += x;
+        Y += y;
+    }
+
+    public Rectangle getImageRect() {
         return new Rectangle(X, Y, image.getWidth(), image.getHeight());
     }
 

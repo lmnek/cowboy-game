@@ -5,14 +5,13 @@ import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.Sprite;
 import cvut.gartnkry.model.entities.Entity;
+import cvut.gartnkry.model.entities.Player;
+import cvut.gartnkry.model.items.Item;
 import cvut.gartnkry.model.map.Tile;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
@@ -41,7 +40,7 @@ public class View {
     private double playerScreenY;
     private Point2D camera;
 
-    private ColorAdjust colorAdjust;
+    private final ColorAdjust colorAdjust;
 
     public View(Stage stage, Model model) {
         this.stage = stage;
@@ -118,13 +117,18 @@ public class View {
     }
 
     private void drawPlayer(GraphicsContext gc) {
-        if(model.getPlayer().isInvincible()){
+        Player player = model.getPlayer();
+        if (player.isInvincible()) {
             gc.setEffect(colorAdjust);
-            gc.drawImage(model.getPlayer().getSprite().getImage(), playerScreenX, playerScreenY);
-            gc.setEffect(null);
-        }else{
-            gc.drawImage(model.getPlayer().getSprite().getImage(), playerScreenX, playerScreenY);
         }
+        gc.drawImage(player.getSprite().getImage(), playerScreenX, playerScreenY);
+
+
+        if (player.hasHat()) {
+            Sprite hatSprite = player.getHatSprite();
+            gc.drawImage(hatSprite.getImage(), hatSprite.getX() + playerScreenX, hatSprite.getY() + playerScreenY);
+        }
+        gc.setEffect(null);
     }
 
     private void setCamera() {
@@ -188,7 +192,7 @@ public class View {
             }
         }
 
-        gc.setFill(new Color(0.1, 0.2, 1, 0.7));
+        gc.setFill(new Color(0.1, 0.2, 1, 0.6));
         drawRectangle(gc, model.getPlayer().getEntityHitboxRec());
         for (Entity entity : model.getEntities()) {
             if (entity.isActive() && ((rec = entity.getEntityHitboxRec()) != null)) {
@@ -197,7 +201,7 @@ public class View {
         }
     }
 
-    private void drawRectangle(GraphicsContext gc, Rectangle rec){
+    private void drawRectangle(GraphicsContext gc, Rectangle rec) {
         gc.fillRect(rec.getX() - camera.getX(), rec.getY() - camera.getY(), rec.getWidth(), rec.getHeight());
     }
 

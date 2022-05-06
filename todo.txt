@@ -1,7 +1,6 @@
 
 fixes:
-- better handlers
-- fix speed when changing scale
+- fix speed when changing scale, player hitbox
 - items hitboxes
 
 sprite fixes:
@@ -9,7 +8,6 @@ sprite fixes:
 - pistol v prave ruce - right
 
 todo:
- - render hat on player
  - enemies
  - ladder/bridge
  - save game data (JSON file)
@@ -29,7 +27,6 @@ todo:
  - open dialog for JSON
  - drops from enemies
  - XP
-
 
 
 Wiki:

@@ -2,15 +2,16 @@ package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
 import cvut.gartnkry.control.KeysEventHandler;
+import cvut.gartnkry.model.Sprite;
+import cvut.gartnkry.model.items.Hat;
 import cvut.gartnkry.model.items.Inventory;
 import cvut.gartnkry.model.items.PropItem;
-import cvut.gartnkry.view.assets.AssetsManager;
 import cvut.gartnkry.view.assets.PlayerAnimation;
+import javafx.scene.image.Image;
 
 import java.util.*;
 
-import static cvut.gartnkry.Settings.PLAYER_MAX_VELOCITY;
-import static cvut.gartnkry.Settings.PLAYER_TICKS_TO_ACCELERATE;
+import static cvut.gartnkry.Settings.*;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static javafx.scene.input.KeyCode.*;
@@ -39,12 +40,13 @@ public class Player extends Entity {
     private final double maxVel;
     private final double addVel;
     private final double addSidewaysVel;
+    private boolean moving;
 
     private final Inventory inventory;
     private final LinkedList<Bullet> bullets;
 
     private boolean invincible;
-    private final int invicibleInterval = 40;
+    private final int invincibleInterval = 30;
     private int invincibleCounter;
 
     /**
@@ -76,19 +78,23 @@ public class Player extends Entity {
 
     public void update() {
         setSpriteImage();
-        sprite.addXY(velocityX, velocityY);
+        sprite.addXYScaled(velocityX, velocityY);
 
-        if (invincible){
-            ++invincibleCounter;
-            if(invincibleCounter == invicibleInterval){
-                invincible = false;
-                invincibleCounter = 0;
-            }
-        }
+        invincibleTick();
 
 //        if (gun != null) {
 //            handleShooting();
 //        }
+    }
+
+    private void invincibleTick() {
+        if (invincible) {
+            ++invincibleCounter;
+            if (invincibleCounter == invincibleInterval) {
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
     }
 
     private void handleShooting() {
@@ -135,7 +141,7 @@ public class Player extends Entity {
     private void setSpriteImage() {
         ++tickCounter;
         PlayerAnimation tmp_animation = getAnimation();
-        if (tmp_animation != null) {
+        if ((moving = tmp_animation != null)) {
             if (tmp_animation != animation) {
                 tickCounter = animation.getTicksPerFrame() - 3;
                 animation = tmp_animation;
@@ -148,9 +154,10 @@ public class Player extends Entity {
             sprite.setImage(animation.getDefaultImage());
         }
     }
+
     @Override
     public void decreaseHealth(int damagePoints) {
-        if(!invincible){
+        if (!invincible) {
             super.decreaseHealth(damagePoints);
             invincible = true;
         }
@@ -198,5 +205,13 @@ public class Player extends Entity {
 
     public boolean isInvincible() {
         return invincible;
+    }
+
+    public Sprite getHatSprite() {
+        return animation.getHatSprite(moving);
+    }
+
+    public boolean hasHat() {
+        return inventory.hasHat();
     }
 }
