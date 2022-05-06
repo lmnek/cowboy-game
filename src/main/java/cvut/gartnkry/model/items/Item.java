@@ -28,4 +28,8 @@ public abstract class Item {
     public String getName() {
         return name;
     }
+
+    public boolean is (Class inClass){
+        return getClass() == inClass;
+    }
 }

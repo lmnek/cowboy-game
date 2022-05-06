@@ -61,8 +61,8 @@ public enum PlayerAnimation {
         return tmpFrames;
     }
 
-    public static void setGunSelected(Item item) {
-        gunSelected = item != null && item.getName().equals("Gun");
+    public static void setGunSelected(boolean _gunSelected) {
+        gunSelected = _gunSelected;
     }
 
     public Image getCurrentFrame() {

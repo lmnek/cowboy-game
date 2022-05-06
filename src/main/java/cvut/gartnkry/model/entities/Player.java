@@ -3,11 +3,10 @@ package cvut.gartnkry.model.entities;
 import com.google.gson.JsonObject;
 import cvut.gartnkry.control.KeysEventHandler;
 import cvut.gartnkry.model.Sprite;
-import cvut.gartnkry.model.items.Hat;
+import cvut.gartnkry.model.items.Gun;
 import cvut.gartnkry.model.items.Inventory;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.view.assets.PlayerAnimation;
-import javafx.scene.image.Image;
 
 import java.util.*;
 
@@ -48,6 +47,8 @@ public class Player extends Entity {
     private boolean invincible;
     private final int invincibleInterval = 30;
     private int invincibleCounter;
+    private int fireRateMax = 100;
+    private int fireRateCounter;
 
     /**
      * Class constructor.
@@ -77,14 +78,22 @@ public class Player extends Entity {
     }
 
     public void update() {
-        setSpriteImage();
         sprite.addXYScaled(velocityX, velocityY);
-
         invincibleTick();
 
-//        if (gun != null) {
-//            handleShooting();
-//        }
+        int dirX = KeysEventHandler.getDirection(D, A);
+        int dirY = KeysEventHandler.getDirection(S, W);
+        int shootX = KeysEventHandler.getDirection(RIGHT, LEFT);
+        int shootY = KeysEventHandler.getDirection(DOWN, UP);
+        boolean shooting = inventory.gunSelected() && (shootX != 0 || shootY != 0);
+        ++tickCounter;
+        if (shooting) {
+            setShootingSprite(dirX, dirY, shootX, shootY);
+        } else {
+            setWalkingSprite(dirX, dirY);
+        }
+
+        handleShooting(shootX, shootY, shooting);
     }
 
     private void invincibleTick() {
@@ -97,15 +106,16 @@ public class Player extends Entity {
         }
     }
 
-    private void handleShooting() {
-    }
-
-    private int getDirectionX() {
-        return KeysEventHandler.getDirection(D) - KeysEventHandler.getDirection(A);
-    }
-
-    private int getDirectionY() {
-        return KeysEventHandler.getDirection(S) - KeysEventHandler.getDirection(W);
+    private void handleShooting(int shootX, int shootY, boolean shooting) {
+        if (fireRateCounter != fireRateMax) {
+            ++fireRateCounter;
+        } else if (shooting) {
+            Gun gun = (Gun) inventory.getSelectedItem();
+            gun.shoot();
+            fireRateMax = gun.getFireRate();
+            fireRateCounter = 0;
+            System.out.println(shootX + " " + shootY);
+        }
     }
 
     public void computeVelocities() {
@@ -118,10 +128,8 @@ public class Player extends Entity {
             max_vel = maxVel;
             add_tmp = addVel;
         }
-        int directionX = getDirectionX();
-        int directionY = getDirectionY();
-        velocityX = getSingleVelocity(directionX, velocityX, add_tmp, max_vel);
-        velocityY = getSingleVelocity(directionY, velocityY, add_tmp, max_vel);
+        velocityX = getSingleVelocity(KeysEventHandler.getDirection(D, A), velocityX, add_tmp, max_vel);
+        velocityY = getSingleVelocity(KeysEventHandler.getDirection(S, W), velocityY, add_tmp, max_vel);
     }
 
     private double getSingleVelocity(int direction, double velocity, double add_tmp, double max_vel) {
@@ -138,21 +146,48 @@ public class Player extends Entity {
         return velocity;
     }
 
-    private void setSpriteImage() {
-        ++tickCounter;
-        PlayerAnimation tmp_animation = getAnimation();
+    private void setWalkingSprite(int dirX, int dirY) {
+        PlayerAnimation tmp_animation = getAnimation(dirX, dirY);
         if ((moving = tmp_animation != null)) {
-            if (tmp_animation != animation) {
-                tickCounter = animation.getTicksPerFrame() - 3;
-                animation = tmp_animation;
-                sprite.setImage(animation.getFirstFrame());
-            } else if (tickCounter >= animation.getTicksPerFrame()) {
-                sprite.setImage(animation.getNextFrame());
-                tickCounter = 0;
-            }
+            setSpriteImage(tmp_animation);
         } else {
             sprite.setImage(animation.getDefaultImage());
         }
+    }
+
+    private void setShootingSprite(int dirX, int dirY, int shootX, int shootY) {
+        PlayerAnimation tmp_animation = getAnimation(shootX, shootY);
+        if (tmp_animation != null) {
+            setSpriteImage(tmp_animation);
+        }
+        if (!(moving = getAnimation(dirX, dirY) != null)) {
+            sprite.setImage(animation.getDefaultImage());
+        }
+    }
+
+    private void setSpriteImage(PlayerAnimation tmp_animation) {
+        if (tmp_animation != animation) {
+            tickCounter = animation.getTicksPerFrame() - 3;
+            animation = tmp_animation;
+            sprite.setImage(animation.getFirstFrame());
+        } else if (tickCounter >= animation.getTicksPerFrame()) {
+            sprite.setImage(animation.getNextFrame());
+            tickCounter = 0;
+        }
+    }
+
+    private PlayerAnimation getAnimation(int dirX, int dirY) {
+        if (dirX == 1) {
+            return PlayerAnimation.PLAYER_RIGHT;
+        } else if (dirX == -1) {
+            return PlayerAnimation.PLAYER_LEFT;
+        }
+        if (dirY == 1) {
+            return PlayerAnimation.PLAYER_DOWN;
+        } else if (dirY == -1) {
+            return PlayerAnimation.PLAYER_UP;
+        }
+        return null;
     }
 
     @Override
@@ -163,21 +198,6 @@ public class Player extends Entity {
         }
     }
 
-    private PlayerAnimation getAnimation() {
-        int directionX = getDirectionX();
-        if (directionX == 1) {
-            return PlayerAnimation.PLAYER_RIGHT;
-        } else if (directionX == -1) {
-            return PlayerAnimation.PLAYER_LEFT;
-        }
-        int directionY = getDirectionY();
-        if (directionY == 1) {
-            return PlayerAnimation.PLAYER_DOWN;
-        } else if (directionY == -1) {
-            return PlayerAnimation.PLAYER_UP;
-        }
-        return null;
-    }
 
     public LinkedList<Bullet> getBullets() {
         return bullets;

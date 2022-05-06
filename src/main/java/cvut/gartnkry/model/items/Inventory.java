@@ -19,33 +19,34 @@ public class Inventory {
         for (int i = 0; i < json.size(); i++) {
             addItem((Item) ResourcesUtils.loadReflection(json.get(i).getAsJsonObject(), "items"), i);
         }
+        PlayerAnimation.setGunSelected(items[selectedIndex].is(Gun.class));
     }
 
 
     public void pickup(PropItem propItem) {
         dropItem(items[selectedIndex]);
         addItem(propItem.getItem(), selectedIndex);
-        PlayerAnimation.setGunSelected(items[selectedIndex]);
+        PlayerAnimation.setGunSelected(items[selectedIndex].is(Gun.class));
     }
 
 
     private void addItem(Item item, int idx) {
         items[idx] = item;
-        if (item.getName().equals("Hat")) {
+        if (item.is(Hat.class)) {
             ++hatCount;
         }
     }
 
     private void dropItem(Item item) {
         if (item != null) {
-            if (item.getName().equals("Hat")) {
+            if (item.is(Hat.class)) {
                 --hatCount;
             }
         }
     }
 
     public boolean gunSelected() {
-        return items[selectedIndex].getClass() == Gun.class;
+        return items[selectedIndex] != null && items[selectedIndex].is(Gun.class);
     }
 
     public int size() {
@@ -76,7 +77,8 @@ public class Inventory {
         int tmp = selectedIndex;
         selectedIndex = Math.floorMod(index, items.length);
         UI.getInstance().newSelectedItem(tmp, selectedIndex);
-        PlayerAnimation.setGunSelected(items[selectedIndex]);
+        PlayerAnimation.setGunSelected(false);
+        PlayerAnimation.setGunSelected(items[selectedIndex] != null && items[selectedIndex].is(Gun.class));
     }
 
     public boolean hasHat() {

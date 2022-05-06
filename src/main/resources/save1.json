@@ -11,8 +11,7 @@
         {
           "name": "Gun",
           "bulletSpeed": 10,
-          "fireRate": 10,
-          "bulletSize": 1
+          "fireRate": 10
         },
         {
           "name": "Hat"
@@ -80,7 +79,9 @@
     {
       "name": "Gun",
       "x": 100,
-      "y": 190
+      "y": 190,
+      "bulletSpeed": 10,
+      "fireRate": 50
     }
   ]
 }

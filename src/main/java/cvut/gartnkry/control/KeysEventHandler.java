@@ -5,9 +5,14 @@ import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.items.Item;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.view.UI;
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+
+import java.security.Key;
 import java.util.HashMap;
+
+import static javafx.scene.input.KeyCode.*;
 
 public class KeysEventHandler {
     private static final HashMap<KeyCode, Boolean> pressedKeys = new HashMap<>();
@@ -49,5 +54,9 @@ public class KeysEventHandler {
 
     public static int getDirection(KeyCode keyCode) {
         return (pressedKeys.containsKey(keyCode) && pressedKeys.get(keyCode) ? 1 : 0);
+    }
+
+    public static int getDirection(KeyCode keyCode1, KeyCode keyCode2){
+        return getDirection(keyCode1) - getDirection(keyCode2);
     }
 }
