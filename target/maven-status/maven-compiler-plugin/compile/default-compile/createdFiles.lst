@@ -1,7 +1,9 @@
 cvut\gartnkry\control\KeysEventHandler.class
 cvut\gartnkry\model\map\Map.class
+cvut\gartnkry\model\items\Plank.class
 cvut\gartnkry\Data.class
 cvut\gartnkry\model\items\Bottle.class
+cvut\gartnkry\model\items\Wood.class
 cvut\gartnkry\view\assets\PlayerAnimation$Frame.class
 cvut\gartnkry\control\ResourcesUtils.class
 cvut\gartnkry\view\View.class

@@ -9,6 +9,7 @@ sprite fixes:
 
 todo:
  - enemies
+ - floating items
  - ladder/bridge
  - save game data (JSON file)
  - fighting system (shooting)

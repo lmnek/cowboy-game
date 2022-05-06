@@ -23,16 +23,16 @@ public class CollisionManager {
     private static double velocityX;
     private static double velocityY;
 
+    private static Model model;
     private static Tile[][] tileMap;
     private static Player player;
-    private static ArrayList<Prop> props;
     private static HitboxInfo hbInfo;
 
-    public static void initialize(Model model) {
+    public static void initialize(Model _model) {
+        model = _model;
         tileMap = model.getMap().getTileMap();
         player = model.getPlayer();
-        props = model.getProps();
-        hbInfo = player.getHitboxInfo();
+        hbInfo = model.getPlayer().getHitboxInfo();
     }
 
     public static void handlePlayerCollisions() {
@@ -61,7 +61,7 @@ public class CollisionManager {
 
         //---PROPS---
         ArrayList<Prop> removedProps = new ArrayList<>();
-        for (Prop p : props) {
+        for (Prop p : model.getProps()) {
             Rectangle pRec = p.getHitboxRec();
             // close to the player?
             if (p.isActive() && p.getClass() != PropItem.class &&
@@ -78,7 +78,7 @@ public class CollisionManager {
     }
 
     public static PropItem getCollidedItem() {
-        for (Prop p : props) {
+        for (Prop p : model.getProps()) {
             if (p.isActive() && p.getClass() == PropItem.class &&
                     player.getEntityHitboxRec().getBoundsInParent().intersects(p.getHitboxRec().getBoundsInParent())) {
                 return (PropItem) p;

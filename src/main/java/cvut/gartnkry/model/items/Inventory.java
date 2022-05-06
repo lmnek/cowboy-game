@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import cvut.gartnkry.control.ResourcesUtils;
 import cvut.gartnkry.Settings;
 import cvut.gartnkry.view.UI;
-import cvut.gartnkry.view.assets.AssetsManager;
 import cvut.gartnkry.view.assets.PlayerAnimation;
 
 public class Inventory {
@@ -15,7 +14,6 @@ public class Inventory {
     public Inventory(JsonArray json) {
         items = new Item[Settings.INVENTORY_SIZE];
         selectedIndex = 0;
-
         for (int i = 0; i < json.size(); i++) {
             addItem((Item) ResourcesUtils.loadReflection(json.get(i).getAsJsonObject(), "items"), i);
         }

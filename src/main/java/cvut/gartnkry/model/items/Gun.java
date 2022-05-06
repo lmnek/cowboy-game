@@ -4,19 +4,15 @@ import com.google.gson.JsonObject;
 import cvut.gartnkry.model.entities.Bullet;
 
 public class Gun extends Item {
-    private double bulletSpeed;
+    private double bulletVelocity;
     public int fireRate;
 
     public Gun(JsonObject json) {
         super(json);
     }
 
-    public Bullet shoot(){
-        return new Bullet(0, 0);
-    }
-
-    public double getBulletSpeed() {
-        return bulletSpeed;
+    public Bullet shoot(int dirX, int dirY, double X, double Y){
+        return new Bullet(dirX, dirY, X, Y, bulletVelocity);
     }
 
     public int getFireRate() {
@@ -25,7 +21,7 @@ public class Gun extends Item {
 
     @Override
     public void parseJson(JsonObject json) {
-        this.bulletSpeed = json.get("bulletSpeed").getAsDouble();
+        this.bulletVelocity = json.get("bulletVelocity").getAsDouble();
         this.fireRate = json.get("fireRate").getAsInt();
     }
 }

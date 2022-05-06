@@ -15,8 +15,6 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static javafx.scene.input.KeyCode.*;
 
-//TODO: go through JAVADOC when program is done
-
 /**
  * Player class is responsible for:
  * <ul>
@@ -84,7 +82,7 @@ public class Player extends Entity {
         int dirX = KeysEventHandler.getDirection(D, A);
         int dirY = KeysEventHandler.getDirection(S, W);
         int shootX = KeysEventHandler.getDirection(RIGHT, LEFT);
-        int shootY = KeysEventHandler.getDirection(DOWN, UP);
+        int shootY = shootX == 0 ? KeysEventHandler.getDirection(DOWN, UP) : 0;
         boolean shooting = inventory.gunSelected() && (shootX != 0 || shootY != 0);
         ++tickCounter;
         if (shooting) {
@@ -111,7 +109,7 @@ public class Player extends Entity {
             ++fireRateCounter;
         } else if (shooting) {
             Gun gun = (Gun) inventory.getSelectedItem();
-            gun.shoot();
+            bullets.add(gun.shoot(shootX, shootY, sprite.getX() + animation.getShootX(), sprite.getY() + animation.getShootY()));
             fireRateMax = gun.getFireRate();
             fireRateCounter = 0;
             System.out.println(shootX + " " + shootY);

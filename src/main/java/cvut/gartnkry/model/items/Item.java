@@ -29,7 +29,7 @@ public abstract class Item {
         return name;
     }
 
-    public boolean is (Class inClass){
+    public boolean is(Class inClass){
         return getClass() == inClass;
     }
 }

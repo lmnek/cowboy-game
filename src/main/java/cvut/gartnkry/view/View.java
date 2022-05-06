@@ -4,9 +4,9 @@ import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.Sprite;
+import cvut.gartnkry.model.entities.Bullet;
 import cvut.gartnkry.model.entities.Entity;
 import cvut.gartnkry.model.entities.Player;
-import cvut.gartnkry.model.items.Item;
 import cvut.gartnkry.model.map.Tile;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -90,7 +90,7 @@ public class View {
         drawTiles(gc);
 
         LinkedList<Prop> frontProps = new LinkedList<>();
-        for (Prop prop : model.getProps()) {
+        model.getProps().forEach(prop -> {
             // on screen?
             if (prop.isActive()) {
                 // check for props in front of player
@@ -100,21 +100,22 @@ public class View {
                     drawSprite(gc, prop.getSprite());
                 }
             }
-        }
+        });
 
         drawPlayer(gc);
 
         // Draw remaining props
-        for (Prop prop : frontProps) {
-            drawSprite(gc, prop.getSprite());
-        }
+        frontProps.forEach(p -> drawSprite(gc, p.getSprite()));
 
         drawEntities(gc);
+
+        drawBullets(gc, model.getPlayer().getBullets());
 
         if (DRAW_HITBOXES) {
             drawHitboxes(gc);
         }
     }
+
 
     private void drawPlayer(GraphicsContext gc) {
         Player player = model.getPlayer();
@@ -175,6 +176,11 @@ public class View {
 
     private void drawSprite(GraphicsContext gc, Sprite sprite) {
         gc.drawImage(sprite.getImage(), sprite.getX() - camera.getX(), sprite.getY() - camera.getY());
+    }
+
+    private void drawBullets(GraphicsContext gc, LinkedList<Bullet> bullets) {
+        gc.setFill(new Color(0, 0, 0, 1));
+        bullets.forEach(b -> gc.fillRect(b.getX() - camera.getX(), b.getY() - camera.getY(), SCALE, SCALE));
     }
 
     private void drawBackground(GraphicsContext gc) {

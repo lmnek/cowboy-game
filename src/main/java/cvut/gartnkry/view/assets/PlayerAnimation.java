@@ -3,17 +3,15 @@ package cvut.gartnkry.view.assets;
 import cvut.gartnkry.control.ResourcesUtils;
 import cvut.gartnkry.model.Sprite;
 import cvut.gartnkry.model.items.Hat;
-import cvut.gartnkry.model.items.Item;
 import javafx.scene.image.Image;
-
 import java.util.HashMap;
-
+import static cvut.gartnkry.Settings.SCALE;
 
 public enum PlayerAnimation {
-    PLAYER_DOWN("forward", 5, 9, new int[]{3, 4}),
-    PLAYER_UP("backwards", 7, 6, new int[]{5, 6}),
-    PLAYER_LEFT("left", 4, 10, new int[]{2, 3}),
-    PLAYER_RIGHT("right", 4, 10, new int[]{2, 3});
+    PLAYER_DOWN("forward", 5, 9, 4, 10),
+    PLAYER_UP("backwards", 7, 6, 10, 7),
+    PLAYER_LEFT("left", 4, 10, -1, 9),
+    PLAYER_RIGHT("right", 4, 10, 12, 9);
 
     // GHOST("Enemies", "ghost", 7, 5);
 
@@ -21,7 +19,8 @@ public enum PlayerAnimation {
 
     private final int frameCount;
     private final int ticksPerFrame;
-    private final int[] lowerFrames;
+    private final int shootX;
+    private final int shootY;
 
     private final HashMap<Boolean, Frame[]> frames;
     private final HashMap<Boolean, Frame> defaultFrame;
@@ -35,14 +34,14 @@ public enum PlayerAnimation {
         private Frame(String path) {
             image = ResourcesUtils.loadAsset(path);
             lower = image.getPixelReader().getArgb((int) (image.getWidth() / 2), 0) == 0;
-            System.out.println(path + " " + lower);
         }
     }
 
-    PlayerAnimation(String filename, int frameCount, int ticksPerFrame, int[] lowerFrames) {
+    PlayerAnimation(String filename, int frameCount, int ticksPerFrame, int shootX, int shootY) {
         this.frameCount = frameCount;
         this.ticksPerFrame = ticksPerFrame;
-        this.lowerFrames = lowerFrames;
+        this.shootX = shootX * SCALE;
+        this.shootY = shootY * SCALE;
         frames = new HashMap<>();
         frames.put(true, loadFrames("Player/player_gun_" + filename));
         frames.put(false, loadFrames("Player/player_" + filename));
@@ -94,5 +93,13 @@ public enum PlayerAnimation {
             return new Sprite(Hat.FRONT, -0.5, y);
         }
         return new Sprite(Hat.SIDE, 1, y);
+    }
+
+    public int getShootX() {
+        return shootX;
+    }
+
+    public int getShootY() {
+        return shootY;
     }
 }

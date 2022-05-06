@@ -5,14 +5,12 @@ import com.google.gson.JsonElement;
 import cvut.gartnkry.Data;
 import cvut.gartnkry.control.ResourcesUtils;
 import cvut.gartnkry.control.collisions.CollisionManager;
+import cvut.gartnkry.model.entities.Bullet;
 import cvut.gartnkry.model.entities.Entity;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.model.map.Map;
-import cvut.gartnkry.model.entities.Bullet;
 import cvut.gartnkry.model.entities.Player;
-
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class Model {
     private Player player;
@@ -52,7 +50,7 @@ public class Model {
         CollisionManager.handlePlayerCollisions();
         player.update();
 
-        LinkedList<Bullet> bullets = player.getBullets();
+        player.getBullets().forEach(Bullet::update);
     }
 
     public Player getPlayer() {

@@ -10,7 +10,7 @@
       "inventory": [
         {
           "name": "Gun",
-          "bulletSpeed": 10,
+          "bulletVelocity": 10,
           "fireRate": 10
         },
         {
@@ -80,8 +80,18 @@
       "name": "Gun",
       "x": 100,
       "y": 190,
-      "bulletSpeed": 10,
+      "bulletVelocity": 10,
       "fireRate": 50
+    },
+    {
+      "name": "Wood",
+      "x": 160,
+      "y": 90
+    },
+    {
+      "name": "Plank",
+      "x": 220,
+      "y": 180
     }
   ]
 }

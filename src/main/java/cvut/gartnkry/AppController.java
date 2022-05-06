@@ -4,17 +4,18 @@ import cvut.gartnkry.control.KeysEventHandler;
 import cvut.gartnkry.control.collisions.CollisionManager;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
+import cvut.gartnkry.model.entities.Bullet;
 import cvut.gartnkry.view.View;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -74,12 +75,23 @@ public class AppController extends Application {
                 stage.getWidth(), stage.getHeight()).getBoundsInParent();
         setActiveOnProps(model.getProps(), activeBounds);
         //setActiveOnProps(model.getEntities(), activeBounds);
+
+        removeBullets(model.getPlayer().getBullets(), activeBounds);
     }
 
     private void setActiveOnProps(List<Prop> props, Bounds activeBounds) {
-        for (Prop p : props) {
-            p.setActive(activeBounds.intersects(p.getSprite().getImageRect().getBoundsInParent()));
-        }
+        props.forEach(p -> p.setActive(activeBounds.intersects(p.getSprite().getImageRect().getBoundsInParent())));
+    }
+
+    private void removeBullets(LinkedList<Bullet> bullets, Bounds activeBounds){
+        LinkedList<Bullet> nonActiveBullets = new LinkedList();
+        bullets.forEach(b -> {
+            if (!activeBounds.intersects(b.getRectangle().getBoundsInParent())) {
+                nonActiveBullets.add(b);
+            }
+        });
+        bullets.removeAll(nonActiveBullets);
+        LOG.finer("Active bullets count: " + bullets.size());
     }
 
     private void setEvents(Stage stage) {

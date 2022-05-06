@@ -12,12 +12,12 @@ public class Settings {
 
     public static final long LOOP_INTERVAL = 10_000_000; // in nanoseconds
 
-    public static final double PLAYER_MAX_VELOCITY = 0.2 * SCALE;
+    public static final double PLAYER_MAX_VELOCITY = 1.2;
     public static final int PLAYER_TICKS_TO_ACCELERATE = 10;
     public static final int INVENTORY_SIZE = 5;
 
 
-    public static final boolean DRAW_HITBOXES = false;
+    public static final boolean DRAW_HITBOXES = true;
     public static final double HITBOX_PADDING = 0.01 * SCALE;
 
     public static final int CACTUS_DAMAGE = 1;
