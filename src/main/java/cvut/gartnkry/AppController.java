@@ -42,10 +42,10 @@ public class AppController extends Application {
 
         Data data = new Data("save1.json");
         model = new Model(data);
-        CollisionManager.initialize(model);
         view = new View(stage, model);
         view.initialization();
 
+        CollisionManager.initialize(model);
         updateActiveProps();
         setEvents(stage);
 

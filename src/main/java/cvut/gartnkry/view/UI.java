@@ -66,7 +66,7 @@ public class UI {
         rec.setArcWidth(SCALE);
         rec.setFill(notSelectedCol);
         rec.setStroke(Color.color(0.1,0.15,0.1));
-        rec.setStrokeWidth(5);
+        rec.setStrokeWidth(SCALE);
         return rec;
     }
 
