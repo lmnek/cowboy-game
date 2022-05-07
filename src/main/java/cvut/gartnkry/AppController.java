@@ -3,20 +3,16 @@ package cvut.gartnkry;
 import cvut.gartnkry.control.KeysEventHandler;
 import cvut.gartnkry.control.collisions.CollisionManager;
 import cvut.gartnkry.model.Model;
-import cvut.gartnkry.model.Prop;
-import cvut.gartnkry.model.entities.Bullet;
+import cvut.gartnkry.view.UI;
 import cvut.gartnkry.view.View;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -25,10 +21,7 @@ import java.util.logging.Logger;
  */
 public class AppController extends Application {
 
-    private Stage stage;
     private View view;
-    private Model model;
-
     private static final Logger LOG = Logger.getLogger(AppController.class.getName());
 
     public static void main(String[] args) {
@@ -37,17 +30,13 @@ public class AppController extends Application {
 
     @Override
     public void start(Stage stage) {
-        this.stage = stage;
         //loadLoggerProperties();
         LOG.info("Start loading/initializing the game.");
 
         Data data = new Data("save1.json");
-        model = new Model(data);
-        view = new View(stage, model);
-        view.initialization();
-
-        CollisionManager.initialize(model);
-        updateActiveProps();
+        Model.getInstance().initialize(data);
+        view = new View(stage);
+        CollisionManager.initialize();
         setEvents(stage);
 
         AnimationTimer loopTimer = new AnimationTimer() {
@@ -59,8 +48,9 @@ public class AppController extends Application {
                 if (now - lastUpdate >= Settings.LOOP_INTERVAL) {
                     // Render and draw graphics
                     view.render();
+                    CollisionManager.handleCollisions();
                     // Set states
-                    model.update();
+                    Model.getInstance().update();
                     updateActiveProps();
                     lastUpdate = now;
                 }
@@ -71,37 +61,31 @@ public class AppController extends Application {
     }
 
     public void updateActiveProps() {
-        Bounds activeBounds = new Rectangle(view.getCamera().getX(), view.getCamera().getY(),
-                stage.getWidth(), stage.getHeight()).getBoundsInParent();
-        setActiveOnProps(model.getProps(), activeBounds);
-        //setActiveOnProps(model.getEntities(), activeBounds);
+        Bounds activeBounds = view.getScreenBounds();
+        Model model = Model.getInstance();
+        model.getProps().forEach(p -> p.setActive(activeBounds.intersects(p.getSprite().getImageRect().getBoundsInParent())));
+        model.getEntities().forEach(e -> e.setActive(activeBounds.intersects(e.getSprite().getImageRect().getBoundsInParent())));
+        model.getVoids().forEach(v -> v.setActive(activeBounds.intersects(v.getSprite().getImageRect().getBoundsInParent())));
 
-        removeBullets(model.getPlayer().getBullets(), activeBounds);
+        model.getBullets().removeIf(b -> !activeBounds.intersects(b.getRectangle().getBoundsInParent()));
+        LOG.finer("Active bullets count: " + model.getBullets().size());
     }
 
-    private void setActiveOnProps(List<Prop> props, Bounds activeBounds) {
-        props.forEach(p -> p.setActive(activeBounds.intersects(p.getSprite().getImageRect().getBoundsInParent())));
+    public static void reloadGame() {
+        Model.reinitialize();
+        UI.getInstance().redraw();
+        CollisionManager.initialize();
     }
 
-    private void removeBullets(LinkedList<Bullet> bullets, Bounds activeBounds){
-        LinkedList<Bullet> nonActiveBullets = new LinkedList();
-        bullets.forEach(b -> {
-            if (!activeBounds.intersects(b.getRectangle().getBoundsInParent())) {
-                nonActiveBullets.add(b);
-            }
-        });
-        bullets.removeAll(nonActiveBullets);
-        LOG.finer("Active bullets count: " + bullets.size());
-    }
 
     private void setEvents(Stage stage) {
         // player movement - W A S D
-        stage.getScene().setOnKeyPressed(event -> KeysEventHandler.onKeyPressed(event));
-        stage.getScene().setOnKeyReleased(event -> KeysEventHandler.onKeyReleased(event));
-        stage.getScene().setOnKeyTyped(event -> KeysEventHandler.onKeyTyped(event, model));
+        stage.getScene().setOnKeyPressed(KeysEventHandler::onKeyPressed);
+        stage.getScene().setOnKeyReleased(KeysEventHandler::onKeyReleased);
+        stage.getScene().setOnKeyTyped(KeysEventHandler::onKeyTyped);
 
         stage.setOnCloseRequest(t -> {
-            Data.saveSave(model);
+            Data.saveSave(Model.getInstance());
             Platform.exit();
             System.exit(0);
         });

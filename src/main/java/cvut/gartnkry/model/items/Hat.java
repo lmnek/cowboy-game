@@ -16,4 +16,10 @@ public class Hat extends Item{
     public void parseJson(JsonObject json) {
 
     }
+
+    @Override
+    public boolean use() {
+
+        return false;
+    }
 }

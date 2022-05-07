@@ -25,6 +25,7 @@ public class Inventory {
         dropItem(items[selectedIndex]);
         addItem(propItem.getItem(), selectedIndex);
         PlayerAnimation.setGunSelected(items[selectedIndex].is(Gun.class));
+        UI.getInstance().drawInventoryItems(this);
     }
 
 
@@ -59,10 +60,6 @@ public class Inventory {
         return items[selectedIndex];
     }
 
-    public int getSelectedIndex() {
-        return selectedIndex;
-    }
-
     public void selectNextItem() {
         selectItem(selectedIndex + 1);
     }
@@ -81,5 +78,14 @@ public class Inventory {
 
     public boolean hasHat() {
         return hatCount != 0;
+    }
+
+    public void useSelectedItem() {
+        if (items[selectedIndex] != null) {
+            if(items[selectedIndex].use()){
+                items[selectedIndex] = null;
+                UI.getInstance().drawInventoryItems(this);
+            }
+        }
     }
 }

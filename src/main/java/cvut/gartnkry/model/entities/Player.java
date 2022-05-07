@@ -6,6 +6,7 @@ import cvut.gartnkry.model.Sprite;
 import cvut.gartnkry.model.items.Gun;
 import cvut.gartnkry.model.items.Inventory;
 import cvut.gartnkry.model.items.PropItem;
+import cvut.gartnkry.view.UI;
 import cvut.gartnkry.view.assets.PlayerAnimation;
 
 import java.util.*;
@@ -31,7 +32,8 @@ import static javafx.scene.input.KeyCode.*;
  * </ul>
  */
 public class Player extends Entity {
-    private int tickCounter;
+    private PlayerAnimation animation;
+    private int animationCounter;
     private double velocityX, velocityY;
     private final double maxSidewaysVel;
     private final double maxVel;
@@ -84,7 +86,7 @@ public class Player extends Entity {
         int shootX = KeysEventHandler.getDirection(RIGHT, LEFT);
         int shootY = shootX == 0 ? KeysEventHandler.getDirection(DOWN, UP) : 0;
         boolean shooting = inventory.gunSelected() && (shootX != 0 || shootY != 0);
-        ++tickCounter;
+        ++animationCounter;
         if (shooting) {
             setShootingSprite(dirX, dirY, shootX, shootY);
         } else {
@@ -112,7 +114,6 @@ public class Player extends Entity {
             bullets.add(gun.shoot(shootX, shootY, sprite.getX() + animation.getShootX(), sprite.getY() + animation.getShootY()));
             fireRateMax = gun.getFireRate();
             fireRateCounter = 0;
-            System.out.println(shootX + " " + shootY);
         }
     }
 
@@ -165,12 +166,12 @@ public class Player extends Entity {
 
     private void setSpriteImage(PlayerAnimation tmp_animation) {
         if (tmp_animation != animation) {
-            tickCounter = animation.getTicksPerFrame() - 3;
+            animationCounter = animation.getTicksPerFrame() - 3;
             animation = tmp_animation;
             sprite.setImage(animation.getFirstFrame());
-        } else if (tickCounter >= animation.getTicksPerFrame()) {
+        } else if (animationCounter >= animation.getTicksPerFrame()) {
             sprite.setImage(animation.getNextFrame());
-            tickCounter = 0;
+            animationCounter = 0;
         }
     }
 
@@ -189,13 +190,19 @@ public class Player extends Entity {
     }
 
     @Override
-    public void decreaseHealth(int damagePoints) {
+    public void damage(int damagePoints) {
         if (!invincible) {
-            super.decreaseHealth(damagePoints);
+            super.damage(damagePoints);
             invincible = true;
+            UI.getInstance().drawHearts(this);
         }
     }
 
+    @Override
+    public void heal(int healPoints) {
+        super.heal(healPoints);
+        UI.getInstance().drawHearts(this);
+    }
 
     public LinkedList<Bullet> getBullets() {
         return bullets;

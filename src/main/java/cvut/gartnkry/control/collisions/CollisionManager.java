@@ -3,14 +3,15 @@ package cvut.gartnkry.control.collisions;
 import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
+import cvut.gartnkry.model.entities.Bullet;
 import cvut.gartnkry.model.entities.Player;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.model.map.Tile;
-import cvut.gartnkry.view.UI;
 import cvut.gartnkry.view.View;
+import javafx.geometry.Bounds;
 import javafx.scene.shape.Rectangle;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import static cvut.gartnkry.Settings.CACTUS_DAMAGE;
 import static cvut.gartnkry.Settings.HITBOX_PADDING;
@@ -23,19 +24,17 @@ public class CollisionManager {
     private static double velocityX;
     private static double velocityY;
 
-    private static Model model;
     private static Tile[][] tileMap;
     private static Player player;
     private static HitboxInfo hbInfo;
 
-    public static void initialize(Model _model) {
-        model = _model;
-        tileMap = model.getMap().getTileMap();
-        player = model.getPlayer();
-        hbInfo = model.getPlayer().getHitboxInfo();
+    public static void initialize() {
+        tileMap = Model.getInstance().getMap().getTileMap();
+        player = Model.getInstance().getPlayer();
+        hbInfo = player.getHitboxInfo();
     }
 
-    public static void handlePlayerCollisions() {
+    public static void handleCollisions() {
         player.computeVelocities();
         velocityX = player.getVelocityX();
         velocityY = player.getVelocityY();
@@ -59,26 +58,56 @@ public class CollisionManager {
             }
         }
 
+        LinkedList<Bullet> bullets = Model.getInstance().getBullets();
         //---PROPS---
-        ArrayList<Prop> removedProps = new ArrayList<>();
-        for (Prop p : model.getProps()) {
+        for (Prop p : Model.getInstance().getProps()) {
             Rectangle pRec = p.getHitboxRec();
             // close to the player?
-            if (p.isActive() && p.getClass() != PropItem.class &&
-                    activeRec.getBoundsInParent().intersects(pRec.getBoundsInParent()) && checkPlayerCollision(pRec)) {
-                // Player collided
-                if (p.getName().equals("Cactus")) {
-                    player.decreaseHealth(CACTUS_DAMAGE);
-                    UI.getInstance().drawHearts(player);
+            if (p.isActive() && p.getClass() != PropItem.class) {
+                if (activeRec.getBoundsInParent().intersects(pRec.getBoundsInParent()) && checkPlayerCollision(pRec)) {
+                    // Player collided
+                    if (p.getName().equals("Cactus")) {
+                        player.damage(CACTUS_DAMAGE);
+                    }
                 }
+                bullets.removeIf(b -> b.getRectangle().getBoundsInParent().intersects(pRec.getBoundsInParent()));
             }
         }
         player.setVelocityX(velocityX);
         player.setVelocityY(velocityY);
+
+        //---ENTITIES---
+        Bounds playerBounds = player.getEntityHitboxRec().getBoundsInParent();
+        Model.getInstance().getEntities().forEach(e -> {
+            if (e.isActive()) {
+                Bounds entityBounds = e.getEntityHitboxRec().getBoundsInParent();
+                if (entityBounds.intersects(e.getName().equals("Void") ? playerRec.getBoundsInParent() : playerBounds)) {
+                    player.damage(e.getDamage());
+                }
+
+                // bullets
+                bullets.removeIf(b -> {
+                    if (b.getRectangle().getBoundsInParent().intersects(entityBounds)) {
+                        e.damage(b.getGun().getDamage());
+                        return true;
+                    }
+                    return false;
+                });
+            }
+        });
+
+        Model.getInstance().getVoids().removeIf(v -> {
+            if (v.isActive() && v.getActivateBounds().intersects(playerRec.getBoundsInParent())) {
+                v.activate();
+                Model.getInstance().getEntities().add(v);
+                return true;
+            }
+            return false;
+        });
     }
 
     public static PropItem getCollidedItem() {
-        for (Prop p : model.getProps()) {
+        for (Prop p : Model.getInstance().getProps()) {
             if (p.isActive() && p.getClass() == PropItem.class &&
                     player.getEntityHitboxRec().getBoundsInParent().intersects(p.getHitboxRec().getBoundsInParent())) {
                 return (PropItem) p;

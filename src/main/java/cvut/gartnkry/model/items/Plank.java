@@ -11,4 +11,10 @@ public class Plank extends Item{
     public void parseJson(JsonObject json) {
 
     }
+
+    @Override
+    public boolean use() {
+
+        return false;
+    }
 }

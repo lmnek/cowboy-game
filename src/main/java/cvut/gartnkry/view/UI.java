@@ -1,6 +1,7 @@
 package cvut.gartnkry.view;
 
 import cvut.gartnkry.control.ResourcesUtils;
+import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.entities.Player;
 import cvut.gartnkry.model.items.Inventory;
 import cvut.gartnkry.model.items.Item;
@@ -56,8 +57,13 @@ public class UI {
 
         canvas = new Canvas(pane.getWidth(), pane.getHeight());
         pane.getChildren().add(canvas);
+        instance.redraw();
+    }
 
-        instance = this;
+    public void redraw(){
+        instance.drawInventoryItems(Model.getInstance().getPlayer().getInventory());
+        instance.drawHearts(Model.getInstance().getPlayer());
+        instance.newSelectedItem(0, 0);
     }
 
     private Rectangle getInventoryRec() {

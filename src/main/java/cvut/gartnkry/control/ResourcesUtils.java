@@ -3,6 +3,7 @@ package cvut.gartnkry.control;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import cvut.gartnkry.AppController;
 import cvut.gartnkry.Settings;
 import javafx.scene.image.Image;
 
@@ -11,11 +12,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Logger;
 
 /**
  * Set of static methods that can be used by classes working with resources/assets.
  */
 public class ResourcesUtils {
+
+    private static final Logger LOG = Logger.getLogger(AppController.class.getName());
+
     /**
      * Load, scale and return given image/asset.
      *
@@ -27,6 +32,7 @@ public class ResourcesUtils {
 
     public static Image loadAsset(String path, double scale) {
         String fullpath = "/" + path + Settings.ASSETS_FILE_FORMAT; // build relative path
+        LOG.info("Loading asset: " + fullpath);
         String url = ResourcesUtils.class.getResource(fullpath).toString(); // get url
         // TODO: find a better way to scale image + add try catch
         // load image and scale it
@@ -59,10 +65,10 @@ public class ResourcesUtils {
         if (packageName != "") {
             packageName += ".";
         }
+        String path = "cvut.gartnkry.model." + packageName + json.get("name").getAsString();
+        LOG.info("Loading object with reflection: " + path);
         try {
-            Constructor constructor = Class.forName(
-                            "cvut.gartnkry.model." + packageName + json.get("name").getAsString())
-                    .getConstructor(JsonObject.class);
+            Constructor constructor = Class.forName(path).getConstructor(JsonObject.class);
             Object[] parameters = {json};
             return constructor.newInstance(parameters);
         } catch (NoSuchMethodException e) {

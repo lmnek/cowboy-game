@@ -89,6 +89,15 @@ public class AssetsManager {
         return null;
     }
 
+    public static int getDamage(String name) {
+        for (JsonElement en : entitiesData) {
+            if (en.getAsJsonObject().get("name").getAsString().equals(name)) {
+                return en.getAsJsonObject().get("damage").getAsInt();
+            }
+        }
+        return 0;
+    }
+
     /**
      * This method is usually used to get Tile
      * from tile code used in a CSV map file.

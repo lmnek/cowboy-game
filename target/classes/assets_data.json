@@ -112,7 +112,7 @@
     },
     {
       "name": "Tree",
-      "hitbox":{
+      "hitbox": {
         "x": 5,
         "y": 10,
         "width": 2,
@@ -140,10 +140,10 @@
     {
       "name": "Hat",
       "hitbox": {
-        "x": 0,
+        "x": 3,
         "y": 0,
-        "width": 5,
-        "height": 5
+        "width": 9,
+        "height": 6
       }
     },
     {
@@ -158,19 +158,19 @@
     {
       "name": "Wood",
       "hitbox": {
-        "x": 0,
-        "y": 0,
-        "width": 5,
-        "height": 5
+        "x": 1,
+        "y": 1,
+        "width": 12,
+        "height": 12
       }
     },
     {
       "name": "Plank",
       "hitbox": {
-        "x": 0,
-        "y": 18,
-        "width": 13,
-        "height": 4
+        "x": 2,
+        "y": 2,
+        "width": 10,
+        "height": 10
       }
     }
   ],
@@ -187,17 +187,28 @@
         "x": 3,
         "y": 7,
         "width": 5,
-        "height": 12
+        "height": 13
       }
     },
     {
       "name": "Ghost",
-      "hitbox": {
+      "entityHitbox": {
+        "x": 2,
+        "y": 3,
+        "width": 10,
+        "height": 15
+      },
+      "damage": 2
+    },
+    {
+      "name": "Void",
+      "entityHitbox": {
         "x": 4,
-        "y": 19,
-        "width": 6,
-        "height": 9
-      }
+        "y": 3,
+        "width": 26,
+        "height": 24
+      },
+      "damage": 1
     }
   ]
 }

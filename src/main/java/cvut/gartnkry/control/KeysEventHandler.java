@@ -1,21 +1,21 @@
 package cvut.gartnkry.control;
 
+import cvut.gartnkry.AppController;
 import cvut.gartnkry.control.collisions.CollisionManager;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.items.Item;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.view.UI;
-import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.security.Key;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
-import static javafx.scene.input.KeyCode.*;
 
 public class KeysEventHandler {
     private static final HashMap<KeyCode, Boolean> pressedKeys = new HashMap<>();
+    private static final Logger LOG = Logger.getLogger(AppController.class.getName());
 
     public static void onKeyPressed(KeyEvent event) {
         pressedKeys.put(event.getCode(), true);
@@ -25,38 +25,46 @@ public class KeysEventHandler {
         pressedKeys.put(event.getCode(), false);
     }
 
-    public static void onKeyTyped(KeyEvent event, Model model) {
-        switch (event.getCharacter().toUpperCase()) {
-            case "E":
-                model.getPlayer().getInventory().selectNextItem();
-                break;
-            case "Q":
-                model.getPlayer().getInventory().selectPreviousItem();
-                break;
-            case "F":
-                PropItem propItem = CollisionManager.getCollidedItem();
-                if (propItem != null) {
-                    Item tmp = model.getPlayer().getInventory().getSelectedItem();
-                    model.getPlayer().pickupItem(propItem);
-                    if (tmp != null) {
-                        propItem.setNewItem(tmp);
-                    } else {
-                        model.getProps().remove(propItem);
-                    }
-                    UI.getInstance().drawInventoryItems(model.getPlayer().getInventory());
-                }
-        }
-    }
-
-    public static boolean isKeyPressed(KeyCode keyCode) {
-        return pressedKeys.containsKey(keyCode) && pressedKeys.get(keyCode);
-    }
-
     public static int getDirection(KeyCode keyCode) {
         return (pressedKeys.containsKey(keyCode) && pressedKeys.get(keyCode) ? 1 : 0);
     }
 
-    public static int getDirection(KeyCode keyCode1, KeyCode keyCode2){
+    public static int getDirection(KeyCode keyCode1, KeyCode keyCode2) {
         return getDirection(keyCode1) - getDirection(keyCode2);
     }
+
+    public static void onKeyTyped(KeyEvent event) {
+        switch (event.getCharacter().toUpperCase()) {
+            case "E":
+                LOG.info("E - select previous item");
+                Model.getInstance().getPlayer().getInventory().selectNextItem();
+                break;
+            case "Q":
+                LOG.info("Q - select next item");
+                Model.getInstance().getPlayer().getInventory().selectPreviousItem();
+                break;
+            case "F":
+                LOG.info("F - pick up item");
+                PropItem propItem = CollisionManager.getCollidedItem();
+                if (propItem != null) {
+                    Item tmp = Model.getInstance().getPlayer().getInventory().getSelectedItem();
+                    Model.getInstance().getPlayer().pickupItem(propItem);
+                    if (tmp != null) {
+                        propItem.setNewItem(tmp);
+                    } else {
+                        Model.getInstance().getProps().remove(propItem);
+                    }
+                }
+                break;
+            case "C":
+                LOG.info("C - use selected item");
+                Model.getInstance().getPlayer().getInventory().useSelectedItem();
+                break;
+            case "R":
+                LOG.info("R - reload game");
+                AppController.reloadGame();
+                break;
+        }
+    }
+
 }

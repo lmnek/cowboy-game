@@ -17,9 +17,8 @@ public abstract class Item {
 
     abstract public void parseJson(JsonObject json);
 
-    // GET POPIS - mnozstvi, lvl, ...
-
-    //
+    public abstract boolean use();
+    // abstract GET POPIS - mnozstvi, lvl, ...
 
     public Image getImage() {
         return image;
@@ -32,4 +31,5 @@ public abstract class Item {
     public boolean is(Class inClass){
         return getClass() == inClass;
     }
+
 }

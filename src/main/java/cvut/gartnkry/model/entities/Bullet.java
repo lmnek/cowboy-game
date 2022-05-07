@@ -1,20 +1,22 @@
 package cvut.gartnkry.model.entities;
 
 import cvut.gartnkry.Settings;
+import cvut.gartnkry.model.items.Gun;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Scale;
 
 public class Bullet {
+    private final Gun gun;
     private final double velocityX;
     private final double velocityY;
     private double X;
     private double Y;
 
-    public Bullet(int directionX, int directionY, double X, double Y, double velocity){
+    public Bullet(int directionX, int directionY, double X, double Y, double velocity, Gun gun){
         this.velocityX = directionX * velocity;
         this.velocityY = directionY * velocity;
         this.X = X;
         this.Y = Y;
+        this.gun = gun;
     }
 
     public void update(){
@@ -32,5 +34,9 @@ public class Bullet {
 
     public double getY() {
         return Y;
+    }
+
+    public Gun getGun() {
+        return gun;
     }
 }

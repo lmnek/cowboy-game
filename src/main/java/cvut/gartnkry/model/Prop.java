@@ -10,7 +10,7 @@ public class Prop {
     protected Sprite sprite;
     protected HitboxInfo hitboxInfo;
     protected final String name;
-    private boolean active;
+    protected boolean active;
 
     public Prop(JsonObject data, Image image) {
         this.name = data.get("name").getAsString();

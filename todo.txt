@@ -1,7 +1,13 @@
 
 fixes:
-- fix speed when changing scale, player hitbox
-- items hitboxes
+- fix bullet speed when changing scale, player hitbox
+- bullets behind props
+
+pepa:
+- foreach vs foreach
+- getInstance casto / ukladat si reference
+- loggery
+- napasovat vlakna
 
 sprite fixes:
 - rovna hlava no gun default
@@ -12,7 +18,6 @@ todo:
  - floating items
  - ladder/bridge
  - save game data (JSON file)
- - fighting system (shooting)
  - death
  - loggers
  - threads for enemy intelligence

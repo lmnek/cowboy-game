@@ -6,12 +6,13 @@
       "x": 180,
       "y": 170,
       "health": 7,
-      "max_health": 10,
+      "maxHealth": 10,
       "inventory": [
         {
           "name": "Gun",
           "bulletVelocity": 10,
-          "fireRate": 10
+          "fireRate": 10,
+          "damage": 1
         },
         {
           "name": "Hat"
@@ -22,15 +23,23 @@
       "name": "Ghost",
       "x": 120,
       "y": 80,
-      "health": 4,
-      "max_health": 10
+      "health": 20,
+      "maxHealth": 30
     },
     {
       "name": "Ghost",
       "x": 240,
       "y": 160,
       "health": 1,
-      "max_health": 10
+      "maxHealth": 30
+    },
+    {
+      "name": "Void",
+      "x": 225,
+      "y": 45,
+      "health": 20,
+      "maxHealth": 20,
+      "activated": false
     }
   ],
   "props": [
@@ -81,7 +90,8 @@
       "x": 100,
       "y": 190,
       "bulletVelocity": 10,
-      "fireRate": 50
+      "fireRate": 50,
+      "damage": 2
     },
     {
       "name": "Wood",
