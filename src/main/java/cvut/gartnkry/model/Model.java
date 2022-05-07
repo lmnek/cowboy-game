@@ -74,6 +74,7 @@ public class Model {
                 e.update();
             }
         });
+        props.forEach(Prop::update);
     }
 
     public Player getPlayer() {

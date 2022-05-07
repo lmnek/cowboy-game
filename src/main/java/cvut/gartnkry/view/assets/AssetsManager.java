@@ -110,4 +110,12 @@ public class AssetsManager {
         return tileMap.get(code);
     }
 
+    public static Tile getTileFromName(String name) {
+        for (Tile t : tileMap.values()) {
+            if (t.getName().equals(name)){
+                return t;
+            }
+        }
+        return null;
+    }
 }

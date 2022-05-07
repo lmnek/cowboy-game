@@ -54,4 +54,6 @@ public class Prop {
     public String getName() {
         return name;
     }
+
+    public void update(){};
 }

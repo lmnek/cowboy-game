@@ -8,8 +8,6 @@ import cvut.gartnkry.view.assets.AssetsManager;
 
 import java.util.Random;
 
-import static cvut.gartnkry.Settings.SCALE;
-
 public class Ghost extends Entity {
     private final Animation animation;
     private final double maxVelocity = 3;

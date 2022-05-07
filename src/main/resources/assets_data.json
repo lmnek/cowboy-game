@@ -89,6 +89,26 @@
       "filename": "sand_inner_right_top",
       "code": "sirt",
       "hasHitbox": true
+    },
+    {
+      "filename": "sand_bridge_right",
+      "code": "sbr",
+      "hasHitbox": false
+    },
+    {
+      "filename": "sand_bridge_left",
+      "code": "sbl",
+      "hasHitbox": false
+    },
+    {
+      "filename": "sand_bridge_top",
+      "code": "sbt",
+      "hasHitbox": false
+    },
+    {
+      "filename": "sand_bridge_bottom",
+      "code": "sbb",
+      "hasHitbox": false
     }
   ],
   "props": [

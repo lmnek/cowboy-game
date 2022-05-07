@@ -2,6 +2,7 @@
 fixes:
 - fix bullet speed when changing scale, player hitbox
 - bullets behind props
+- death font size
 
 pepa:
 - foreach vs foreach
@@ -14,15 +15,14 @@ sprite fixes:
 - pistol v prave ruce - right
 
 todo:
- - enemies
- - floating items
+ - enemies - spawn points
  - ladder/bridge
  - save game data (JSON file)
- - death
  - loggers
  - threads for enemy intelligence
  - try/catch
  - functional test
+ - sounds
 
  - go through all TODOS
  - go through all warnings

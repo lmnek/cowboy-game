@@ -78,22 +78,23 @@ public class Player extends Entity {
     }
 
     public void update() {
-        sprite.addXYScaled(velocityX, velocityY);
-        invincibleTick();
+        if (!isDead()) {
+            sprite.addXYScaled(velocityX, velocityY);
+            invincibleTick();
 
-        int dirX = KeysEventHandler.getDirection(D, A);
-        int dirY = KeysEventHandler.getDirection(S, W);
-        int shootX = KeysEventHandler.getDirection(RIGHT, LEFT);
-        int shootY = shootX == 0 ? KeysEventHandler.getDirection(DOWN, UP) : 0;
-        boolean shooting = inventory.gunSelected() && (shootX != 0 || shootY != 0);
-        ++animationCounter;
-        if (shooting) {
-            setShootingSprite(dirX, dirY, shootX, shootY);
-        } else {
-            setWalkingSprite(dirX, dirY);
+            int dirX = KeysEventHandler.getDirection(D, A);
+            int dirY = KeysEventHandler.getDirection(S, W);
+            int shootX = KeysEventHandler.getDirection(RIGHT, LEFT);
+            int shootY = shootX == 0 ? KeysEventHandler.getDirection(DOWN, UP) : 0;
+            boolean shooting = inventory.gunSelected() && (shootX != 0 || shootY != 0);
+            ++animationCounter;
+            if (shooting) {
+                setShootingSprite(dirX, dirY, shootX, shootY);
+            } else {
+                setWalkingSprite(dirX, dirY);
+            }
+            handleShooting(shootX, shootY, shooting);
         }
-
-        handleShooting(shootX, shootY, shooting);
     }
 
     private void invincibleTick() {

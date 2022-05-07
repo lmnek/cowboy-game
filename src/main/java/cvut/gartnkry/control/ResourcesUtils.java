@@ -6,9 +6,11 @@ import com.google.gson.JsonParser;
 import cvut.gartnkry.AppController;
 import cvut.gartnkry.Settings;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -83,5 +85,19 @@ public class ResourcesUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static Font loadFont(String fontName, int size) {
+        Font font = null;
+        InputStream fontStream = ResourcesUtils.class.getResourceAsStream("/Fonts/" + fontName);
+        if (fontStream != null) {
+            font = Font.loadFont(fontStream, size);
+            try {
+                fontStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return font;
     }
 }

@@ -41,12 +41,15 @@ public class View {
     private final double playerScreenY;
     private Point2D camera;
 
-    private final ColorAdjust colorAdjust;
+    private final ColorAdjust damageEffect;
+    private final ColorAdjust deathEffect;
 
     public View(Stage stage) {
         this.stage = stage;
-        colorAdjust = new ColorAdjust();
-        colorAdjust.setBrightness(0.3);
+        damageEffect = new ColorAdjust();
+        damageEffect.setBrightness(0.3);
+        deathEffect = new ColorAdjust();
+        deathEffect.setBrightness(-0.9);
 
         // Compute screen size
         int screenWidth = pixelTileSize * Settings.TILES_COUNT_WIDTH;
@@ -79,20 +82,34 @@ public class View {
         setCamera();
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        drawBackground(gc);
+        if (Model.getInstance().getPlayer().isDead()) {
+            gc.setEffect(deathEffect);
+            UI.getInstance().showDeathMessage();
+        } else {
+            UI.getInstance().hideDeathMessage();
+        }
 
+        drawBackground(gc);
         drawTiles(gc);
 
         LinkedList<Prop> frontProps = new LinkedList<>();
         Model.getInstance().getProps().forEach(prop -> {
             // on screen?
             if (prop.isActive()) {
+                double propY = prop.getHitboxRec().getY();
                 // check for props in front of player
-                if (prop.getHitboxRec().getY() > Model.getInstance().getPlayer().getHitboxRec().getY() + HITBOX_PADDING) {
+                if (propY > Model.getInstance().getPlayer().getHitboxRec().getY() + HITBOX_PADDING) {
                     frontProps.add(prop);
                 } else {
                     drawSprite(gc, prop.getSprite());
                 }
+//                Model.getInstance().getBullets().forEach(b -> {
+//                    if (propY > b.getRectangle().getY() + HITBOX_PADDING) {
+//                        frontProps.add(b);
+//                    } else {
+//                        drawBullet(gc, b);
+//                    }
+//                });
             }
         });
 
@@ -104,8 +121,9 @@ public class View {
 
         drawPlayer(gc);
 
-        // Draw remaining props
+        // Draw remaining props and bullets
         frontProps.forEach(p -> drawSprite(gc, p.getSprite()));
+        //frontBullets.forEach(b -> drawBullet(gc, b));
 
         Model.getInstance().getEntities().forEach(e -> {
             if (e.getClass() != Void.class && e.isActive()) {
@@ -113,7 +131,7 @@ public class View {
             }
         });
 
-        drawBullets(gc, Model.getInstance().getBullets());
+        Model.getInstance().getBullets().forEach(b -> drawBullet(gc, b));
 
         if (DRAW_HITBOXES) {
             drawHitboxes(gc);
@@ -123,17 +141,19 @@ public class View {
 
     private void drawPlayer(GraphicsContext gc) {
         Player player = Model.getInstance().getPlayer();
-        if (player.isInvincible()) {
-            gc.setEffect(colorAdjust);
-        }
-        gc.drawImage(player.getSprite().getImage(), playerScreenX, playerScreenY);
+        if (!player.isDead()) {
+            if (player.isInvincible()) {
+                gc.setEffect(damageEffect);
+            }
+            gc.drawImage(player.getSprite().getImage(), playerScreenX, playerScreenY);
 
 
-        if (player.hasHat()) {
-            Sprite hatSprite = player.getHatSprite();
-            gc.drawImage(hatSprite.getImage(), hatSprite.getX() + playerScreenX, hatSprite.getY() + playerScreenY);
+            if (player.hasHat()) {
+                Sprite hatSprite = player.getHatSprite();
+                gc.drawImage(hatSprite.getImage(), hatSprite.getX() + playerScreenX, hatSprite.getY() + playerScreenY);
+            }
+            gc.setEffect(null);
         }
-        gc.setEffect(null);
     }
 
     private void setCamera() {
@@ -178,9 +198,9 @@ public class View {
         gc.drawImage(sprite.getImage(), sprite.getX() - camera.getX(), sprite.getY() - camera.getY());
     }
 
-    private void drawBullets(GraphicsContext gc, LinkedList<Bullet> bullets) {
+    private void drawBullet(GraphicsContext gc, Bullet bullet) {
         gc.setFill(new Color(0, 0, 0, 1));
-        bullets.forEach(b -> gc.fillRect(b.getX() - camera.getX(), b.getY() - camera.getY(), SCALE, SCALE));
+        gc.fillRect(bullet.getX() - camera.getX(), bullet.getY() - camera.getY(), SCALE, SCALE);
     }
 
     private void drawBackground(GraphicsContext gc) {

@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
 public enum Animation {
     GHOST("Entities", "ghost", 7, 5),
     VOID("Entities", "void", 3, 7),
-    VOID_OPEN("Entities", "void_open", 25, 2);
+    VOID_OPEN("Entities", "void_open", 25, 4);
 
     private final int frameCount;
     private final int ticksPerFrame;

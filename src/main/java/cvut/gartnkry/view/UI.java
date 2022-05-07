@@ -12,16 +12,19 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+
 
 import static cvut.gartnkry.Settings.SCALE;
 
 public class UI {
-    private static UI instance = new UI();
+    private final static UI instance = new UI();
     private Canvas canvas;
     private Rectangle[] inventoryRecs;
-
     private final Image fullHeart;
     private final Image emptyHeart;
+    private final Text deathMessage;
 
     private double inventoryX;
     private final double HEARTS_GAP = 4 * SCALE;
@@ -35,6 +38,13 @@ public class UI {
     public UI() {
         fullHeart = ResourcesUtils.loadAsset("Inventory/heart");
         emptyHeart = ResourcesUtils.loadAsset("Inventory/heart2");
+        deathMessage = new Text("YOU DIED\nPress 'R' to restart");
+        deathMessage.setFont(ResourcesUtils.loadFont ("upheavtt.ttf", 18 * SCALE));
+        deathMessage.setFill(Color.WHITE);
+       // deathMessage.setStroke(Color.BLACK);
+        //deathMessage.setStrokeWidth(3);
+        deathMessage.setTextAlignment(TextAlignment.CENTER);
+        hideDeathMessage();
     }
 
     public static UI getInstance(){
@@ -43,7 +53,6 @@ public class UI {
 
     public void initialize(StackPane pane, int inventorySize) {
         final double inventoryEndX = pane.getWidth() - INVENTORY_GAP;
-
         inventoryRecs = new Rectangle[inventorySize];
         for (int i = 0; i < inventorySize; i++) {
             Rectangle rec = getInventoryRec();
@@ -57,6 +66,7 @@ public class UI {
 
         canvas = new Canvas(pane.getWidth(), pane.getHeight());
         pane.getChildren().add(canvas);
+        pane.getChildren().add(deathMessage);
         instance.redraw();
     }
 
@@ -102,5 +112,13 @@ public class UI {
         for (int i = 0; i < player.getMaxHealth(); i++, x += fullHeart.getWidth() + HEARTS_BETWEEN_GAP) {
             gc.drawImage(i >= player.getHealth() ? emptyHeart : fullHeart, x, HEARTS_GAP);
         }
+    }
+
+    public void showDeathMessage(){
+        deathMessage.setVisible(true);
+    }
+
+    public void hideDeathMessage() {
+        deathMessage.setVisible(false);
     }
 }
