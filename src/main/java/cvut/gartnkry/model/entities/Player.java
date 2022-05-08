@@ -11,7 +11,7 @@ import cvut.gartnkry.view.assets.PlayerAnimation;
 
 import java.util.*;
 
-import static cvut.gartnkry.Settings.*;
+import static cvut.gartnkry.control.Settings.*;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static javafx.scene.input.KeyCode.*;

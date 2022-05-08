@@ -1,27 +1,27 @@
-package cvut.gartnkry;
+package cvut.gartnkry.control;
 
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.util.logging.*;
 
-import static cvut.gartnkry.Settings.*;
+import static cvut.gartnkry.control.Settings.*;
 
 public class AppLogger {
     private static final Logger LOGGER = Logger.getGlobal();
 
     public static void init() {
         try {
+            LogManager.getLogManager().reset();
             LOGGER.setLevel(logLevel);
             System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tF %1$tT.%1$tL %4$s %5$s%6$s%n");
-            if (logConsole) {
-                // ...
-            }
-            if (logFile) {
-                FileHandler fileHandler = new FileHandler("log", true);
-                fileHandler.setFormatter(new SimpleFormatter());
-                LOGGER.addHandler(fileHandler);
-            }
+
+            ConsoleHandler handler = new ConsoleHandler();
+            handler.setFormatter(new SimpleFormatter());
+            handler.setLevel(consoleLogLevel);
+            LOGGER.addHandler(handler);
+
+            FileHandler fileHandler = new FileHandler("log", true);
+            fileHandler.setFormatter(new SimpleFormatter());
+            fileHandler.setLevel(fileLogLevel);
+            LOGGER.addHandler(fileHandler);
         } catch (Exception e) {
             warning(() -> "Unable to initialize logging:\n" + e.getLocalizedMessage());
         }

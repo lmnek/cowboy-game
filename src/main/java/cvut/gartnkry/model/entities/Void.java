@@ -1,16 +1,12 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.Settings;
 import cvut.gartnkry.view.assets.Animation;
 import cvut.gartnkry.view.assets.AssetsManager;
 import javafx.geometry.Bounds;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Scale;
 
-import java.util.BitSet;
-
-import static cvut.gartnkry.Settings.SCALE;
+import static cvut.gartnkry.control.Settings.SCALE;
 
 public class Void extends Entity {
     private boolean activated;
@@ -23,6 +19,9 @@ public class Void extends Entity {
         super(entityData, Animation.VOID_OPEN.getFrame(0));
         damage = AssetsManager.getDamage(name);
         activated = entityData.get("activated").getAsBoolean();
+        if (activated) {
+            animation = Animation.VOID;
+        }
         activateRec = new Rectangle(sprite.getX() - 10 * SCALE, sprite.getY() - 10 * SCALE,
                 sprite.getImage().getWidth() + 20 * SCALE, sprite.getImage().getHeight() + 20 * SCALE);
     }
@@ -62,7 +61,7 @@ public class Void extends Entity {
         return activateRec.getBoundsInParent();
     }
 
-    public Rectangle getRec(){
-       return activateRec;
+    public Rectangle getRec() {
+        return activateRec;
     }
 }

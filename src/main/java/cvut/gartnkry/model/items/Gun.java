@@ -3,6 +3,8 @@ package cvut.gartnkry.model.items;
 import com.google.gson.JsonObject;
 import cvut.gartnkry.model.entities.Bullet;
 
+import static cvut.gartnkry.control.Settings.SCALE;
+
 public class Gun extends Item {
     private double bulletVelocity;
     private int damage;
@@ -18,14 +20,13 @@ public class Gun extends Item {
 
     @Override
     public void parseJson(JsonObject json) {
-        this.bulletVelocity = json.get("bulletVelocity").getAsDouble();
+        this.bulletVelocity = json.get("bulletVelocity").getAsDouble() * SCALE;
         this.fireRate = json.get("fireRate").getAsInt();
         this.damage = json.get("damage").getAsInt();
     }
 
     @Override
     public boolean use() {
-
         return false;
     }
 
@@ -35,5 +36,9 @@ public class Gun extends Item {
 
     public int getDamage() {
         return damage;
+    }
+
+    public Double getBulletVelocity() {
+        return bulletVelocity;
     }
 }

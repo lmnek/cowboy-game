@@ -1,7 +1,7 @@
 package cvut.gartnkry.model.items;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.control.ResourcesUtils;
+import cvut.gartnkry.control.files.ResourcesUtils;
 import javafx.scene.image.Image;
 
 public class Hat extends Item{

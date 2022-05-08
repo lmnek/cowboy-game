@@ -1,11 +1,11 @@
-package cvut.gartnkry;
+package cvut.gartnkry.control;
 
 import java.util.logging.Level;
 
 public class Settings {
-    public static final boolean logConsole = true;
-    public static final boolean logFile = true;
-    public static final Level logLevel = Level.INFO;
+    public static final Level logLevel = Level.ALL;
+    public static final Level consoleLogLevel = Level.FINE;
+    public static final Level fileLogLevel = Level.INFO;
 
     public static final String TITLE = "RPG";
 
@@ -25,4 +25,5 @@ public class Settings {
     public static final double HITBOX_PADDING = 0.01 * SCALE;
 
     public static final int CACTUS_DAMAGE = 1;
+    public static final double MAX_GHOST_VELOCITY = SCALE / 2;
 }

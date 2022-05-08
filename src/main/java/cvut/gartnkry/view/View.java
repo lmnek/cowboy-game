@@ -1,6 +1,7 @@
 package cvut.gartnkry.view;
 
-import cvut.gartnkry.Settings;
+import cvut.gartnkry.control.AppLogger;
+import cvut.gartnkry.control.Settings;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.Sprite;
@@ -23,7 +24,7 @@ import javafx.stage.Stage;
 
 import java.util.LinkedList;
 
-import static cvut.gartnkry.Settings.*;
+import static cvut.gartnkry.control.Settings.*;
 
 /**
  * Render game in current model state:
@@ -79,6 +80,7 @@ public class View {
     }
 
     public void render() {
+        AppLogger.finer(() -> "Drawing on screen.");
         setCamera();
 
         GraphicsContext gc = canvas.getGraphicsContext2D();

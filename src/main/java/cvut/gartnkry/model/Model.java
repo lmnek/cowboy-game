@@ -2,8 +2,8 @@ package cvut.gartnkry.model;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import cvut.gartnkry.Data;
-import cvut.gartnkry.control.ResourcesUtils;
+import cvut.gartnkry.control.files.JsonData;
+import cvut.gartnkry.control.files.ResourcesUtils;
 import cvut.gartnkry.model.entities.Bullet;
 import cvut.gartnkry.model.entities.Entity;
 import cvut.gartnkry.model.entities.Void;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Model {
     private static Model instance = new Model();
-    private Data data;
+    private JsonData data;
     private Player player;
     private ArrayList<Entity> entities;
     private ArrayList<Prop> props;
@@ -31,7 +31,7 @@ public class Model {
         return instance;
     }
 
-    public void initialize(Data data) {
+    public void initialize(JsonData data) {
         this.data = data;
         map = new Map(data.getMapFilename());
         entities = new ArrayList<>();
@@ -40,9 +40,9 @@ public class Model {
         // (loaded from json save file)
         for (JsonElement element : data.getArrayData("entities")) {
             Entity entity = (Entity) ResourcesUtils.loadReflection(element.getAsJsonObject(), "entities");
-            if (entity.getClass() == Player.class) {
+            if (entity.getClass().equals(Player.class)) {
                 player = (Player) entity;
-            } else if (entity.getClass() == Void.class && !element.getAsJsonObject().get("activated").getAsBoolean()) {
+            } else if (entity.getClass().equals(Void.class) && !element.getAsJsonObject().get("activated").getAsBoolean()) {
                 nonActiveVoids.add((Void) entity);
             } else {
                 entities.add(entity);

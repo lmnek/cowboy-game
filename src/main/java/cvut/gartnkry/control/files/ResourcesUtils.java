@@ -1,11 +1,10 @@
-package cvut.gartnkry.control;
+package cvut.gartnkry.control.files;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import cvut.gartnkry.AppController;
-import cvut.gartnkry.AppLogger;
-import cvut.gartnkry.Settings;
+import cvut.gartnkry.control.AppLogger;
+import cvut.gartnkry.control.Settings;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 
@@ -14,8 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Logger;
+import java.util.Objects;
 
 /**
  * Set of static methods that can be used by classes working with resources/assets.
@@ -33,9 +31,8 @@ public class ResourcesUtils {
 
     public static Image loadAsset(String path, double scale) {
         String fullpath = "/" + path + Settings.ASSETS_FILE_FORMAT; // build relative path
-        AppLogger.info(() -> "Loading asset: " + fullpath);
-        String url = ResourcesUtils.class.getResource(fullpath).toString(); // get url
-        // load image and scale it
+        AppLogger.fine(() -> "Loading asset: " + fullpath);
+        String url = Objects.requireNonNull(ResourcesUtils.class.getResource(fullpath)).toString(); // get url
         Image unscaled_image = new Image(url);
         return new Image(url, unscaled_image.getWidth() * Settings.SCALE * scale,
                 unscaled_image.getHeight() * Settings.SCALE * scale, false, true);
@@ -47,38 +44,39 @@ public class ResourcesUtils {
      */
     public static BufferedReader getReader(String path) {
         return new BufferedReader(new InputStreamReader(
-                ResourcesUtils.class.getResourceAsStream("/" + path)));
+                Objects.requireNonNull(ResourcesUtils.class.getResourceAsStream("/" + path))));
     }
 
     public static JsonElement readJsonFile(String path) {
+        AppLogger.fine(() -> "Loading JSON file: " + path);
         JsonParser parser = new JsonParser();
         JsonElement returnElement = null;
         try (BufferedReader br = ResourcesUtils.getReader(path)) {
             returnElement = parser.parse(br);
         } catch (IOException e) {
-            e.printStackTrace();
+            AppLogger.severe(() -> "Loading JSON file failed: " + e.getMessage());
         }
         return returnElement;
     }
 
     public static Object loadReflection(JsonObject json, String packageName) {
-        if (packageName != "") {
+        if (!packageName.equals("")) {
             packageName += ".";
         }
         String path = "cvut.gartnkry.model." + packageName + json.get("name").getAsString();
-        AppLogger.info(() -> "Loading object with reflection: " + path);
+        AppLogger.fine(() -> "Loading object with reflection: " + path);
         try {
-            Constructor constructor = Class.forName(path).getConstructor(JsonObject.class);
+            Constructor<?> constructor = Class.forName(path).getConstructor(JsonObject.class);
             Object[] parameters = {json};
             return constructor.newInstance(parameters);
         } catch (Exception e) {
-            AppLogger.severe(() -> "Reflection failed.");
-            e.printStackTrace();
+            AppLogger.severe(() -> "Reflection failed: " + e.getMessage());
         }
         return null;
     }
 
     public static Font loadFont(String fontName, int size) {
+        AppLogger.fine(() -> "Loading Font: " + fontName);
         Font font = null;
         InputStream fontStream = ResourcesUtils.class.getResourceAsStream("/Fonts/" + fontName);
         if (fontStream != null) {
@@ -88,6 +86,8 @@ public class ResourcesUtils {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            AppLogger.info(() -> "Font failed to load.");
         }
         return font;
     }

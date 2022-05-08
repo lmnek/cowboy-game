@@ -10,7 +10,7 @@
       "inventory": [
         {
           "name": "Gun",
-          "bulletVelocity": 10,
+          "bulletVelocity": 2,
           "fireRate": 10,
           "damage": 1
         },

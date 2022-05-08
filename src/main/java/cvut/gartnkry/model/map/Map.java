@@ -1,7 +1,6 @@
 package cvut.gartnkry.model.map;
 
-import cvut.gartnkry.control.ResourcesUtils;
-import cvut.gartnkry.model.Model;
+import cvut.gartnkry.control.files.ResourcesUtils;
 import cvut.gartnkry.view.assets.AssetsManager;
 
 import java.io.BufferedReader;
@@ -76,4 +75,7 @@ public class Map {
     }
 
 
+    public String getFilename() {
+        return filename;
+    }
 }

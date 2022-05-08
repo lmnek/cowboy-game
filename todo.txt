@@ -4,19 +4,13 @@ fixes:
 - bullets behind props
 - death font size
 
-pepa:
-- foreach vs foreach
-- getInstance casto / ukladat si reference
-- loggery
-- napasovat vlakna
-
 sprite fixes:
 - rovna hlava no gun default
 - pistol v prave ruce - right
 
 todo:
  - enemies - spawn points
- - ladder/bridge
+ - ladder/bridge - items
  - save game data (JSON file)
  - loggers
  - threads for enemy intelligence

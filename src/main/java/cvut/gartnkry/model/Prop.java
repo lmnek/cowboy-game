@@ -9,7 +9,7 @@ import javafx.scene.shape.Rectangle;
 public class Prop {
     protected Sprite sprite;
     protected HitboxInfo hitboxInfo;
-    protected final String name;
+    protected String name;
     protected boolean active;
 
     public Prop(JsonObject data, Image image) {

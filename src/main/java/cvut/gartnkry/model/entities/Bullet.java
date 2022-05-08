@@ -1,6 +1,6 @@
 package cvut.gartnkry.model.entities;
 
-import cvut.gartnkry.Settings;
+import cvut.gartnkry.control.Settings;
 import cvut.gartnkry.model.items.Gun;
 import javafx.scene.shape.Rectangle;
 

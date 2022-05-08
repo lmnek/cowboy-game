@@ -1,7 +1,6 @@
 package cvut.gartnkry.control;
 
 import cvut.gartnkry.AppController;
-import cvut.gartnkry.AppLogger;
 import cvut.gartnkry.control.collisions.CollisionManager;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.items.Item;
@@ -10,7 +9,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 
 public class KeysEventHandler {
@@ -35,15 +33,15 @@ public class KeysEventHandler {
     public static void onKeyTyped(KeyEvent event) {
         switch (event.getCharacter().toUpperCase()) {
             case "E":
-                AppLogger.info(() -> "E - select previous item");
+                AppLogger.info(() -> "Pressed E - select previous item");
                 Model.getInstance().getPlayer().getInventory().selectNextItem();
                 break;
             case "Q":
-                AppLogger.info(() -> "Q - select next item");
+                AppLogger.info(() -> "Pressed Q - select next item");
                 Model.getInstance().getPlayer().getInventory().selectPreviousItem();
                 break;
             case "F":
-                AppLogger.info(() -> "F - pick up item");
+                AppLogger.info(() -> "Pressed F - pick up item");
                 PropItem propItem = CollisionManager.getCollidedItem();
                 if (propItem != null) {
                     Item tmp = Model.getInstance().getPlayer().getInventory().getSelectedItem();
@@ -56,11 +54,11 @@ public class KeysEventHandler {
                 }
                 break;
             case "C":
-                AppLogger.info(() -> "C - use selected item");
+                AppLogger.info(() -> "Pressed C - use selected item");
                 Model.getInstance().getPlayer().getInventory().useSelectedItem();
                 break;
             case "R":
-                AppLogger.info(() -> "R - reload game");
+                AppLogger.info(() -> "Pressed R - reload game");
                 AppController.reloadGame();
                 break;
         }

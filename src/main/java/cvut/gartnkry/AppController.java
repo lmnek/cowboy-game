@@ -1,6 +1,9 @@
 package cvut.gartnkry;
 
+import cvut.gartnkry.control.AppLogger;
+import cvut.gartnkry.control.files.JsonData;
 import cvut.gartnkry.control.KeysEventHandler;
+import cvut.gartnkry.control.Settings;
 import cvut.gartnkry.control.collisions.CollisionManager;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.view.UI;
@@ -11,17 +14,13 @@ import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
 /**
  * JavaFX App
  */
 public class AppController extends Application {
 
     private View view;
+    private JsonData data;
 
     public static void main(String[] args) {
         launch();
@@ -32,7 +31,7 @@ public class AppController extends Application {
         AppLogger.init();
         AppLogger.info(() -> "Start loading/initializing the game.");
 
-        Data data = new Data("save1.json");
+        data = new JsonData("save2.json");
         Model.getInstance().initialize(data);
         view = new View(stage);
         CollisionManager.initialize();
@@ -84,7 +83,7 @@ public class AppController extends Application {
         stage.getScene().setOnKeyTyped(KeysEventHandler::onKeyTyped);
 
         stage.setOnCloseRequest(t -> {
-            Data.saveSave(Model.getInstance());
+            data.saveJson();
             Platform.exit();
             System.exit(0);
         });

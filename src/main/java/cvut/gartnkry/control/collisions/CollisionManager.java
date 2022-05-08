@@ -1,6 +1,6 @@
 package cvut.gartnkry.control.collisions;
 
-import cvut.gartnkry.Settings;
+import cvut.gartnkry.control.Settings;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.entities.Bullet;
@@ -15,8 +15,8 @@ import javafx.scene.shape.Rectangle;
 import java.util.LinkedList;
 import java.util.List;
 
-import static cvut.gartnkry.Settings.CACTUS_DAMAGE;
-import static cvut.gartnkry.Settings.HITBOX_PADDING;
+import static cvut.gartnkry.control.Settings.CACTUS_DAMAGE;
+import static cvut.gartnkry.control.Settings.HITBOX_PADDING;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -185,6 +185,6 @@ public class CollisionManager {
         Bounds playerBounds = player.getEntityHitboxRec().getBoundsInParent();
         return (PropItem) Model.getInstance().getProps().stream().filter(p ->
                 (p.isActive() && p.getClass() == PropItem.class && playerBounds.intersects(p.getHitboxRec().getBoundsInParent()))
-        ).findFirst().orElseGet(null);
+        ).findFirst().orElse(null);
     }
 }

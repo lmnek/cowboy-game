@@ -1,6 +1,6 @@
 package cvut.gartnkry.model.map;
 
-import cvut.gartnkry.control.ResourcesUtils;
+import cvut.gartnkry.control.files.ResourcesUtils;
 import javafx.scene.image.Image;
 
 /**

@@ -1,11 +1,13 @@
 package cvut.gartnkry.view.assets;
 
-import cvut.gartnkry.control.ResourcesUtils;
+import cvut.gartnkry.control.files.ResourcesUtils;
 import cvut.gartnkry.model.Sprite;
 import cvut.gartnkry.model.items.Hat;
 import javafx.scene.image.Image;
+
 import java.util.HashMap;
-import static cvut.gartnkry.Settings.SCALE;
+
+import static cvut.gartnkry.control.Settings.SCALE;
 
 public enum PlayerAnimation {
     PLAYER_DOWN("forward", 5, 9, 4, 10),
@@ -13,9 +15,6 @@ public enum PlayerAnimation {
     PLAYER_LEFT("left", 4, 10, -1, 9),
     PLAYER_RIGHT("right", 4, 10, 12, 9);
 
-    // GHOST("Enemies", "ghost", 7, 5);
-
-    private static boolean gunSelected = false;
 
     private final int frameCount;
     private final int ticksPerFrame;
@@ -26,6 +25,7 @@ public enum PlayerAnimation {
     private final HashMap<Boolean, Frame> defaultFrame;
     private int currentFrame;
 
+    private static boolean gunSelected = false;
 
     private class Frame {
         public final Image image;
@@ -62,10 +62,6 @@ public enum PlayerAnimation {
 
     public static void setGunSelected(boolean _gunSelected) {
         gunSelected = _gunSelected;
-    }
-
-    public Image getCurrentFrame() {
-        return frames.get(gunSelected)[currentFrame].image;
     }
 
     public Image getDefaultImage() {

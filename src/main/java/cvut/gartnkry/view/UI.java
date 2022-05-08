@@ -1,6 +1,6 @@
 package cvut.gartnkry.view;
 
-import cvut.gartnkry.control.ResourcesUtils;
+import cvut.gartnkry.control.files.ResourcesUtils;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.entities.Player;
 import cvut.gartnkry.model.items.Inventory;
@@ -16,7 +16,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 
-import static cvut.gartnkry.Settings.SCALE;
+import java.util.ArrayList;
+
+import static cvut.gartnkry.control.Settings.SCALE;
 
 public class UI {
     private final static UI instance = new UI();
@@ -30,24 +32,22 @@ public class UI {
     private final double HEARTS_GAP = 4 * SCALE;
     private final double HEARTS_BETWEEN_GAP = 1 * SCALE;
     private final double INVENTORY_GAP = 3 * SCALE;
-    private final double INVENTORY_BOX_SIZE = View.pixelTileSize + SCALE + SCALE;
+    private final double INVENTORY_BOX_SIZE = View.pixelTileSize + 2 * SCALE;
 
     private final Color selectedCol = Color.color(0.5, 0.5, 0.5, 0.9);
-    private final Color notSelectedCol = Color.color(0.3,0.3,0.3, 0.9);
+    private final Color notSelectedCol = Color.color(0.3, 0.3, 0.3, 0.9);
 
     public UI() {
         fullHeart = ResourcesUtils.loadAsset("Inventory/heart");
         emptyHeart = ResourcesUtils.loadAsset("Inventory/heart2");
         deathMessage = new Text("YOU DIED\nPress 'R' to restart");
-        deathMessage.setFont(ResourcesUtils.loadFont ("upheavtt.ttf", 18 * SCALE));
+        deathMessage.setFont(ResourcesUtils.loadFont("upheavtt.ttf", 18 * SCALE));
         deathMessage.setFill(Color.WHITE);
-       // deathMessage.setStroke(Color.BLACK);
-        //deathMessage.setStrokeWidth(3);
         deathMessage.setTextAlignment(TextAlignment.CENTER);
         hideDeathMessage();
     }
 
-    public static UI getInstance(){
+    public static UI getInstance() {
         return instance;
     }
 
@@ -70,7 +70,7 @@ public class UI {
         instance.redraw();
     }
 
-    public void redraw(){
+    public void redraw() {
         instance.drawInventoryItems(Model.getInstance().getPlayer().getInventory());
         instance.drawHearts(Model.getInstance().getPlayer());
         instance.newSelectedItem(0, 0);
@@ -81,7 +81,7 @@ public class UI {
         rec.setArcHeight(SCALE);
         rec.setArcWidth(SCALE);
         rec.setFill(notSelectedCol);
-        rec.setStroke(Color.color(0.1,0.15,0.1));
+        rec.setStroke(Color.color(0.1, 0.15, 0.1));
         rec.setStrokeWidth(SCALE);
         return rec;
     }
@@ -93,11 +93,11 @@ public class UI {
 
     public void drawInventoryItems(Inventory inventory) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        Item[] items = inventory.getItems();
-        gc.clearRect(inventoryX, INVENTORY_GAP, items.length * INVENTORY_BOX_SIZE, INVENTORY_BOX_SIZE);
-        for (int i = 0; i < items.length; i++) {
-            if (items[i] != null) {
-                Image image = items[i].getImage();
+        ArrayList<Item> items = inventory.getItems();
+        gc.clearRect(inventoryX, INVENTORY_GAP, items.size() * INVENTORY_BOX_SIZE, INVENTORY_BOX_SIZE);
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) != null) {
+                Image image = items.get(i).getImage();
                 gc.drawImage(image, inventoryX + (i * INVENTORY_BOX_SIZE) + INVENTORY_BOX_SIZE / 2 - image.getWidth() / 2,
                         INVENTORY_GAP + INVENTORY_BOX_SIZE / 2 - image.getHeight() / 2);
             }
@@ -114,7 +114,7 @@ public class UI {
         }
     }
 
-    public void showDeathMessage(){
+    public void showDeathMessage() {
         deathMessage.setVisible(true);
     }
 

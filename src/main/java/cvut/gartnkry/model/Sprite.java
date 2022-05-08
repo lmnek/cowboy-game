@@ -1,6 +1,6 @@
 package cvut.gartnkry.model;
 
-import cvut.gartnkry.Settings;
+import cvut.gartnkry.control.Settings;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
