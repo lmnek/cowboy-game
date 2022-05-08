@@ -1,7 +1,11 @@
 package cvut.gartnkry;
 
+import java.util.logging.Level;
+
 public class Settings {
-    private Settings(){}
+    public static final boolean logConsole = true;
+    public static final boolean logFile = true;
+    public static final Level logLevel = Level.INFO;
 
     public static final String TITLE = "RPG";
 

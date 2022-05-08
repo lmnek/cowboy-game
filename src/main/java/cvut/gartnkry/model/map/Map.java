@@ -54,15 +54,18 @@ public class Map {
     public boolean buildBridge(int startX, int startY, int incX, int incY) {
         String tile1 = tileMap[startY + incY][startX + incX].getName();
         String tile2 = tileMap[startY + 2 * incY][startX + 2 * incX].getName();
-        if (tile1.equals("sand_bottom") && tile2.equals("sand_top")
-                || tile1.equals("sand_top") && tile2.equals("sand_bottom")
-                || tile1.equals("sand_left") && tile2.equals("sand_right")
-                || tile1.equals("sand_right") && tile2.equals("sand_left")) {
+        if (tileNameEquals(tile1, tile2, "sand_bottom", "sand_top")
+                || tileNameEquals(tile1, tile2, "sand_left", "sand_right")) {
             tileMap[startY + incY][startX + incX] = AssetsManager.getTileFromName(tile1.substring(0, 4) + "_bridge" + tile1.substring(4));
             tileMap[startY + 2 * incY][startX + 2 * incX] = AssetsManager.getTileFromName(tile2.substring(0, 4) + "_bridge" + tile2.substring(4));
             return true;
         }
         return false;
+    }
+
+    private boolean tileNameEquals(String tile1, String tile2, String name1, String name2) {
+        return (tile1.equals(name1) && tile2.equals(name2)
+                || tile1.equals(name2) && tile2.equals(name1));
     }
 
     /**

@@ -55,5 +55,8 @@ public class Prop {
         return name;
     }
 
-    public void update(){};
+    public void update() {
+    }
+
+    ;
 }

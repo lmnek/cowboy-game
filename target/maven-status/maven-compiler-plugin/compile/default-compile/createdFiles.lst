@@ -11,6 +11,7 @@ cvut\gartnkry\view\View.class
 module-info.class
 cvut\gartnkry\model\Prop.class
 cvut\gartnkry\Settings.class
+cvut\gartnkry\AppLogger.class
 cvut\gartnkry\view\assets\Animation.class
 cvut\gartnkry\AppController.class
 cvut\gartnkry\view\assets\PlayerAnimation.class
@@ -26,6 +27,7 @@ cvut\gartnkry\SystemInfo.class
 cvut\gartnkry\view\UI.class
 cvut\gartnkry\model\Model.class
 cvut\gartnkry\model\entities\Ghost.class
+cvut\gartnkry\AppLogger$Message.class
 cvut\gartnkry\model\items\Inventory.class
 cvut\gartnkry\model\map\Tile.class
 cvut\gartnkry\control\collisions\CollisionManager.class

@@ -2,6 +2,7 @@ package cvut.gartnkry.model.items;
 
 import com.google.gson.JsonObject;
 import cvut.gartnkry.model.Model;
+import cvut.gartnkry.model.map.Map;
 import cvut.gartnkry.model.map.Tile;
 import cvut.gartnkry.view.assets.Animation;
 import cvut.gartnkry.view.assets.AssetsManager;
@@ -18,30 +19,20 @@ public class Wood extends Item {
 
     @Override
     public void parseJson(JsonObject json) {
-
     }
 
     @Override
     public boolean use() {
         Rectangle hitboxRec = Model.getInstance().getPlayer().getHitboxRec();
+        Map map = Model.getInstance().getMap();
         int idxX = (int) (hitboxRec.getX() / pixelTileSize);
         int idxY = (int) (hitboxRec.getY() / pixelTileSize);
-        System.out.println(idxX + " " + idxY);
-        int incX, incY;
-        if (hitboxRec.getX() - idxX * pixelTileSize > (idxX + 1) * pixelTileSize - hitboxRec.getWidth() - hitboxRec.getX()) {
-            incX = 1;
-        } else {
-            incX = -1;
+        int incX = hitboxRec.getX() - idxX * pixelTileSize > (idxX + 1) * pixelTileSize - hitboxRec.getWidth() - hitboxRec.getX() ? 1 : -1;
+        int incY = hitboxRec.getY() - idxY * pixelTileSize > (idxY + 1) * pixelTileSize - hitboxRec.getHeight() - hitboxRec.getY() ? 1 : -1;
+        boolean built = map.buildBridge(idxX, idxY, incX, 0);
+        if (!built) {
+            built = map.buildBridge(idxX, idxY, 0, incY);
         }
-        if (hitboxRec.getY() - idxY * pixelTileSize > (idxY + 1) * pixelTileSize - hitboxRec.getHeight() - hitboxRec.getY()) {
-            incY = 1;
-        } else {
-            incY = -1;
-        }
-        if (Model.getInstance().getMap().buildBridge(idxX, idxY, incX, 0)) {
-            Model.getInstance().getMap().buildBridge(idxX, idxY, 0, incY);
-        }
-
-        return false;
+        return built;
     }
 }

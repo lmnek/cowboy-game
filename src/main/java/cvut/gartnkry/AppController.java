@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 public class AppController extends Application {
 
     private View view;
-    private static final Logger LOG = Logger.getLogger(AppController.class.getName());
 
     public static void main(String[] args) {
         launch();
@@ -30,8 +29,8 @@ public class AppController extends Application {
 
     @Override
     public void start(Stage stage) {
-        //loadLoggerProperties();
-        LOG.info("Start loading/initializing the game.");
+        AppLogger.init();
+        AppLogger.info(() -> "Start loading/initializing the game.");
 
         Data data = new Data("save1.json");
         Model.getInstance().initialize(data);
@@ -57,7 +56,7 @@ public class AppController extends Application {
             }
         };
         loopTimer.start();
-        LOG.info("Game loop started.");
+        AppLogger.info(() -> "Game loop started.");
     }
 
     public void updateActiveProps() {
@@ -68,7 +67,7 @@ public class AppController extends Application {
         model.getVoids().forEach(v -> v.setActive(activeBounds.intersects(v.getSprite().getImageRect().getBoundsInParent())));
 
         model.getBullets().removeIf(b -> !activeBounds.intersects(b.getRectangle().getBoundsInParent()));
-        LOG.finer("Active bullets count: " + model.getBullets().size());
+        AppLogger.finer(() -> "Active bullets count: " + model.getBullets().size());
     }
 
     public static void reloadGame() {
@@ -89,14 +88,5 @@ public class AppController extends Application {
             Platform.exit();
             System.exit(0);
         });
-    }
-
-    private void loadLoggerProperties() {
-        try (InputStream is = AppController.class.getClassLoader().
-                getResourceAsStream("logging.properties")) {
-            LogManager.getLogManager().readConfiguration(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

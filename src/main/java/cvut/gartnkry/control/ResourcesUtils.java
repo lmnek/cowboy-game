@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import cvut.gartnkry.AppController;
+import cvut.gartnkry.AppLogger;
 import cvut.gartnkry.Settings;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
@@ -21,8 +22,6 @@ import java.util.logging.Logger;
  */
 public class ResourcesUtils {
 
-    private static final Logger LOG = Logger.getLogger(AppController.class.getName());
-
     /**
      * Load, scale and return given image/asset.
      *
@@ -34,9 +33,8 @@ public class ResourcesUtils {
 
     public static Image loadAsset(String path, double scale) {
         String fullpath = "/" + path + Settings.ASSETS_FILE_FORMAT; // build relative path
-        LOG.info("Loading asset: " + fullpath);
+        AppLogger.info(() -> "Loading asset: " + fullpath);
         String url = ResourcesUtils.class.getResource(fullpath).toString(); // get url
-        // TODO: find a better way to scale image + add try catch
         // load image and scale it
         Image unscaled_image = new Image(url);
         return new Image(url, unscaled_image.getWidth() * Settings.SCALE * scale,
@@ -68,13 +66,13 @@ public class ResourcesUtils {
             packageName += ".";
         }
         String path = "cvut.gartnkry.model." + packageName + json.get("name").getAsString();
-        LOG.info("Loading object with reflection: " + path);
+        AppLogger.info(() -> "Loading object with reflection: " + path);
         try {
             Constructor constructor = Class.forName(path).getConstructor(JsonObject.class);
             Object[] parameters = {json};
             return constructor.newInstance(parameters);
         } catch (Exception e) {
-            LOG.severe("Reflection failed.");
+            AppLogger.severe(() -> "Reflection failed.");
             e.printStackTrace();
         }
         return null;

@@ -4,6 +4,7 @@ import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.entities.Bullet;
+import cvut.gartnkry.model.entities.Entity;
 import cvut.gartnkry.model.entities.Player;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.model.map.Tile;
@@ -12,6 +13,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.shape.Rectangle;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import static cvut.gartnkry.Settings.CACTUS_DAMAGE;
 import static cvut.gartnkry.Settings.HITBOX_PADDING;
@@ -43,7 +45,16 @@ public class CollisionManager {
         Rectangle activeRec = new Rectangle(playerRec.getX() - PROPS_RADIUS / 2,
                 playerRec.getY() - PROPS_RADIUS / 2, PROPS_RADIUS, PROPS_RADIUS);
 
-        //---TILES---
+        handleTilesCollision(playerRec);
+        handlePropsCollision(activeRec);
+        handleEntitiesCollision(playerRec);
+        handleNonActiveVoidsCollision(playerRec);
+
+        player.setVelocityX(velocityX);
+        player.setVelocityY(velocityY);
+    }
+
+    private static void handleTilesCollision(Rectangle playerRec) {
         int startX = max((int) (playerRec.getX() / View.pixelTileSize) - 1, 0);
         int startY = max((int) (playerRec.getY() / View.pixelTileSize) - 1, 0);
         int endX = min(startX + TILES_RADIUS, tileMap[0].length);
@@ -52,14 +63,14 @@ public class CollisionManager {
             for (int y = startY; y < endY; y++) {
                 Tile tile = tileMap[y][x];
                 if (tile.hasHitbox()) {
-                    Rectangle tileRec = new Rectangle(x * View.pixelTileSize, y * View.pixelTileSize, View.pixelTileSize, View.pixelTileSize);
-                    checkPlayerCollision(tileRec);
+                    checkPlayerCollision(new Rectangle(x * View.pixelTileSize, y * View.pixelTileSize, View.pixelTileSize, View.pixelTileSize));
                 }
             }
         }
+    }
 
+    private static void handlePropsCollision(Rectangle activeRec) {
         LinkedList<Bullet> bullets = Model.getInstance().getBullets();
-        //---PROPS---
         for (Prop p : Model.getInstance().getProps()) {
             Rectangle pRec = p.getHitboxRec();
             // close to the player?
@@ -73,12 +84,13 @@ public class CollisionManager {
                 bullets.removeIf(b -> b.getRectangle().getBoundsInParent().intersects(pRec.getBoundsInParent()));
             }
         }
-        player.setVelocityX(velocityX);
-        player.setVelocityY(velocityY);
+    }
 
-        //---ENTITIES---
+    private static void handleEntitiesCollision(Rectangle playerRec) {
+        LinkedList<Bullet> bullets = Model.getInstance().getBullets();
         Bounds playerBounds = player.getEntityHitboxRec().getBoundsInParent();
-        Model.getInstance().getEntities().forEach(e -> {
+        List<Entity> entities = Model.getInstance().getEntities();
+        entities.forEach(e -> {
             if (e.isActive()) {
                 Bounds entityBounds = e.getEntityHitboxRec().getBoundsInParent();
                 if (entityBounds.intersects(e.getName().equals("Void") ? playerRec.getBoundsInParent() : playerBounds)) {
@@ -95,25 +107,18 @@ public class CollisionManager {
                 });
             }
         });
+    }
 
+    private static void handleNonActiveVoidsCollision(Rectangle playerRec) {
+        List<Entity> entities = Model.getInstance().getEntities();
         Model.getInstance().getVoids().removeIf(v -> {
             if (v.isActive() && v.getActivateBounds().intersects(playerRec.getBoundsInParent())) {
                 v.activate();
-                Model.getInstance().getEntities().add(v);
+                entities.add(v);
                 return true;
             }
             return false;
         });
-    }
-
-    public static PropItem getCollidedItem() {
-        for (Prop p : Model.getInstance().getProps()) {
-            if (p.isActive() && p.getClass() == PropItem.class &&
-                    player.getEntityHitboxRec().getBoundsInParent().intersects(p.getHitboxRec().getBoundsInParent())) {
-                return (PropItem) p;
-            }
-        }
-        return null;
     }
 
 
@@ -176,5 +181,10 @@ public class CollisionManager {
         return velocity;
     }
 
-
+    public static PropItem getCollidedItem() {
+        Bounds playerBounds = player.getEntityHitboxRec().getBoundsInParent();
+        return (PropItem) Model.getInstance().getProps().stream().filter(p ->
+                (p.isActive() && p.getClass() == PropItem.class && playerBounds.intersects(p.getHitboxRec().getBoundsInParent()))
+        ).findFirst().orElseGet(null);
+    }
 }
