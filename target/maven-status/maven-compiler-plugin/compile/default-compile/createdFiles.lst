@@ -29,4 +29,6 @@ cvut\gartnkry\model\Model.class
 cvut\gartnkry\model\entities\Ghost.class
 cvut\gartnkry\model\items\Inventory.class
 cvut\gartnkry\model\map\Tile.class
+cvut\gartnkry\model\entities\Player.class
 cvut\gartnkry\control\collisions\CollisionManager.class
+cvut\gartnkry\model\items\Gun.class

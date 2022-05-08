@@ -1,0 +1,195 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 268435456 bytes for Failed to commit area from 0x0000000700c00000 to 0x0000000710c00000 of length 268435456.
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (./src/hotspot/os/windows/os_windows.cpp:3301), pid=21932, tid=27344
+#
+# JRE version:  (11.0.10+9) (build )
+# Java VM: OpenJDK 64-Bit Server VM (11.0.10+9, mixed mode, sharing, tiered, compressed oops, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: --module-path=C:\Users\tomahawk\Desktop\cvut\RPG\gartnkry\target\classes;C:\Users\tomahawk\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.13.2\jackson-annotations-2.13.2.jar;C:\Users\tomahawk\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.13.2\jackson-core-2.13.2.jar;C:\Users\tomahawk\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.13.2.2\jackson-databind-2.13.2.2.jar;C:\Users\tomahawk\.m2\repository\com\google\code\gson\gson\2.8.5\gson-2.8.5.jar;C:\Users\tomahawk\.m2\repository\org\openjfx\javafx-base\17.0.2\javafx-base-17.0.2-win.jar;C:\Users\tomahawk\.m2\repository\org\openjfx\javafx-controls\17.0.2\javafx-controls-17.0.2-win.jar;C:\Users\tomahawk\.m2\repository\org\openjfx\javafx-graphics\17.0.2\javafx-graphics-17.0.2-win.jar --add-modules=cvut.gartnkry -Djdk.module.main=cvut.gartnkry cvut.gartnkry/cvut.gartnkry.AppController
+
+Host: AMD Ryzen 5 2600 Six-Core Processor            , 12 cores, 15G,  Windows 10 , 64 bit Build 19041 (10.0.19041.1645)
+Time: Sun May  8 16:48:18 2022 Støední Evropa (letní èas) elapsed time: 0.204458 seconds (0d 0h 0m 0s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00000295a67b9000):  JavaThread "Unknown thread" [_thread_in_vm, id=27344, stack(0x000000f726d00000,0x000000f726e00000)]
+
+Stack: [0x000000f726d00000,0x000000f726e00000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x5f35ea]
+V  [jvm.dll+0x77c65e]
+V  [jvm.dll+0x77dd2f]
+V  [jvm.dll+0x77e3f3]
+V  [jvm.dll+0x246c38]
+V  [jvm.dll+0x5f079a]
+V  [jvm.dll+0x5e53c5]
+V  [jvm.dll+0x2fba4c]
+V  [jvm.dll+0x2fb8d2]
+V  [jvm.dll+0x300586]
+V  [jvm.dll+0x344cff]
+V  [jvm.dll+0x344730]
+V  [jvm.dll+0x2d8cb8]
+V  [jvm.dll+0x2d9e06]
+V  [jvm.dll+0x757c77]
+V  [jvm.dll+0x7593ff]
+V  [jvm.dll+0x351a59]
+V  [jvm.dll+0x73aea0]
+V  [jvm.dll+0x3b929f]
+V  [jvm.dll+0x3bb7a1]
+C  [jli.dll+0x520b]
+C  [ucrtbase.dll+0x21bb2]
+C  [KERNEL32.DLL+0x17034]
+C  [ntdll.dll+0x52651]
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00000295a6617740, length=0, elements={
+}
+
+Java Threads: ( => current thread )
+
+Other Threads:
+  0x00000295a67d1000 GCTaskThread "GC Thread#0" [stack: 0x000000f726e00000,0x000000f726f00000] [id=5988]
+  0x00000295a6832000 ConcurrentGCThread "G1 Main Marker" [stack: 0x000000f726f00000,0x000000f727000000] [id=24564]
+  0x00000295a6834800 ConcurrentGCThread "G1 Conc#0" [stack: 0x000000f727000000,0x000000f727100000] [id=26512]
+
+[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007fff34638337]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00000295a67b6e60] Heap_lock - owner thread: 0x00000295a67b9000
+
+Heap address: 0x0000000700c00000, size: 4084 MB, Compressed Oops mode: Non-zero based: 0x0000000700c00000
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (1 events):
+Event: 0.007 Loaded shared library C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin\zip.dll
+
+
+Dynamic libraries:
+0x00007ff7002b0000 - 0x00007ff7002bd000 	C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin\java.exe
+0x00007fff93e30000 - 0x00007fff94025000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007fff93500000 - 0x00007fff935be000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007fff91730000 - 0x00007fff919f8000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007fff91a00000 - 0x00007fff91b00000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007fff8e290000 - 0x00007fff8e2a7000 	C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin\jli.dll
+0x00007fff7f270000 - 0x00007fff7f285000 	C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin\VCRUNTIME140.dll
+0x00007fff93360000 - 0x00007fff93500000 	C:\WINDOWS\System32\USER32.dll
+0x00007fff75f40000 - 0x00007fff761da000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.1110_none_60b5254171f9507e\COMCTL32.dll
+0x00007fff91700000 - 0x00007fff91722000 	C:\WINDOWS\System32\win32u.dll
+0x00007fff92230000 - 0x00007fff922ce000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007fff92600000 - 0x00007fff9262a000 	C:\WINDOWS\System32\GDI32.dll
+0x00007fff915f0000 - 0x00007fff916fb000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007fff91550000 - 0x00007fff915ed000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007fff935e0000 - 0x00007fff93610000 	C:\WINDOWS\System32\IMM32.DLL
+0x00007fff6e6b0000 - 0x00007fff6e74b000 	C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin\msvcp140.dll
+0x00007fff34350000 - 0x00007fff34e93000 	C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin\server\jvm.dll
+0x00007fff92400000 - 0x00007fff924ae000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007fff932c0000 - 0x00007fff9335c000 	C:\WINDOWS\System32\sechost.dll
+0x00007fff922d0000 - 0x00007fff923f5000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007fff92d80000 - 0x00007fff92d88000 	C:\WINDOWS\System32\PSAPI.DLL
+0x00007fff8b660000 - 0x00007fff8b66a000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007fff82230000 - 0x00007fff82257000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007fff8ecc0000 - 0x00007fff8ecc9000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007fff939a0000 - 0x00007fff93a0b000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007fff8f450000 - 0x00007fff8f462000 	C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+0x00007fff8a0b0000 - 0x00007fff8a0c0000 	C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin\verify.dll
+0x00007fff7b410000 - 0x00007fff7b5f4000 	C:\WINDOWS\SYSTEM32\DBGHELP.DLL
+0x00007fff79090000 - 0x00007fff790bc000 	C:\WINDOWS\SYSTEM32\dbgcore.DLL
+0x00007fff91ca0000 - 0x00007fff91d22000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007fff7a880000 - 0x00007fff7a8a8000 	C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin\java.dll
+0x00007fff7f260000 - 0x00007fff7f26a000 	C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin\jimage.dll
+0x00007fff7a860000 - 0x00007fff7a877000 	C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin\zip.dll
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin;C:\WINDOWS\SYSTEM32;C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.1110_none_60b5254171f9507e;C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin\server
+
+VM Arguments:
+jvm_args: --module-path=C:\Users\tomahawk\Desktop\cvut\RPG\gartnkry\target\classes;C:\Users\tomahawk\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.13.2\jackson-annotations-2.13.2.jar;C:\Users\tomahawk\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.13.2\jackson-core-2.13.2.jar;C:\Users\tomahawk\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.13.2.2\jackson-databind-2.13.2.2.jar;C:\Users\tomahawk\.m2\repository\com\google\code\gson\gson\2.8.5\gson-2.8.5.jar;C:\Users\tomahawk\.m2\repository\org\openjfx\javafx-base\17.0.2\javafx-base-17.0.2-win.jar;C:\Users\tomahawk\.m2\repository\org\openjfx\javafx-controls\17.0.2\javafx-controls-17.0.2-win.jar;C:\Users\tomahawk\.m2\repository\org\openjfx\javafx-graphics\17.0.2\javafx-graphics-17.0.2-win.jar --add-modules=cvut.gartnkry -Djdk.module.main=cvut.gartnkry 
+java_command: cvut.gartnkry/cvut.gartnkry.AppController
+java_class_path (initial): C:\Users\tomahawk\.m2\repository\org\openjfx\javafx-base\17.0.2\javafx-base-17.0.2.jar;C:\Users\tomahawk\.m2\repository\org\openjfx\javafx-controls\17.0.2\javafx-controls-17.0.2.jar;C:\Users\tomahawk\.m2\repository\org\openjfx\javafx-graphics\17.0.2\javafx-graphics-17.0.2.jar
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 4                                         {product} {ergonomic}
+     uint ConcGCThreads                            = 3                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 10                                        {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 1048576                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 268435456                                 {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 4282384384                                {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 1048576                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 5836300                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122910970                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122910970                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+     bool UseCompressedClassPointers               = true                                 {lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                                 {lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+JAVA_HOME=C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\
+PATH=C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Bin\;C:\Program Files\IVI Foundation\VISA\Win64\Bin\;C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Bin;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\Java\jdk1.8.0_251\bin;G:\Program Files (x86)\MinGW\bin;C:\Program Files\dotnet\;C:\Program Files (x86)\dotnet\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Windows\System32;C:\Program Files\Git\cmd;C:\Users\tomahawk\AppData\Local\Programs\AdoptOpenJDK\jdk-11.0.10.9-hotspot\bin;C:\Users\tomahawk\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\tomahawk\AppData\Local\Programs\Python\Python39\;G:\Program Files (x86)\Microsoft VS Code\bin;C:\Users\tomahawk\AppData\Local\Microsoft\WindowsApps;;C:\Program Files\JetBrains\IntelliJ IDEA 2021.3.3\bin;
+USERNAME=tomahawk
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=AMD64 Family 23 Model 8 Stepping 2, AuthenticAMD
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10 , 64 bit Build 19041 (10.0.19041.1645)
+OS uptime: 0 days 6:36 hours
+Hyper-V role detected
+
+CPU:total 12 (initial active 12) (12 cores per cpu, 2 threads per core) family 23 model 8 stepping 2 microcode 0x0, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, mmxext, 3dnowpref, lzcnt, sse4a, ht, tsc, tscinvbit, tscinv, bmi1, bmi2, adx, s
+
+Memory: 4k page, system-wide physical 16334M (4025M free)
+TotalPageFile size 46723M (AvailPageFile size 22M)
+current process WorkingSet (physical memory assigned to process): 10M, peak: 10M
+current process commit charge ("private bytes"): 64M, peak: 320M
+
+vm_info: OpenJDK 64-Bit Server VM (11.0.10+9) for windows-amd64 JRE (11.0.10+9), built on Jan 20 2021 06:07:07 by "" with MS VC++ 15.9 (VS2017)
+
+END.

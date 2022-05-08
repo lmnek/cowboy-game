@@ -11,7 +11,6 @@ import cvut.gartnkry.model.items.Inventory;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.view.UI;
 import cvut.gartnkry.view.assets.PlayerAnimation;
-import javafx.scene.image.Image;
 
 import java.util.*;
 
@@ -35,8 +34,7 @@ import static javafx.scene.input.KeyCode.*;
  * <li> D - right
  * </ul>
  */
-@JsonIgnoreProperties({"animation", "bullets", "animationCounter", "moving", "invincible"
-        , "invincibleCounter", "fireRateMax", "fireRateCounter", "hitboxInfo", "entityHitboxInfo"})
+@JsonIgnoreProperties({"bullets", "invincible", "hitboxInfo"})
 public class Player extends Entity {
     private PlayerAnimation animation;
     private int animationCounter;
