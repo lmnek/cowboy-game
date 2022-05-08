@@ -60,8 +60,8 @@ public class Model {
         }
     }
 
-    public static void reinitialize() {
-        instance.initialize(instance.data);
+    public void reinitialize() {
+        initialize(data);
     }
 
 

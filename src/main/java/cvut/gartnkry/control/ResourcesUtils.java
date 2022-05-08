@@ -73,15 +73,8 @@ public class ResourcesUtils {
             Constructor constructor = Class.forName(path).getConstructor(JsonObject.class);
             Object[] parameters = {json};
             return constructor.newInstance(parameters);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
+            LOG.severe("Reflection failed.");
             e.printStackTrace();
         }
         return null;

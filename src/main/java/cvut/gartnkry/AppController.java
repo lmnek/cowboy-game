@@ -72,7 +72,7 @@ public class AppController extends Application {
     }
 
     public static void reloadGame() {
-        Model.reinitialize();
+        Model.getInstance().reinitialize();
         UI.getInstance().redraw();
         CollisionManager.initialize();
     }
