@@ -1,5 +1,6 @@
 package cvut.gartnkry.model.map;
 
+import com.fasterxml.jackson.annotation.*;
 import cvut.gartnkry.control.ResourcesUtils;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.view.assets.AssetsManager;
@@ -13,22 +14,23 @@ import java.io.BufferedReader;
  * Map layout is loaded from a CSV file.
  * CSV file is structured as codes of tiles in given positions.
  */
+@JsonIgnoreProperties({"tileMap"})
 public class Map {
     private Tile[][] tileMap;
-    private final String filename;
+    private String filename;
     private static final String DELIMITER = ";";
 
+    @JsonSetter
+    public void setFilename(String filename) {
+        loadMap(filename);
+        this.filename = filename;
+    }
+
     /**
-     * Class constructor.
      * Loads CSV file and constructs 2D array of Tiles from tile codes.
      *
      * @param filename name of CSV map file in resources/Maps/
      */
-    public Map(String filename) {
-        this.filename = filename;
-        loadMap(filename);
-    }
-
     private void loadMap(String filename) {
         // Load map from CSV file
         try (BufferedReader br = ResourcesUtils.getReader("Maps/" + filename)) {

@@ -1,10 +1,12 @@
 package cvut.gartnkry.model.items;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.JsonObject;
 import cvut.gartnkry.view.assets.AssetsManager;
 import javafx.scene.image.Image;
 
-
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "name")
 public abstract class Item {
     private final String name;
     private final Image image;
@@ -28,7 +30,7 @@ public abstract class Item {
         return name;
     }
 
-    public boolean is(Class inClass){
+    public boolean is(Class inClass) {
         return getClass() == inClass;
     }
 

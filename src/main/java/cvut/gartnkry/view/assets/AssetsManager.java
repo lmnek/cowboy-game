@@ -9,7 +9,9 @@ import cvut.gartnkry.control.collisions.HitboxInfo;
 import cvut.gartnkry.model.map.Tile;
 import javafx.scene.image.Image;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Class for loading and managing Tiles.
@@ -111,11 +113,13 @@ public class AssetsManager {
     }
 
     public static Tile getTileFromName(String name) {
-        for (Tile t : tileMap.values()) {
-            if (t.getName().equals(name)){
-                return t;
-            }
-        }
-        return null;
+        return tileMap.values().stream().filter(t -> t.getName().equals(name)).findFirst().orElseGet(null);
+
+//        for (Tile t : tileMap.values()) {
+//            if (t.getName().equals(name)) {
+//                return t;
+//            }
+//        }
+//        return null;
     }
 }

@@ -17,14 +17,13 @@ import java.util.List;
 
 public class Model {
     private static Model instance = new Model();
-    private Data data;
     private Player player;
     private ArrayList<Entity> entities;
     private ArrayList<Prop> props;
     private LinkedList<Void> nonActiveVoids;
     private Map map;
 
-    private Model() {
+    public Model() {
     }
 
     public static Model getInstance() {
@@ -32,8 +31,7 @@ public class Model {
     }
 
     public void initialize(Data data) {
-        this.data = data;
-        map = new Map(data.getMapFilename());
+        // map = new Map(data.getMapFilename());
         entities = new ArrayList<>();
         nonActiveVoids = new LinkedList<>();
         // iterate and initialize all entities
@@ -61,7 +59,7 @@ public class Model {
     }
 
     public void reinitialize() {
-        initialize(data);
+        //initialize(data);
     }
 
 
@@ -99,5 +97,29 @@ public class Model {
 
     public LinkedList<Void> getVoids() {
         return nonActiveVoids;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public void setEntities(ArrayList<Entity> entities) {
+        this.entities = entities;
+    }
+
+    public void setProps(ArrayList<Prop> props) {
+        this.props = props;
+    }
+
+    public LinkedList<Void> getNonActiveVoids() {
+        return nonActiveVoids;
+    }
+
+    public void setNonActiveVoids(LinkedList<Void> nonActiveVoids) {
+        this.nonActiveVoids = nonActiveVoids;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
     }
 }

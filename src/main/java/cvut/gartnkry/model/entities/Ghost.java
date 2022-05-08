@@ -13,8 +13,7 @@ public class Ghost extends Entity {
     private final double maxVelocity = 3;
     private final Random random;
 
-    public Ghost(JsonObject entityData) {
-        super(entityData, Animation.GHOST.getFrame(0));
+    public Ghost() {
         animation = Animation.GHOST;
         damage = AssetsManager.getDamage(name);
         random =new Random();

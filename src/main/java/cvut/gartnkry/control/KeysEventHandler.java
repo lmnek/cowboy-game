@@ -3,9 +3,9 @@ package cvut.gartnkry.control;
 import cvut.gartnkry.AppController;
 import cvut.gartnkry.control.collisions.CollisionManager;
 import cvut.gartnkry.model.Model;
+import cvut.gartnkry.model.items.Inventory;
 import cvut.gartnkry.model.items.Item;
 import cvut.gartnkry.model.items.PropItem;
-import cvut.gartnkry.view.UI;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 
-public class KeysEventHandler {
+public class KeysEventHandler{
     private static final HashMap<KeyCode, Boolean> pressedKeys = new HashMap<>();
     private static final Logger LOG = Logger.getLogger(AppController.class.getName());
 
@@ -34,20 +34,21 @@ public class KeysEventHandler {
     }
 
     public static void onKeyTyped(KeyEvent event) {
+        Inventory inventory = Model.getInstance().getPlayer().getInventory();
         switch (event.getCharacter().toUpperCase()) {
             case "E":
                 LOG.info("E - select previous item");
-                Model.getInstance().getPlayer().getInventory().selectNextItem();
+                inventory.selectNextItem();
                 break;
             case "Q":
                 LOG.info("Q - select next item");
-                Model.getInstance().getPlayer().getInventory().selectPreviousItem();
+                inventory.selectPreviousItem();
                 break;
             case "F":
                 LOG.info("F - pick up item");
                 PropItem propItem = CollisionManager.getCollidedItem();
                 if (propItem != null) {
-                    Item tmp = Model.getInstance().getPlayer().getInventory().getSelectedItem();
+                    Item tmp = inventory.getSelectedItem();
                     Model.getInstance().getPlayer().pickupItem(propItem);
                     if (tmp != null) {
                         propItem.setNewItem(tmp);
@@ -58,7 +59,7 @@ public class KeysEventHandler {
                 break;
             case "C":
                 LOG.info("C - use selected item");
-                Model.getInstance().getPlayer().getInventory().useSelectedItem();
+                inventory.useSelectedItem();
                 break;
             case "R":
                 LOG.info("R - reload game");

@@ -13,16 +13,13 @@ import javafx.scene.shape.Rectangle;
  */
 public abstract class Entity extends Prop {
     private final HitboxInfo entityHitboxInfo;
-    private final int max_health;
+    private int maxHealth;
     private int health;
     protected int damage;
 
-    protected Entity(JsonObject entityData, Image defaultImage) {
-        super(entityData, defaultImage);
-        health = entityData.get("health").getAsInt();
-        max_health = entityData.get("maxHealth").getAsInt();
-        if (health > max_health) {
-            health = max_health;
+    public Entity() {
+        if (health > maxHealth) {
+            health = maxHealth;
         }
         entityHitboxInfo = AssetsManager.getEntityHitboxInfo(name);
     }
@@ -41,9 +38,15 @@ public abstract class Entity extends Prop {
         health += inc;
         if (health < 0) {
             health = 0;
-        } else if (health > max_health) {
-            health = max_health;
+        } else if (health > maxHealth) {
+            health = maxHealth;
         }
+    }
+
+    public Rectangle getEntityHitboxRec() {
+        return new Rectangle(entityHitboxInfo.getX() + sprite.getX(),
+                entityHitboxInfo.getY() + sprite.getY(),
+                entityHitboxInfo.getWidth(), entityHitboxInfo.getHeight());
     }
 
     public boolean isDead() {
@@ -55,16 +58,22 @@ public abstract class Entity extends Prop {
     }
 
     public int getMaxHealth() {
-        return max_health;
-    }
-
-    public Rectangle getEntityHitboxRec() {
-        return new Rectangle(entityHitboxInfo.getX() + sprite.getX(),
-                entityHitboxInfo.getY() + sprite.getY(),
-                entityHitboxInfo.getWidth(), entityHitboxInfo.getHeight());
+        return maxHealth;
     }
 
     public int getDamage() {
-        return  damage;
+        return damage;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
     }
 }

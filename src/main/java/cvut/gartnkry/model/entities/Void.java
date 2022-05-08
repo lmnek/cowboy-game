@@ -1,5 +1,7 @@
 package cvut.gartnkry.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.JsonObject;
 import cvut.gartnkry.Settings;
 import cvut.gartnkry.view.assets.Animation;
@@ -12,6 +14,7 @@ import java.util.BitSet;
 
 import static cvut.gartnkry.Settings.SCALE;
 
+@JsonIgnoreProperties({"activated", "hitboxInfo"})
 public class Void extends Entity {
     private boolean activated;
     private Animation animation;
@@ -19,10 +22,8 @@ public class Void extends Entity {
     private int currentFrame;
     private Rectangle activateRec;
 
-    public Void(JsonObject entityData) {
-        super(entityData, Animation.VOID_OPEN.getFrame(0));
+    public Void() {
         damage = AssetsManager.getDamage(name);
-        activated = entityData.get("activated").getAsBoolean();
         activateRec = new Rectangle(sprite.getX() - 10 * SCALE, sprite.getY() - 10 * SCALE,
                 sprite.getImage().getWidth() + 20 * SCALE, sprite.getImage().getHeight() + 20 * SCALE);
     }

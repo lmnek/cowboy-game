@@ -13,6 +13,7 @@ cvut\gartnkry\model\Prop.class
 cvut\gartnkry\Settings.class
 cvut\gartnkry\view\assets\Animation.class
 cvut\gartnkry\AppController.class
+cvut\gartnkry\Test.class
 cvut\gartnkry\view\assets\PlayerAnimation.class
 cvut\gartnkry\model\items\Item.class
 cvut\gartnkry\model\entities\Entity.class
@@ -29,4 +30,3 @@ cvut\gartnkry\model\entities\Ghost.class
 cvut\gartnkry\model\items\Inventory.class
 cvut\gartnkry\model\map\Tile.class
 cvut\gartnkry\control\collisions\CollisionManager.class
-cvut\gartnkry\AppController$1.class

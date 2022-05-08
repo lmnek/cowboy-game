@@ -1,10 +1,13 @@
 package cvut.gartnkry.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import cvut.gartnkry.Settings;
 import cvut.gartnkry.model.items.Gun;
 import javafx.scene.shape.Rectangle;
 
 public class Bullet {
+    @JsonIgnore
     private final Gun gun;
     private final double velocityX;
     private final double velocityY;

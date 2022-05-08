@@ -1,5 +1,6 @@
 package cvut.gartnkry.model.items;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.JsonObject;
 import cvut.gartnkry.control.ResourcesUtils;
 import cvut.gartnkry.model.Prop;
@@ -9,6 +10,9 @@ import java.util.Random;
 
 public class PropItem extends Prop {
     private static Random random = new Random();
+
+    //@JsonTypeInfo(use = JsonTypeInfo.Id.NAME.CLASS,
+    //        include = JsonTypeInfo.As.PROPERTY, property = "name")
     private Item item;
     private int counter;
     private int add = 1;

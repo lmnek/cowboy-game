@@ -1,13 +1,17 @@
 {
-  "map": "map2.csv",
-  "entities": [
-    {
-      "name": "Player",
+  "map": {
+    "filename": "map2.csv"
+  },
+  "player": {
+    "name": "Player",
+    "sprite": {
       "x": 180,
-      "y": 170,
-      "health": 7,
-      "maxHealth": 10,
-      "inventory": [
+      "y": 170
+    },
+    "health": 7,
+    "maxHealth": 10,
+    "inventory": {
+      "items": [
         {
           "name": "Gun",
           "bulletVelocity": 10,
@@ -18,90 +22,132 @@
           "name": "Hat"
         }
       ]
-    },
+    }
+  },
+  "entities": [
     {
       "name": "Ghost",
-      "x": 120,
-      "y": 80,
+      "sprite": {
+        "x": 120,
+        "y": 80
+      },
       "health": 5,
       "maxHealth": 30
     },
     {
       "name": "Ghost",
-      "x": 240,
-      "y": 160,
+      "sprite": {
+        "x": 240,
+        "y": 160
+      },
       "health": 1,
       "maxHealth": 30
-    },
+    }
+  ],
+  "nonActiveVoids": [
     {
       "name": "Void",
-      "x": 225,
-      "y": 45,
+      "sprite": {
+        "x": 225,
+        "y": 45
+      },
       "health": 20,
-      "maxHealth": 20,
-      "activated": false
+      "maxHealth": 20
     }
   ],
   "props": [
     {
+      "@type": "Prop",
       "name": "Cactus",
-      "x": 50,
-      "y": 30
+      "sprite": {
+        "x": 50,
+        "y": 30
+      }
     },
     {
+      "@type": "Prop",
       "name": "Cactus",
-      "x": 120,
-      "y": 190
+      "sprite": {
+        "x": 120,
+        "y": 190
+      }
     },
     {
+      "@type": "Prop",
       "name": "Skull",
-      "x": 170,
-      "y": 130
+      "sprite": {
+        "x": 170,
+        "y": 130
+      }
     },
     {
+      "@type": "Prop",
       "name": "Cross",
-      "x": 352,
-      "y": 150
+      "sprite": {
+        "x": 352,
+        "y": 150
+      }
     },
     {
+      "@type": "Prop",
       "name": "Tree",
-      "x": 59,
-      "y": 100
+      "sprite": {
+        "x": 59,
+        "y": 100
+      }
     },
     {
+      "@type": "Prop",
       "name": "Tree",
-      "x": 210,
-      "y": 60
+      "sprite": {
+        "x": 210,
+        "y": 60
+      }
     },
     {
+      "@type": "Prop",
       "name": "Tree",
-      "x": 170,
-      "y": 225
-    }
-  ],
-  "items": [
+      "sprite": {
+        "x": 170,
+        "y": 225
+      }
+    },
     {
+      "@type": "PropItem",
       "name": "Bottle",
-      "x": 200,
-      "y": 100
+      "sprite": {
+        "x": 200,
+        "y": 100
+      }
     },
     {
+      "@type": "PropItem",
       "name": "Gun",
-      "x": 100,
-      "y": 190,
-      "bulletVelocity": 10,
-      "fireRate": 50,
-      "damage": 2
+      "sprite": {
+        "x": 100,
+        "y": 190
+      },
+      "item": {
+        "bulletVelocity": 10,
+        "fireRate": 50,
+        "damage": 2
+      }
     },
     {
+      "@type": "PropItem",
       "name": "Wood",
-      "x": 160,
-      "y": 90
+      "sprite": {
+        "x": 160,
+        "y": 90
+      }
     },
     {
+      "@type": "PropItem",
       "name": "Plank",
-      "x": 220,
-      "y": 180
+      "sprite": {
+        "x": 220,
+        "y": 180
+      }
     }
   ]
 }

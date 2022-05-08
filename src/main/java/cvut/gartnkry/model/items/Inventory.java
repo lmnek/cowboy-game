@@ -1,5 +1,6 @@
 package cvut.gartnkry.model.items;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.JsonArray;
 import cvut.gartnkry.control.ResourcesUtils;
 import cvut.gartnkry.Settings;
@@ -7,9 +8,13 @@ import cvut.gartnkry.view.UI;
 import cvut.gartnkry.view.assets.PlayerAnimation;
 
 public class Inventory {
-    private final Item[] items;
+    private Item[] items;
     private int selectedIndex;
     private int hatCount;
+
+    public Inventory(){
+
+    }
 
     public Inventory(JsonArray json) {
         items = new Item[Settings.INVENTORY_SIZE];
@@ -54,6 +59,10 @@ public class Inventory {
 
     public Item[] getItems() {
         return items;
+    }
+
+    public void setItems(Item[] items) {
+        this.items = items;
     }
 
     public Item getSelectedItem() {

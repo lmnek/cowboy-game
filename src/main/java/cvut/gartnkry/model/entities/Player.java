@@ -1,5 +1,8 @@
 package cvut.gartnkry.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.JsonObject;
 import cvut.gartnkry.control.KeysEventHandler;
 import cvut.gartnkry.model.Sprite;
@@ -8,6 +11,7 @@ import cvut.gartnkry.model.items.Inventory;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.view.UI;
 import cvut.gartnkry.view.assets.PlayerAnimation;
+import javafx.scene.image.Image;
 
 import java.util.*;
 
@@ -31,6 +35,8 @@ import static javafx.scene.input.KeyCode.*;
  * <li> D - right
  * </ul>
  */
+@JsonIgnoreProperties({"animation", "bullets", "animationCounter", "moving", "invincible"
+        , "invincibleCounter", "fireRateMax", "fireRateCounter", "hitboxInfo", "entityHitboxInfo"})
 public class Player extends Entity {
     private PlayerAnimation animation;
     private int animationCounter;
@@ -41,25 +47,21 @@ public class Player extends Entity {
     private final double addSidewaysVel;
     private boolean moving;
 
-    private final Inventory inventory;
+    private Inventory inventory = null;
     private final LinkedList<Bullet> bullets;
 
     private boolean invincible;
     private final int invincibleInterval = 30;
     private int invincibleCounter;
-    private int fireRateMax = 100;
+    private int fireRateMax;
     private int fireRateCounter;
 
     /**
      * Class constructor.
      * Load position of player from data and set a sprite.
      * Player is initialized not moving, with default static image and no animation.
-     *
-     * @param playerData data object loaded from input save file
      */
-    public Player(JsonObject playerData) {
-        super(playerData, null);
-
+    public Player() {
         animation = PlayerAnimation.PLAYER_DOWN;
         bullets = new LinkedList<>();
 
@@ -69,9 +71,10 @@ public class Player extends Entity {
         addVel = maxVel / PLAYER_TICKS_TO_ACCELERATE;
         addSidewaysVel = maxSidewaysVel / PLAYER_TICKS_TO_ACCELERATE;
 
-        inventory = new Inventory(playerData.get("inventory").getAsJsonArray());
-        sprite.setImage(PlayerAnimation.PLAYER_DOWN.getDefaultImage());
+        //inventory = new Inventory(playerData.get("inventory").getAsJsonArray());
+        //sprite.setImage(PlayerAnimation.PLAYER_DOWN.getDefaultImage());
     }
+
 
     public void pickupItem(PropItem prop) {
         inventory.pickup(prop);
@@ -165,6 +168,7 @@ public class Player extends Entity {
         }
     }
 
+    @JsonIgnore
     private void setSpriteImage(PlayerAnimation tmp_animation) {
         if (tmp_animation != animation) {
             animationCounter = animation.getTicksPerFrame() - 3;
@@ -239,5 +243,9 @@ public class Player extends Entity {
 
     public boolean hasHat() {
         return inventory.hasHat();
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 }

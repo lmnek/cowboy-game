@@ -12,8 +12,6 @@ import javafx.geometry.Bounds;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -30,12 +28,17 @@ public class AppController extends Application {
 
     @Override
     public void start(Stage stage) {
-        //loadLoggerProperties();
         LOG.info("Start loading/initializing the game.");
 
-        Data data = new Data("save1.json");
-        Model.getInstance().initialize(data);
-        view = new View(stage);
+//        Data data = new Data("save1.json");
+        try {
+            Model model = Data.loadModel("save1.json");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        LOG.info("LOL");
+        //Model.getInstance().initialize(data);
+        /*view = new View(stage);
         CollisionManager.initialize();
         setEvents(stage);
 
@@ -57,7 +60,7 @@ public class AppController extends Application {
             }
         };
         loopTimer.start();
-        LOG.info("Game loop started.");
+        LOG.info("Game loop started.");*/
     }
 
     public void updateActiveProps() {
@@ -89,14 +92,5 @@ public class AppController extends Application {
             Platform.exit();
             System.exit(0);
         });
-    }
-
-    private void loadLoggerProperties() {
-        try (InputStream is = AppController.class.getClassLoader().
-                getResourceAsStream("logging.properties")) {
-            LogManager.getLogManager().readConfiguration(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

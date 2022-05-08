@@ -1,5 +1,6 @@
 package cvut.gartnkry.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import cvut.gartnkry.Settings;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
@@ -9,9 +10,14 @@ import javafx.scene.shape.Rectangle;
  * and its coordinates on the map.
  */
 public class Sprite {
-    private double X;
-    private double Y;
+    private double x;
+    private double y;
+    @JsonIgnore
     private Image image;
+
+
+    public Sprite(){
+    }
 
     /**
      * Class constructor.
@@ -20,8 +26,8 @@ public class Sprite {
      */
     public Sprite(Image image, double coordX, double coordY) {
         this.image = image;
-        this.X = coordX * Settings.SCALE;
-        this.Y = coordY * Settings.SCALE;
+        this.x = coordX * Settings.SCALE;
+        this.y = coordY * Settings.SCALE;
     }
 
     /**
@@ -42,33 +48,33 @@ public class Sprite {
     }
 
     public double getX() {
-        return X;
+        return x;
     }
 
     public double getY() {
-        return Y;
+        return y;
     }
 
     public void setX(double coordX) {
-        this.X = coordX;
+        this.x = coordX;
     }
 
     public void setY(double coordY) {
-        this.Y = coordY;
+        this.y = coordY;
     }
 
     /**
      * @return double value of X coordinate in the center of the sprite
      */
     public double getXCenter() {
-        return X + image.getWidth() / 2;
+        return x + image.getWidth() / 2;
     }
 
     /**
      * @return double value of Y coordinate in the center of the sprite
      */
     public double getYCenter() {
-        return Y + image.getHeight() / 2;
+        return y + image.getHeight() / 2;
     }
 
     /**
@@ -80,12 +86,12 @@ public class Sprite {
     }
 
     public void addXY(double x, double y) {
-        X += x;
-        Y += y;
+        this.x += x;
+        this.y += y;
     }
 
     public Rectangle getImageRect() {
-        return new Rectangle(X, Y, image.getWidth(), image.getHeight());
+        return new Rectangle(x, y, image.getWidth(), image.getHeight());
     }
 
 }
