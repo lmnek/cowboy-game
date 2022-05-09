@@ -11,7 +11,6 @@ sprite fixes:
 todo:
  - enemies - spawn points
  - ladder/bridge - items
- - save game data (JSON file)
  - loggers
  - threads for enemy intelligence
  - try/catch

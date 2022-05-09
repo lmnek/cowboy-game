@@ -31,7 +31,7 @@ public class AppController extends Application {
         AppLogger.init();
         AppLogger.info(() -> "Start loading/initializing the game.");
 
-        data = new JsonData("save2.json");
+        data = new JsonData(Settings.SAVE_FILENAME);
         Model.getInstance().initialize(data);
         view = new View(stage);
         CollisionManager.initialize();

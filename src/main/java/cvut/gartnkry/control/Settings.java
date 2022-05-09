@@ -3,6 +3,8 @@ package cvut.gartnkry.control;
 import java.util.logging.Level;
 
 public class Settings {
+    public static final String SAVE_FILENAME = "save3.json";
+
     public static final Level logLevel = Level.ALL;
     public static final Level consoleLogLevel = Level.FINE;
     public static final Level fileLogLevel = Level.INFO;
@@ -21,7 +23,7 @@ public class Settings {
     public static final int INVENTORY_SIZE = 5;
 
 
-    public static final boolean DRAW_HITBOXES = true;
+    public static final boolean DRAW_HITBOXES = false;
     public static final double HITBOX_PADDING = 0.01 * SCALE;
 
     public static final int CACTUS_DAMAGE = 1;

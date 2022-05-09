@@ -73,7 +73,7 @@ public class UI {
     public void redraw() {
         instance.drawInventoryItems(Model.getInstance().getPlayer().getInventory());
         instance.drawHearts(Model.getInstance().getPlayer());
-        instance.newSelectedItem(0, 0);
+        instance.newSelectedItem(0);
     }
 
     private Rectangle getInventoryRec() {
@@ -86,9 +86,11 @@ public class UI {
         return rec;
     }
 
-    public void newSelectedItem(int prevIndex, int newIndex) {
-        inventoryRecs[prevIndex].setFill(notSelectedCol);
-        inventoryRecs[newIndex].setFill(selectedCol);
+    public void newSelectedItem(int idx) {
+        for (int i = 0; i < inventoryRecs.length; i++) {
+            inventoryRecs[i].setFill(notSelectedCol);
+        }
+        inventoryRecs[idx].setFill(selectedCol);
     }
 
     public void drawInventoryItems(Inventory inventory) {

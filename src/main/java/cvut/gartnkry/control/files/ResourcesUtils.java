@@ -64,7 +64,7 @@ public class ResourcesUtils {
             packageName += ".";
         }
         String path = "cvut.gartnkry.model." + packageName + json.get("name").getAsString();
-        AppLogger.fine(() -> "Loading object with reflection: " + path);
+        AppLogger.info(() -> "Loading object with reflection: " + path);
         try {
             Constructor<?> constructor = Class.forName(path).getConstructor(JsonObject.class);
             Object[] parameters = {json};

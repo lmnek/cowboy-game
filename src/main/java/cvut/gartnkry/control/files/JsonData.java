@@ -1,9 +1,6 @@
 package cvut.gartnkry.control.files;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import cvut.gartnkry.control.AppLogger;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
@@ -121,7 +118,7 @@ public class JsonData {
         obj.add("items", itemsArr);
 
         try (FileWriter writer = new FileWriter(filename)) {
-            writer.write(obj.toString());
+            writer.write(new GsonBuilder().setPrettyPrinting().create().toJson(obj));
         } catch (IOException e) {
             AppLogger.severe(() -> "Failed to save a game to file: " + filename);
         }

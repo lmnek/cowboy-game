@@ -1,0 +1,47 @@
+{
+  "map": "map3.csv",
+  "entities": [
+    {
+      "name": "Player",
+      "x": 114.94534203286295,
+      "y": 200,
+      "health": 7,
+      "maxHealth": 10,
+      "inventory": []
+    }
+  ],
+  "props": [
+    {
+      "name": "Tree",
+      "x": 230.0,
+      "y": 50.0
+    },
+    {
+      "name": "Cactus",
+      "x": 200.0,
+      "y": 300.0
+    },
+    {
+      "name": "Cactus",
+      "x": 120.0,
+      "y": 340.0
+    },
+    {
+      "name": "Tree",
+      "x": 200.0,
+      "y": 380.0
+    }
+  ],
+  "items": [
+    {
+      "name": "Hat",
+      "x": 245.0,
+      "y": 99.0
+    },
+    {
+      "name": "Wood",
+      "x": 91.0,
+      "y": 283.0
+    }
+  ]
+}

@@ -23,7 +23,7 @@ public class Inventory {
             Item item = (Item) ResourcesUtils.loadReflection(json.get(i).getAsJsonObject(), "items");
             addItem(item, i);
         }
-        PlayerAnimation.setGunSelected(items.get(selectedIndex).is(Gun.class));
+        PlayerAnimation.setGunSelected(items.get(selectedIndex) != null && items.get(selectedIndex).is(Gun.class));
     }
 
 
@@ -77,7 +77,7 @@ public class Inventory {
     private void selectItem(int index) {
         int tmp = selectedIndex;
         selectedIndex = Math.floorMod(index, items.size());
-        UI.getInstance().newSelectedItem(tmp, selectedIndex);
+        UI.getInstance().newSelectedItem(selectedIndex);
         PlayerAnimation.setGunSelected(false);
         PlayerAnimation.setGunSelected(items.get(selectedIndex) != null && items.get(selectedIndex).is(Gun.class));
     }
