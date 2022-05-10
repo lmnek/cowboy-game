@@ -1,9 +1,4 @@
 
-fixes:
-- fix bullet speed when changing scale, player hitbox
-- bullets behind props
-- death font size
-
 sprite fixes:
 - rovna hlava no gun default
 - pistol v prave ruce - right

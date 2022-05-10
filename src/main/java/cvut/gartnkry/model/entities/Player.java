@@ -1,6 +1,7 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
+import cvut.gartnkry.AppController;
 import cvut.gartnkry.control.KeysEventHandler;
 import cvut.gartnkry.model.Sprite;
 import cvut.gartnkry.model.items.Gun;
@@ -8,6 +9,8 @@ import cvut.gartnkry.model.items.Inventory;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.view.UI;
 import cvut.gartnkry.view.assets.PlayerAnimation;
+import cvut.gartnkry.view.assets.Sound;
+import cvut.gartnkry.view.assets.StepSoundsPlayer;
 
 import java.util.*;
 
@@ -46,6 +49,7 @@ public class Player extends Entity {
 
     private boolean invincible;
     private final int invincibleInterval = 30;
+    private final int maxHealth;
     private int invincibleCounter;
     private int fireRateMax = 100;
     private int fireRateCounter;
@@ -59,6 +63,11 @@ public class Player extends Entity {
      */
     public Player(JsonObject playerData) {
         super(playerData, null);
+
+        maxHealth = playerData.get("maxHealth").getAsInt();
+        if (health > maxHealth) {
+            health = maxHealth;
+        }
 
         animation = PlayerAnimation.PLAYER_DOWN;
         bullets = new LinkedList<>();
@@ -75,6 +84,7 @@ public class Player extends Entity {
 
     public void pickupItem(PropItem prop) {
         inventory.pickup(prop);
+        Sound.ITEM.play();
     }
 
     public void update() {
@@ -149,8 +159,10 @@ public class Player extends Entity {
     private void setWalkingSprite(int dirX, int dirY) {
         PlayerAnimation tmp_animation = getAnimation(dirX, dirY);
         if ((moving = tmp_animation != null)) {
+            StepSoundsPlayer.play();
             setSpriteImage(tmp_animation);
         } else {
+            StepSoundsPlayer.stop();
             sprite.setImage(animation.getDefaultImage());
         }
     }
@@ -196,12 +208,20 @@ public class Player extends Entity {
             super.damage(damagePoints);
             invincible = true;
             UI.getInstance().drawHearts(this);
+            if (health == 0) {
+                Sound.FALL.play();
+                Sound.DEATH.play();
+            } else {
+                Sound.GRUNT.play();
+            }
         }
     }
 
-    @Override
     public void heal(int healPoints) {
-        super.heal(healPoints);
+        health += healPoints;
+        if (health > maxHealth) {
+            health = maxHealth;
+        }
         UI.getInstance().drawHearts(this);
     }
 
@@ -239,5 +259,9 @@ public class Player extends Entity {
 
     public boolean hasHat() {
         return inventory.hasHat();
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
     }
 }

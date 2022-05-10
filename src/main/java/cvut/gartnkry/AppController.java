@@ -8,6 +8,8 @@ import cvut.gartnkry.control.collisions.CollisionManager;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.view.UI;
 import cvut.gartnkry.view.View;
+import cvut.gartnkry.view.assets.Sound;
+import cvut.gartnkry.view.assets.StepSoundsPlayer;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -26,6 +28,7 @@ public class AppController extends Application {
         launch();
     }
 
+
     @Override
     public void start(Stage stage) {
         AppLogger.init();
@@ -36,6 +39,11 @@ public class AppController extends Application {
         view = new View(stage);
         CollisionManager.initialize();
         setEvents(stage);
+
+
+        Sound.WIND.play();
+        Thread soundThread = new Thread(new StepSoundsPlayer());
+        soundThread.start();
 
         AnimationTimer loopTimer = new AnimationTimer() {
             private long lastUpdate = 0;
@@ -84,8 +92,10 @@ public class AppController extends Application {
 
         stage.setOnCloseRequest(t -> {
             data.saveJson();
+            StepSoundsPlayer.shutdown();
             Platform.exit();
             System.exit(0);
         });
     }
+
 }

@@ -24,7 +24,7 @@ public class Bullet {
         Y += velocityY;
     }
 
-    public Rectangle getRectangle() {
+    public Rectangle  getRectangle() {
         return new Rectangle(X, Y, Settings.SCALE, Settings.SCALE);
     }
 

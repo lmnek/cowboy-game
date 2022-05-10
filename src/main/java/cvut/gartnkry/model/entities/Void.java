@@ -48,11 +48,6 @@ public class Void extends Entity {
         animation = Animation.VOID_OPEN;
     }
 
-    @Override
-    public void damage(int damagePoints) {
-        // invincible
-    }
-
     public boolean isActivated() {
         return activated;
     }

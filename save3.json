@@ -3,11 +3,54 @@
   "entities": [
     {
       "name": "Player",
-      "x": 114.94534203286295,
-      "y": 200,
-      "health": 7,
-      "maxHealth": 10,
-      "inventory": []
+      "x": 243.40928993771843,
+      "y": 253.41772721475195,
+      "health": 10,
+      "inventory": [
+        {
+          "name": "Wood"
+        }
+      ],
+      "maxHealth": 10
+    },
+    {
+      "name": "Ghost",
+      "x": 54.0,
+      "y": 732.0,
+      "health": 10
+    },
+    {
+      "name": "Ghost",
+      "x": 151.0,
+      "y": 683.0,
+      "health": 10
+    },
+    {
+      "name": "Ghost",
+      "x": 360.0,
+      "y": 760.0,
+      "health": 15
+    },
+    {
+      "name": "Void",
+      "x": 160.0,
+      "y": 340.0,
+      "health": 20,
+      "activated": true
+    },
+    {
+      "name": "Void",
+      "x": 112.0,
+      "y": 752.0,
+      "health": 10,
+      "activated": false
+    },
+    {
+      "name": "Void",
+      "x": 335.0,
+      "y": 458.0,
+      "health": 30,
+      "activated": false
     }
   ],
   "props": [
@@ -30,18 +73,112 @@
       "name": "Tree",
       "x": 200.0,
       "y": 380.0
+    },
+    {
+      "name": "Cactus",
+      "x": 41.0,
+      "y": 488.0
+    },
+    {
+      "name": "Skull",
+      "x": 128.0,
+      "y": 519.0
+    },
+    {
+      "name": "Tree",
+      "x": 93.0,
+      "y": 503.0
+    },
+    {
+      "name": "Tree",
+      "x": 72.0,
+      "y": 690.0
+    },
+    {
+      "name": "Cactus",
+      "x": 145.0,
+      "y": 700.0
+    },
+    {
+      "name": "Skull",
+      "x": 135.0,
+      "y": 795.0
+    },
+    {
+      "name": "Tree",
+      "x": 98.0,
+      "y": 839.0
+    },
+    {
+      "name": "Skull",
+      "x": 229.0,
+      "y": 663.0
+    },
+    {
+      "name": "Tree",
+      "x": 196.0,
+      "y": 775.0
+    },
+    {
+      "name": "Cross",
+      "x": 353.0,
+      "y": 760.0
+    },
+    {
+      "name": "Cactus",
+      "x": 59.0,
+      "y": 723.0
     }
   ],
   "items": [
     {
+      "name": "Gun",
+      "x": 76.0,
+      "y": 549.0,
+      "bulletVelocity": 4.0,
+      "fireRate": 15,
+      "damage": 1
+    },
+    {
       "name": "Hat",
       "x": 245.0,
-      "y": 99.0
+      "y": 101.0
     },
     {
       "name": "Wood",
       "x": 91.0,
-      "y": 283.0
+      "y": 291.0
+    },
+    {
+      "name": "Plank",
+      "x": 142.0,
+      "y": 333.0
+    },
+    {
+      "name": "Plank",
+      "x": 33.0,
+      "y": 845.0
+    },
+    {
+      "name": "Wood",
+      "x": 159.0,
+      "y": 832.0
+    },
+    {
+      "name": "Plank",
+      "x": 245.0,
+      "y": 791.0
+    },
+    {
+      "name": "Wood",
+      "x": 186.0,
+      "y": 653.0
+    },
+    {
+      "name": "Bottle",
+      "x": 346.0,
+      "y": 426.0,
+      "heal": 2
     }
   ]
 }

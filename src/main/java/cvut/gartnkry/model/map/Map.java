@@ -2,6 +2,7 @@ package cvut.gartnkry.model.map;
 
 import cvut.gartnkry.control.files.ResourcesUtils;
 import cvut.gartnkry.view.assets.AssetsManager;
+import cvut.gartnkry.view.assets.Sound;
 
 import java.io.BufferedReader;
 
@@ -57,6 +58,7 @@ public class Map {
                 || tileNameEquals(tile1, tile2, "sand_left", "sand_right")) {
             tileMap[startY + incY][startX + incX] = AssetsManager.getTileFromName(tile1.substring(0, 4) + "_bridge" + tile1.substring(4));
             tileMap[startY + 2 * incY][startX + 2 * incX] = AssetsManager.getTileFromName(tile2.substring(0, 4) + "_bridge" + tile2.substring(4));
+            Sound.BRIDGE.play();
             return true;
         }
         return false;

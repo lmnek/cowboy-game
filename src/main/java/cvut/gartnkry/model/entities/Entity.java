@@ -13,37 +13,23 @@ import javafx.scene.shape.Rectangle;
  */
 public abstract class Entity extends Prop {
     private final HitboxInfo entityHitboxInfo;
-    private final int max_health;
-    private int health;
+    protected int health;
     protected int damage;
 
     protected Entity(JsonObject entityData, Image defaultImage) {
         super(entityData, defaultImage);
         health = entityData.get("health").getAsInt();
-        max_health = entityData.get("maxHealth").getAsInt();
-        if (health > max_health) {
-            health = max_health;
-        }
+
         entityHitboxInfo = AssetsManager.getEntityHitboxInfo(name);
     }
 
     public abstract void update();
 
     public void damage(int damagePoints) {
-        addToHealth(-damagePoints);
-    }
-
-    public void heal(int healPoints) {
-        addToHealth(healPoints);
-    }
-
-    private void addToHealth(int inc) {
-        health += inc;
+        health -= damagePoints;
         if (health < 0) {
             health = 0;
-        } else if (health > max_health) {
-            health = max_health;
-        }
+        };
     }
 
     public boolean isDead() {
@@ -52,10 +38,6 @@ public abstract class Entity extends Prop {
 
     public int getHealth() {
         return health;
-    }
-
-    public int getMaxHealth() {
-        return max_health;
     }
 
     public Rectangle getEntityHitboxRec() {

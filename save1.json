@@ -1,1 +1,89 @@
-{"map":"map3.csv","entities":[{"name":"Player","x":135.85517318281072,"y":39.99,"health":2,"maxHealth":10,"inventory":[{"name":"Gun","bulletVelocity":2.0,"fireRate":10,"damage":1},{"name":"Hat"}]},{"name":"Void","x":225.0,"y":45.0,"health":20,"maxHealth":20,"activated":true}],"props":[{"name":"Cactus","x":50.0,"y":30.0},{"name":"Cactus","x":120.0,"y":190.0},{"name":"Skull","x":170.0,"y":130.0},{"name":"Cross","x":352.0,"y":150.0},{"name":"Tree","x":59.0,"y":100.0},{"name":"Tree","x":210.0,"y":60.0},{"name":"Tree","x":170.0,"y":225.0}],"items":[{"name":"Gun","x":100.0,"y":191.0,"bulletVelocity":10.0,"fireRate":50,"damage":2},{"name":"Wood","x":160.0,"y":91.0},{"name":"Plank","x":220.0,"y":181.0}]}
+{
+  "map": "map2.csv",
+  "entities": [
+    {
+      "name": "Player",
+      "x": 200.44631155049652,
+      "y": 53.07313857175739,
+      "health": 10,
+      "inventory": [
+        {
+          "name": "Gun",
+          "bulletVelocity": 2.0,
+          "fireRate": 10,
+          "damage": 1
+        },
+        {
+          "name": "Hat"
+        },
+        {
+          "name": "Wood"
+        },
+        {
+          "name": "Bottle",
+          "heal": 2
+        }
+      ],
+      "maxHealth": 10
+    },
+    {
+      "name": "Void",
+      "x": 225.0,
+      "y": 45.0,
+      "health": 3,
+      "activated": false
+    }
+  ],
+  "props": [
+    {
+      "name": "Cactus",
+      "x": 50.0,
+      "y": 30.0
+    },
+    {
+      "name": "Cactus",
+      "x": 120.0,
+      "y": 190.0
+    },
+    {
+      "name": "Skull",
+      "x": 170.0,
+      "y": 130.0
+    },
+    {
+      "name": "Cross",
+      "x": 352.0,
+      "y": 150.0
+    },
+    {
+      "name": "Tree",
+      "x": 59.0,
+      "y": 100.0
+    },
+    {
+      "name": "Tree",
+      "x": 210.0,
+      "y": 60.0
+    },
+    {
+      "name": "Tree",
+      "x": 170.0,
+      "y": 225.0
+    }
+  ],
+  "items": [
+    {
+      "name": "Gun",
+      "x": 100.0,
+      "y": 197.0,
+      "bulletVelocity": 10.0,
+      "fireRate": 50,
+      "damage": 2
+    },
+    {
+      "name": "Plank",
+      "x": 220.0,
+      "y": 188.0
+    }
+  ]
+}

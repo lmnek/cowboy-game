@@ -10,6 +10,7 @@ import cvut.gartnkry.model.entities.Void;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.model.map.Map;
 import cvut.gartnkry.model.entities.Player;
+import cvut.gartnkry.view.assets.Sound;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -68,7 +69,13 @@ public class Model {
     public void update() {
         player.update();
         getBullets().forEach(Bullet::update);
-        entities.removeIf(e -> e.isDead());
+        entities.removeIf(e -> {
+            if (e.isDead()) {
+                Sound.VOID.play();
+                return true;
+            }
+            return false;
+        });
         entities.forEach(e -> {
             if (e.isActive()) {
                 e.update();

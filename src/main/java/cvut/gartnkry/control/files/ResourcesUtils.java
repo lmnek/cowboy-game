@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import cvut.gartnkry.control.AppLogger;
 import cvut.gartnkry.control.Settings;
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
 import javafx.scene.text.Font;
 
 import java.io.BufferedReader;
@@ -90,5 +91,10 @@ public class ResourcesUtils {
             AppLogger.info(() -> "Font failed to load.");
         }
         return font;
+    }
+
+    public static Media loadMedia(String filename){
+        AppLogger.fine(() -> "Loading sound: " + filename);
+        return new Media(Objects.requireNonNull(ResourcesUtils.class.getResource("/Sounds/" + filename)).toExternalForm());
     }
 }

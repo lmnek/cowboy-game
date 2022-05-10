@@ -27,5 +27,5 @@ public class Settings {
     public static final double HITBOX_PADDING = 0.01 * SCALE;
 
     public static final int CACTUS_DAMAGE = 1;
-    public static final double MAX_GHOST_VELOCITY = SCALE / 2;
+    public static final double MAX_GHOST_VELOCITY = SCALE / 3;
 }

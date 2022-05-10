@@ -6,6 +6,7 @@ import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
 import cvut.gartnkry.model.entities.Entity;
 import cvut.gartnkry.model.entities.Void;
+import cvut.gartnkry.model.items.Bottle;
 import cvut.gartnkry.model.items.Gun;
 import cvut.gartnkry.model.items.Item;
 import cvut.gartnkry.model.items.PropItem;
@@ -51,13 +52,14 @@ public class JsonData {
             item.addProperty("bulletVelocity", gun.getBulletVelocity() / SCALE);
             item.addProperty("fireRate", gun.getFireRate());
             item.addProperty("damage", gun.getDamage());
+        } else if (i.getClass().equals(Bottle.class)) {
+            item.addProperty("heal", ((Bottle) i).getHeal());
         }
     }
 
     private JsonObject entityToJson(Entity e) {
         JsonObject obj = propToJson(e);
         obj.addProperty("health", e.getHealth());
-        obj.addProperty("maxHealth", e.getMaxHealth());
         return obj;
     }
 
@@ -85,6 +87,7 @@ public class JsonData {
             }
         });
         playerObj.add("inventory", inventory);
+        playerObj.addProperty("maxHealth", model.getPlayer().getMaxHealth());
 
         JsonArray entitiesArr = new JsonArray();
         entitiesArr.add(playerObj);

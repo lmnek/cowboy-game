@@ -9,6 +9,7 @@ import cvut.gartnkry.model.entities.Player;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.model.map.Tile;
 import cvut.gartnkry.view.View;
+import cvut.gartnkry.view.assets.Sound;
 import javafx.geometry.Bounds;
 import javafx.scene.shape.Rectangle;
 
@@ -101,6 +102,7 @@ public class CollisionManager {
                 bullets.removeIf(b -> {
                     if (b.getRectangle().getBoundsInParent().intersects(entityBounds)) {
                         e.damage(b.getGun().getDamage());
+                        Sound.ENTITY.play();
                         return true;
                     }
                     return false;
@@ -115,6 +117,7 @@ public class CollisionManager {
             if (v.isActive() && v.getActivateBounds().intersects(playerRec.getBoundsInParent())) {
                 v.activate();
                 entities.add(v);
+                Sound.VOID.play();
                 return true;
             }
             return false;

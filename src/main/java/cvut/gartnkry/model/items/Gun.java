@@ -2,6 +2,7 @@ package cvut.gartnkry.model.items;
 
 import com.google.gson.JsonObject;
 import cvut.gartnkry.model.entities.Bullet;
+import cvut.gartnkry.view.assets.Sound;
 
 import static cvut.gartnkry.control.Settings.SCALE;
 
@@ -15,6 +16,7 @@ public class Gun extends Item {
     }
 
     public Bullet shoot(int dirX, int dirY, double X, double Y) {
+        Sound.GUN.play();
         return new Bullet(dirX, dirY, X, Y, bulletVelocity, this);
     }
 

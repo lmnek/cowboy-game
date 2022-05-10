@@ -3,12 +3,16 @@ package cvut.gartnkry.control;
 import cvut.gartnkry.AppController;
 import cvut.gartnkry.control.collisions.CollisionManager;
 import cvut.gartnkry.model.Model;
+import cvut.gartnkry.model.Sprite;
+import cvut.gartnkry.model.items.Inventory;
 import cvut.gartnkry.model.items.Item;
 import cvut.gartnkry.model.items.PropItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.util.HashMap;
+
+import static cvut.gartnkry.control.Settings.SCALE;
 
 
 public class KeysEventHandler {
@@ -31,20 +35,21 @@ public class KeysEventHandler {
     }
 
     public static void onKeyTyped(KeyEvent event) {
+        Inventory inventory = Model.getInstance().getPlayer().getInventory();
         switch (event.getCharacter().toUpperCase()) {
             case "E":
                 AppLogger.info(() -> "Pressed E - select previous item");
-                Model.getInstance().getPlayer().getInventory().selectNextItem();
+                inventory.selectNextItem();
                 break;
             case "Q":
                 AppLogger.info(() -> "Pressed Q - select next item");
-                Model.getInstance().getPlayer().getInventory().selectPreviousItem();
+                inventory.selectPreviousItem();
                 break;
             case "F":
                 AppLogger.info(() -> "Pressed F - pick up item");
                 PropItem propItem = CollisionManager.getCollidedItem();
                 if (propItem != null) {
-                    Item tmp = Model.getInstance().getPlayer().getInventory().getSelectedItem();
+                    Item tmp = inventory.getSelectedItem();
                     Model.getInstance().getPlayer().pickupItem(propItem);
                     if (tmp != null) {
                         propItem.setNewItem(tmp);
@@ -55,11 +60,15 @@ public class KeysEventHandler {
                 break;
             case "C":
                 AppLogger.info(() -> "Pressed C - use selected item");
-                Model.getInstance().getPlayer().getInventory().useSelectedItem();
+                inventory.useSelectedItem();
                 break;
             case "R":
                 AppLogger.info(() -> "Pressed R - reload game");
                 AppController.reloadGame();
+                break;
+            case "X":
+                Sprite playerSprite = Model.getInstance().getPlayer().getSprite();
+                AppLogger.severe(() -> "Player position: X " + playerSprite.getX() / SCALE + ", Y " + playerSprite.getY() / SCALE);
                 break;
         }
     }

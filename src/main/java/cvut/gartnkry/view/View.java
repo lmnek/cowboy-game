@@ -91,32 +91,45 @@ public class View {
             UI.getInstance().hideDeathMessage();
         }
 
+        drawModel(gc);
+
+        if (DRAW_HITBOXES) {
+            drawHitboxes(gc);
+        }
+    }
+
+    private void drawModel(GraphicsContext gc) {
         drawBackground(gc);
         drawTiles(gc);
 
+        LinkedList<Bullet> tmpBullets = (LinkedList<Bullet>) Model.getInstance().getBullets().clone();
         LinkedList<Prop> frontProps = new LinkedList<>();
+        Rectangle hitboxRec = Model.getInstance().getPlayer().getHitboxRec();
         Model.getInstance().getProps().forEach(prop -> {
             // on screen?
             if (prop.isActive()) {
                 double propY = prop.getHitboxRec().getY();
+                // Draw bullet?
+                tmpBullets.removeIf(b -> {
+                    Rectangle bRec = b.getRectangle();
+                    if (propY > bRec.getY() + HITBOX_PADDING && bRec.getBoundsInParent().intersects(prop.getSprite().getImageRect().getBoundsInParent())) {
+                        drawBullet(gc, b);
+                        return true;
+                    }
+                    return false;
+                });
+
                 // check for props in front of player
-                if (propY > Model.getInstance().getPlayer().getHitboxRec().getY() + HITBOX_PADDING) {
+                if (propY > hitboxRec.getY() + HITBOX_PADDING) {
                     frontProps.add(prop);
                 } else {
                     drawSprite(gc, prop.getSprite());
                 }
-//                Model.getInstance().getBullets().forEach(b -> {
-//                    if (propY > b.getRectangle().getY() + HITBOX_PADDING) {
-//                        frontProps.add(b);
-//                    } else {
-//                        drawBullet(gc, b);
-//                    }
-//                });
             }
         });
 
         Model.getInstance().getEntities().forEach(e -> {
-            if (e.getClass() == Void.class && e.isActive()) {
+            if (e.getClass().equals(Void.class) && e.isActive()) {
                 drawSprite(gc, e.getSprite());
             }
         });
@@ -125,19 +138,13 @@ public class View {
 
         // Draw remaining props and bullets
         frontProps.forEach(p -> drawSprite(gc, p.getSprite()));
-        //frontBullets.forEach(b -> drawBullet(gc, b));
+        tmpBullets.forEach(b -> drawBullet(gc, b));
 
         Model.getInstance().getEntities().forEach(e -> {
-            if (e.getClass() != Void.class && e.isActive()) {
+            if (!e.getClass().equals(Void.class) && e.isActive()) {
                 drawSprite(gc, e.getSprite());
             }
         });
-
-        Model.getInstance().getBullets().forEach(b -> drawBullet(gc, b));
-
-        if (DRAW_HITBOXES) {
-            drawHitboxes(gc);
-        }
     }
 
 
