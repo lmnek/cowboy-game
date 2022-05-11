@@ -10,14 +10,24 @@ import cvut.gartnkry.model.entities.Void;
 import cvut.gartnkry.model.items.PropItem;
 import cvut.gartnkry.model.map.Map;
 import cvut.gartnkry.model.entities.Player;
-import cvut.gartnkry.view.assets.Sound;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * Model of the game is a Singleton class that contains information about all ingame objects:
+ * <ul>
+ * <li> Player
+ * <li> Props
+ * <li> Entities
+ * <li> Map
+ * </ul>
+ * It is used for access to those objects and to call update() method on them.
+ */
 public class Model {
-    private static Model instance = new Model();
+    private final static Model instance = new Model();
     private JsonData data;
     private Player player;
     private ArrayList<Entity> entities;
@@ -32,6 +42,11 @@ public class Model {
         return instance;
     }
 
+    /**
+     * Initializes all objects in model from given save.
+     * Should be called before using Model.
+     * @param data JsonData class loaded from a save file
+     */
     public void initialize(JsonData data) {
         this.data = data;
         map = new Map(data.getMapFilename());
@@ -41,7 +56,7 @@ public class Model {
         // (loaded from json save file)
         for (JsonElement element : data.getArrayData("entities")) {
             Entity entity = (Entity) ResourcesUtils.loadReflection(element.getAsJsonObject(), "entities");
-            if (entity.getClass().equals(Player.class)) {
+            if (Objects.requireNonNull(entity).getClass().equals(Player.class)) {
                 player = (Player) entity;
             } else if (entity.getClass().equals(Void.class) && !element.getAsJsonObject().get("activated").getAsBoolean()) {
                 nonActiveVoids.add((Void) entity);
@@ -50,6 +65,7 @@ public class Model {
             }
         }
 
+        // Add props and items on the ground to the Prop list
         JsonArray propsData = data.getArrayData("props");
         JsonArray itemsData = data.getArrayData("items");
         props = new ArrayList<>();
@@ -61,21 +77,23 @@ public class Model {
         }
     }
 
+    /**
+     * Load the Model again from the same data.
+     * Used when restarting the game.
+     */
     public void reinitialize() {
         initialize(data);
     }
 
 
+    /**
+     * Calls update() on objects stored in Model.
+     * Removes dead entities.
+     */
     public void update() {
         player.update();
         getBullets().forEach(Bullet::update);
-        entities.removeIf(e -> {
-            if (e.isDead()) {
-                Sound.VOID.play();
-                return true;
-            }
-            return false;
-        });
+        entities.removeIf(Entity::isDead);
         entities.forEach(e -> {
             if (e.isActive()) {
                 e.update();

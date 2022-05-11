@@ -8,7 +8,6 @@ import cvut.gartnkry.control.collisions.CollisionManager;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.view.UI;
 import cvut.gartnkry.view.View;
-import cvut.gartnkry.view.assets.Sound;
 import cvut.gartnkry.view.assets.StepSoundsPlayer;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -17,18 +16,24 @@ import javafx.geometry.Bounds;
 import javafx.stage.Stage;
 
 /**
- * JavaFX App
+ * JavaFX App.
+ * Main class that is responsible for communication between all parts of the game.
+ * It sets up the main game loop and other threads.
  */
 public class AppController extends Application {
-
     private View view;
     private JsonData data;
 
+    /**
+     * Main class that launches javafx app.
+     */
     public static void main(String[] args) {
         launch();
     }
 
-
+    /**
+     * Javafx start method that sets up the game and its objects.
+     */
     @Override
     public void start(Stage stage) {
         AppLogger.init();
@@ -40,22 +45,18 @@ public class AppController extends Application {
         CollisionManager.initialize();
         setEvents(stage);
 
-
-        Sound.WIND.play();
-        Thread soundThread = new Thread(new StepSoundsPlayer());
+        Thread soundThread = new Thread(StepSoundsPlayer.getInstance());
         soundThread.start();
 
+        // Set game loop
         AnimationTimer loopTimer = new AnimationTimer() {
             private long lastUpdate = 0;
 
-            // game loop
             @Override
             public void handle(long now) {
                 if (now - lastUpdate >= Settings.LOOP_INTERVAL) {
-                    // Render and draw graphics
                     view.render();
                     CollisionManager.handleCollisions();
-                    // Set states
                     Model.getInstance().update();
                     updateActiveProps();
                     lastUpdate = now;
@@ -66,24 +67,36 @@ public class AppController extends Application {
         AppLogger.info(() -> "Game loop started.");
     }
 
+    /**
+     * Update active state on all game objects
+     * - depends on whether they are on screen.
+     * Nonactive objects don't need to be drawn and be checked for collisions.
+     */
     public void updateActiveProps() {
         Bounds activeBounds = view.getScreenBounds();
         Model model = Model.getInstance();
+        // update active objects
         model.getProps().forEach(p -> p.setActive(activeBounds.intersects(p.getSprite().getImageRect().getBoundsInParent())));
         model.getEntities().forEach(e -> e.setActive(activeBounds.intersects(e.getSprite().getImageRect().getBoundsInParent())));
         model.getVoids().forEach(v -> v.setActive(activeBounds.intersects(v.getSprite().getImageRect().getBoundsInParent())));
 
+        // remove bullets that are not on screen
         model.getBullets().removeIf(b -> !activeBounds.intersects(b.getRectangle().getBoundsInParent()));
         AppLogger.finer(() -> "Active bullets count: " + model.getBullets().size());
     }
 
+    /**
+     * Reinitialize objects when restarting the game.
+     */
     public static void reloadGame() {
         Model.getInstance().reinitialize();
         UI.getInstance().redraw();
         CollisionManager.initialize();
     }
 
-
+    /**
+     * Set all required events.
+     */
     private void setEvents(Stage stage) {
         // player movement - W A S D
         stage.getScene().setOnKeyPressed(KeysEventHandler::onKeyPressed);
@@ -92,7 +105,9 @@ public class AppController extends Application {
 
         stage.setOnCloseRequest(t -> {
             data.saveJson();
+            Model.getInstance().getMap().saveMap();
             StepSoundsPlayer.shutdown();
+            AppLogger.info(() -> "The game was closed.");
             Platform.exit();
             System.exit(0);
         });

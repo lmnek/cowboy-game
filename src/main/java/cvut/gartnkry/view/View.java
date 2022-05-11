@@ -27,10 +27,7 @@ import java.util.LinkedList;
 import static cvut.gartnkry.control.Settings.*;
 
 /**
- * Render game in current model state:
- * 1. draw background
- * 2. draw tiles
- * 3. draw entities (items, player, enemies)
+ *  Class responsible for rendering/drawing game on screen.
  */
 public class View {
     private final Stage stage;
@@ -45,6 +42,13 @@ public class View {
     private final ColorAdjust damageEffect;
     private final ColorAdjust deathEffect;
 
+    /**
+     * Class constructor.
+     * Create all needed graphical elements.
+     * Compute and initialize attributes.
+     * Set UI and stage to show on screen.
+     * @param stage Stage passed in from javafx
+     */
     public View(Stage stage) {
         this.stage = stage;
         damageEffect = new ColorAdjust();
@@ -67,7 +71,7 @@ public class View {
 
         drawBackground(canvas.getGraphicsContext2D());
 
-        // stage = window
+        // Stage settings
         stage.setScene(scene);
         stage.setTitle(Settings.TITLE);
         stage.centerOnScreen();
@@ -79,10 +83,14 @@ public class View {
         UI.getInstance().initialize(pane, Model.getInstance().getPlayer().getInventory().size());
     }
 
+    /**
+     * Render/draw game on the screen in the current model state.
+     */
     public void render() {
         AppLogger.finer(() -> "Drawing on screen.");
         setCamera();
 
+        // Is player dead?
         GraphicsContext gc = canvas.getGraphicsContext2D();
         if (Model.getInstance().getPlayer().isDead()) {
             gc.setEffect(deathEffect);
@@ -105,6 +113,7 @@ public class View {
         LinkedList<Bullet> tmpBullets = (LinkedList<Bullet>) Model.getInstance().getBullets().clone();
         LinkedList<Prop> frontProps = new LinkedList<>();
         Rectangle hitboxRec = Model.getInstance().getPlayer().getHitboxRec();
+        // Iterate all props and draw the ones that are behind player
         Model.getInstance().getProps().forEach(prop -> {
             // on screen?
             if (prop.isActive()) {
@@ -128,6 +137,7 @@ public class View {
             }
         });
 
+        // Draw voids
         Model.getInstance().getEntities().forEach(e -> {
             if (e.getClass().equals(Void.class) && e.isActive()) {
                 drawSprite(gc, e.getSprite());
@@ -140,6 +150,7 @@ public class View {
         frontProps.forEach(p -> drawSprite(gc, p.getSprite()));
         tmpBullets.forEach(b -> drawBullet(gc, b));
 
+        // Draw remaining entities
         Model.getInstance().getEntities().forEach(e -> {
             if (!e.getClass().equals(Void.class) && e.isActive()) {
                 drawSprite(gc, e.getSprite());
@@ -147,16 +158,16 @@ public class View {
         });
     }
 
-
     private void drawPlayer(GraphicsContext gc) {
         Player player = Model.getInstance().getPlayer();
         if (!player.isDead()) {
+            // Lighten player if invincible
             if (player.isInvincible()) {
                 gc.setEffect(damageEffect);
             }
             gc.drawImage(player.getSprite().getImage(), playerScreenX, playerScreenY);
 
-
+            // Render hat on top of the player
             if (player.hasHat()) {
                 Sprite hatSprite = player.getHatSprite();
                 gc.drawImage(hatSprite.getImage(), hatSprite.getX() + playerScreenX, hatSprite.getY() + playerScreenY);
@@ -170,9 +181,6 @@ public class View {
         camera = new Point2D(Model.getInstance().getPlayer().getSprite().getXCenter() - stage.getWidth() / 2, Model.getInstance().getPlayer().getSprite().getYCenter() - stage.getHeight() / 2);
     }
 
-    public Bounds getScreenBounds() {
-        return new Rectangle(getCamera().getX(), getCamera().getY(), stage.getWidth(), stage.getHeight()).getBoundsInParent();
-    }
 
     // Draw tiles depending on player position - camera
     private void drawTiles(GraphicsContext gc) {
@@ -218,6 +226,7 @@ public class View {
     }
 
     private void drawHitboxes(GraphicsContext gc) {
+        // walking hitboxes
         gc.setFill(new Color(1, 0.3, 0.3, 0.7));
         Rectangle rec = Model.getInstance().getPlayer().getHitboxRec();
         drawRectangle(gc, rec);
@@ -227,6 +236,7 @@ public class View {
             }
         }
 
+        // entity hitboxes
         gc.setFill(new Color(0.1, 0.2, 1, 0.6));
         drawRectangle(gc, Model.getInstance().getPlayer().getEntityHitboxRec());
         for (Entity entity : Model.getInstance().getEntities()) {
@@ -242,5 +252,9 @@ public class View {
 
     public Point2D getCamera() {
         return camera;
+    }
+
+    public Bounds getScreenBounds() {
+        return new Rectangle(getCamera().getX(), getCamera().getY(), stage.getWidth(), stage.getHeight()).getBoundsInParent();
     }
 }

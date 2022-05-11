@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Class for keeping image of this sprite
+ * Class for keeping image of the sprite
  * and its coordinates on the map.
  */
 public class Sprite {
@@ -16,7 +16,9 @@ public class Sprite {
     /**
      * Class constructor.
      *
-     * @param image loaded Image asset
+     * @param image  loaded Image asset
+     * @param coordX X coordinate
+     * @param coordY Y coordinate
      */
     public Sprite(Image image, double coordX, double coordY) {
         this.image = image;
@@ -24,19 +26,10 @@ public class Sprite {
         this.Y = coordY * Settings.SCALE;
     }
 
-    /**
-     * @return Image asset of this sprite.
-     */
     public Image getImage() {
         return image;
     }
 
-    /**
-     * New image is being set when animation
-     * frames are being switched.
-     *
-     * @param image new Image
-     */
     public void setImage(Image image) {
         this.image = image;
     }
@@ -58,23 +51,19 @@ public class Sprite {
     }
 
     /**
-     * @return double value of X coordinate in the center of the sprite
+     * @return X coordinate in the center of the sprite
      */
     public double getXCenter() {
         return X + image.getWidth() / 2;
     }
 
     /**
-     * @return double value of Y coordinate in the center of the sprite
+     * @return Y coordinate in the center of the sprite
      */
     public double getYCenter() {
         return Y + image.getHeight() / 2;
     }
 
-    /**
-     * @param x double value to add to x coordinate
-     * @param y double value to add to y coordinate
-     */
     public void addXYScaled(double x, double y) {
         addXY(x * Settings.SCALE, y * Settings.SCALE);
     }

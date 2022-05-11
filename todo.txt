@@ -4,25 +4,21 @@ sprite fixes:
 - pistol v prave ruce - right
 
 todo:
- - enemies - spawn points
- - ladder/bridge - items
- - loggers
- - threads for enemy intelligence
- - try/catch
+ - threads
  - functional test
- - sounds
-
  - go through all TODOS
- - go through all warnings
- - complete JAVADOC
 
-?
++
  - main menu
  - open dialog for JSON
  - drops from enemies
  - XP
-
+ - game object + vlastnosti
+ - better AI
+ - enemies - spawn points
+ - stackovani itemu v inventari
+ - serializace/deserializace JSON
 
 Wiki:
- - Art: pridat animace, screen ze hry
- - pouzity sw / knihovny
+ - Art: pridat animace, screen ze hry, hitbox screen, excel screen
+ - pouzity sw, knihovny

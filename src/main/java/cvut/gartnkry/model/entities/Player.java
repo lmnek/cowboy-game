@@ -1,7 +1,7 @@
 package cvut.gartnkry.model.entities;
 
 import com.google.gson.JsonObject;
-import cvut.gartnkry.AppController;
+import cvut.gartnkry.control.AppLogger;
 import cvut.gartnkry.control.KeysEventHandler;
 import cvut.gartnkry.model.Sprite;
 import cvut.gartnkry.model.items.Gun;
@@ -23,16 +23,17 @@ import static javafx.scene.input.KeyCode.*;
  * Player class is responsible for:
  * <ul>
  * <li> Keeping player's data (position, velocity, players movement direction, ...)
- * <li> Handling keyboard input (WASD movement)
- * <li> Animating player's movement
+ * <li> Handling keyboard input (walking and shooting)
+ * <li> Animating player's movement (changing sprite images)
  * </ul>
- * Keys for controlling player's movement direction are:
+ * Keys for controlling player's movement:
  * <ul>
  * <li> W - forward
  * <li> A - left
  * <li> S - bottom
  * <li> D - right
  * </ul>
+ * Keys for controlling shooting from a gun: Left, Right, Up, Down arrow keys
  */
 public class Player extends Entity {
     private PlayerAnimation animation;
@@ -56,10 +57,9 @@ public class Player extends Entity {
 
     /**
      * Class constructor.
-     * Load position of player from data and set a sprite.
-     * Player is initialized not moving, with default static image and no animation.
+     * Load Player's position, inventory and health from Json data.
      *
-     * @param playerData data object loaded from input save file
+     * @param playerData player Json Object from save file
      */
     public Player(JsonObject playerData) {
         super(playerData, null);
@@ -69,6 +69,8 @@ public class Player extends Entity {
             health = maxHealth;
         }
 
+        deathSound = Sound.DEATH;
+        damageSound = Sound.GRUNT;
         animation = PlayerAnimation.PLAYER_DOWN;
         bullets = new LinkedList<>();
 
@@ -82,31 +84,55 @@ public class Player extends Entity {
         sprite.setImage(PlayerAnimation.PLAYER_DOWN.getDefaultImage());
     }
 
-    public void pickupItem(PropItem prop) {
-        inventory.pickup(prop);
+    /**
+     * Add item to player's inventory and remove prop item from the ground.
+     * If the inventory slot is full, drop item in the slot.
+     *
+     * @param propItem to pick up
+     */
+    public void pickupItem(PropItem propItem) {
+        AppLogger.info(() -> "Picking up item: " + propItem.getName());
+        inventory.pickup(propItem);
         Sound.ITEM.play();
     }
 
+    /**
+     * Update player's sprite corresponding to keyboard input.
+     * Change position according to computed velocity.
+     * Handle shooting if Gun is selected in inventory.
+     */
     public void update() {
         if (!isDead()) {
             sprite.addXYScaled(velocityX, velocityY);
             invincibleTick();
 
+            ++animationCounter;
             int dirX = KeysEventHandler.getDirection(D, A);
             int dirY = KeysEventHandler.getDirection(S, W);
             int shootX = KeysEventHandler.getDirection(RIGHT, LEFT);
             int shootY = shootX == 0 ? KeysEventHandler.getDirection(DOWN, UP) : 0;
             boolean shooting = inventory.gunSelected() && (shootX != 0 || shootY != 0);
-            ++animationCounter;
+            boolean prevMoving = moving;
             if (shooting) {
                 setShootingSprite(dirX, dirY, shootX, shootY);
             } else {
                 setWalkingSprite(dirX, dirY);
             }
             handleShooting(shootX, shootY, shooting);
+
+            if (prevMoving != moving) {
+                if (moving) {
+                    StepSoundsPlayer.getInstance().play();
+                } else {
+                    StepSoundsPlayer.getInstance().stop();
+                }
+            }
         }
     }
 
+    /**
+     * Handle invincibility state after being hit.
+     */
     private void invincibleTick() {
         if (invincible) {
             ++invincibleCounter;
@@ -117,10 +143,18 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * Handle interval for shooting and create new bullet if needed.
+     *
+     * @param shootX   direction of shooting in X axis
+     * @param shootY   direction of shooting in Y axis
+     * @param shooting bool whether player is shooting right now
+     */
     private void handleShooting(int shootX, int shootY, boolean shooting) {
         if (fireRateCounter != fireRateMax) {
             ++fireRateCounter;
         } else if (shooting) {
+            AppLogger.finer(() -> "New bullet created.");
             Gun gun = (Gun) inventory.getSelectedItem();
             bullets.add(gun.shoot(shootX, shootY, sprite.getX() + animation.getShootX(), sprite.getY() + animation.getShootY()));
             fireRateMax = gun.getFireRate();
@@ -128,46 +162,61 @@ public class Player extends Entity {
         }
     }
 
+
+    /**
+     * Compute X and Y velocity from keyboard input and direction of movement.
+     */
     public void computeVelocities() {
-        double add_tmp, max_vel;
+        double tmpAdd, tmpMaxVel;
         // fixes faster movement sideways -> pythagoras theorem
         if (velocityX != 0 && velocityY != 0) {
-            max_vel = maxSidewaysVel;
-            add_tmp = addSidewaysVel;
+            tmpMaxVel = maxSidewaysVel;
+            tmpAdd = addSidewaysVel;
         } else {
-            max_vel = maxVel;
-            add_tmp = addVel;
+            tmpMaxVel = maxVel;
+            tmpAdd = addVel;
         }
-        velocityX = getSingleVelocity(KeysEventHandler.getDirection(D, A), velocityX, add_tmp, max_vel);
-        velocityY = getSingleVelocity(KeysEventHandler.getDirection(S, W), velocityY, add_tmp, max_vel);
+        // compute velocities
+        velocityX = getSingleVelocity(KeysEventHandler.getDirection(D, A), velocityX, tmpAdd, tmpMaxVel);
+        velocityY = getSingleVelocity(KeysEventHandler.getDirection(S, W), velocityY, tmpAdd, tmpMaxVel);
     }
 
-    private double getSingleVelocity(int direction, double velocity, double add_tmp, double max_vel) {
+    /**
+     * Compute single velocity.
+     */
+    private double getSingleVelocity(int direction, double velocity, double tmpAdd, double tmpMaxVel) {
         // accelerate to max velocity
         if (direction != 0) {
-            velocity = max(min(max_vel, velocity + (add_tmp * direction)), -max_vel);
+            velocity = max(min(tmpMaxVel, velocity + (tmpAdd * direction)), -tmpMaxVel);
         }
         // decelerate to zero
         else if (velocity > 0) {
-            velocity = max(velocity - add_tmp, 0);
+            velocity = max(velocity - tmpAdd, 0);
         } else if (velocity < 0) {
-            velocity = min(velocity + add_tmp, 0);
+            velocity = min(velocity + tmpAdd, 0);
         }
         return velocity;
     }
 
+
+    /**
+     * Set sprite image for player - frame from animation or default image.
+     */
     private void setWalkingSprite(int dirX, int dirY) {
         PlayerAnimation tmp_animation = getAnimation(dirX, dirY);
         if ((moving = tmp_animation != null)) {
-            StepSoundsPlayer.play();
             setSpriteImage(tmp_animation);
         } else {
-            StepSoundsPlayer.stop();
             sprite.setImage(animation.getDefaultImage());
         }
     }
 
+    /**
+     * Set sprite image for player with a gun.
+     */
     private void setShootingSprite(int dirX, int dirY, int shootX, int shootY) {
+        // Player will be turned in the direction of shooting
+        // (even if walking backwards)
         PlayerAnimation tmp_animation = getAnimation(shootX, shootY);
         if (tmp_animation != null) {
             setSpriteImage(tmp_animation);
@@ -178,16 +227,24 @@ public class Player extends Entity {
     }
 
     private void setSpriteImage(PlayerAnimation tmp_animation) {
+        // Animation changed?
         if (tmp_animation != animation) {
+            // Set new animation
             animationCounter = animation.getTicksPerFrame() - 3;
             animation = tmp_animation;
             sprite.setImage(animation.getFirstFrame());
-        } else if (animationCounter >= animation.getTicksPerFrame()) {
+        }
+        // Check interval for new frame
+        else if (animationCounter >= animation.getTicksPerFrame()) {
+            // Set new animation frame
             sprite.setImage(animation.getNextFrame());
             animationCounter = 0;
         }
     }
 
+    /**
+     * Get animation from direction of player's movement.
+     */
     private PlayerAnimation getAnimation(int dirX, int dirY) {
         if (dirX == 1) {
             return PlayerAnimation.PLAYER_RIGHT;
@@ -202,21 +259,30 @@ public class Player extends Entity {
         return null;
     }
 
+    /**
+     * Damage player (~decrease his health) if he is not in invincible state.
+     *
+     * @param damagePoints Amount of points to remove from player's health.
+     */
     @Override
     public void damage(int damagePoints) {
         if (!invincible) {
             super.damage(damagePoints);
             invincible = true;
             UI.getInstance().drawHearts(this);
-            if (health == 0) {
+            if (isDead()) {
                 Sound.FALL.play();
-                Sound.DEATH.play();
-            } else {
-                Sound.GRUNT.play();
+                StepSoundsPlayer.getInstance().stop();
             }
         }
     }
 
+    /**
+     * Heal player (~increase his health).
+     * Could from usage of item like Bottle.
+     *
+     * @param healPoints Amount of points to add to player's health.
+     */
     public void heal(int healPoints) {
         health += healPoints;
         if (health > maxHealth) {

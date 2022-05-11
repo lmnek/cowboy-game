@@ -14,26 +14,49 @@ import java.util.HashMap;
 
 import static cvut.gartnkry.control.Settings.SCALE;
 
-
+/**
+ * Class for handling keyboard inputs.
+ * W, A, S, D and Left, right, up, down keys are stored in hashmap with state whether they are pressed.
+ * Other keys are only handled as single time actions - key typing.
+ */
 public class KeysEventHandler {
     private static final HashMap<KeyCode, Boolean> pressedKeys = new HashMap<>();
 
+    /**
+     * Set state as pressed in hashmap for this key.
+     * @param event KeyEvent
+     */
     public static void onKeyPressed(KeyEvent event) {
         pressedKeys.put(event.getCode(), true);
     }
 
+    /**
+     * Set state as not pressed in hashmap for this key.
+     * @param event KeyEvent
+     */
     public static void onKeyReleased(KeyEvent event) {
         pressedKeys.put(event.getCode(), false);
     }
 
-    public static int getDirection(KeyCode keyCode) {
-        return (pressedKeys.containsKey(keyCode) && pressedKeys.get(keyCode) ? 1 : 0);
-    }
-
+    /**
+     * Get values of keycodes (1 if pressed, 0 if not pressed)
+     * and subtract them.
+     * @param keyCode1 positive keycode
+     * @param keyCode2 negative keycode
+     * @return direction as int (1/-1/0)
+     */
     public static int getDirection(KeyCode keyCode1, KeyCode keyCode2) {
         return getDirection(keyCode1) - getDirection(keyCode2);
     }
 
+    private static int getDirection(KeyCode keyCode) {
+        return (pressedKeys.containsKey(keyCode) && pressedKeys.get(keyCode) ? 1 : 0);
+    }
+
+    /**
+     * Handle key typed by according action.
+     * @param event KeyEvent
+     */
     public static void onKeyTyped(KeyEvent event) {
         Inventory inventory = Model.getInstance().getPlayer().getInventory();
         switch (event.getCharacter().toUpperCase()) {
@@ -67,6 +90,7 @@ public class KeysEventHandler {
                 AppController.reloadGame();
                 break;
             case "X":
+                //TODO: remove
                 Sprite playerSprite = Model.getInstance().getPlayer().getSprite();
                 AppLogger.severe(() -> "Player position: X " + playerSprite.getX() / SCALE + ", Y " + playerSprite.getY() / SCALE);
                 break;

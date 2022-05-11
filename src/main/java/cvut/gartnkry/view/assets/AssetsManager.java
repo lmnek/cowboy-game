@@ -10,65 +10,55 @@ import cvut.gartnkry.model.map.Tile;
 import javafx.scene.image.Image;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
- * Class for loading and managing Tiles.
- * Firstly statically loads "assets_data.json" from which it gets filename of Tiles assets, code
- * and hitbox value. The images are then loaded and hashmap of all Tiles is constructed.
- * This hashmap has code of the tile as a key and Tile as a value.
+ * Class for loading and managing assets/asset information.
+ * Firstly statically loads "assets_data.json" from which it gets information of all tile types
+ * and props/items/entities hitboxes.
+ * Also loads needed images which can be retrieved by get methods by their name.
  */
 public class AssetsManager {
-
-    private static HashMap<String, Tile> tileMap;
-    private static JsonArray propsData;
-    private static JsonArray entitiesData;
+    private static LinkedList<Tile> tileTypes;
+    private final static JsonArray propsData;
+    private final static JsonArray entitiesData;
 
     private static HashMap<String, Image> images;
 
-    /**
-     * Load all Tiles and store them in the hashmap
-     */
+    // Load all asset's info, tile types and images.
     static {
         JsonObject assetsData = ResourcesUtils.readJsonFile("assets_data.json").getAsJsonObject();
-        loadTileMap(assetsData.get("tiles").getAsJsonArray());
+        loadTileTypes(assetsData.get("tiles").getAsJsonArray());
         entitiesData = assetsData.get("entities").getAsJsonArray();
         propsData = assetsData.get("props").getAsJsonArray();
 
         loadImages("Props", propsData);
     }
 
-    private static void loadImages(String folder, JsonArray data) {
-        images = new HashMap<>();
-        for (JsonElement el : data) {
-            String name = el.getAsJsonObject().get("name").getAsString();
-            images.put(name, ResourcesUtils.loadAsset(folder + "/" + name));
-        }
-    }
-
-    private static void loadTileMap(JsonArray tileTypes) {
-        AssetsManager.tileMap = new HashMap<>();
-        // Loop each tile
-        tileTypes.forEach(_t -> {
-                    JsonObject t = _t.getAsJsonObject();
-                    // parse tile
-                    String code = t.get("code").getAsString();
-                    String filename = t.get("filename").getAsString();
-                    boolean hasHitbox = t.get("hasHitbox").getAsBoolean();
-                    // add tile to hashmap
-                    AssetsManager.tileMap.put(code, new Tile(filename, hasHitbox));
-                }
-        );
-    }
-
+    /**
+     * Get Image according to the name.
+     * @param name name of the image
+     * @return Image object
+     */
     public static Image getImage(String name) {
         return images.get(name);
     }
 
+    /**
+     * Iterate props and entities data and return hitbox info.
+     * @param name name of the prop/entity
+     * @return HitboxInfo object corresponding to the name
+     */
     public static HitboxInfo getHitboxInfo(String name) {
         HitboxInfo hbInfo = getHitboxInfoFromJson(propsData, name, "hitbox");
         return hbInfo == null ? getHitboxInfoFromJson(entitiesData, name, "hitbox") : hbInfo;
     }
 
+    /**
+     * Iterate props and entities data and return entity hitbox info.
+     * @param name name of the prop/entity
+     * @return HitboxInfo object corresponding to the name
+     */
     public static HitboxInfo getEntityHitboxInfo(String name) {
         return getHitboxInfoFromJson(entitiesData, name, "entityHitbox");
     }
@@ -89,6 +79,11 @@ public class AssetsManager {
         return null;
     }
 
+    /**
+     * Get entity damage.
+     * @param name Name of the entity
+     * @return damage as an int corresponding to the name
+     */
     public static int getDamage(String name) {
         for (JsonElement en : entitiesData) {
             if (en.getAsJsonObject().get("name").getAsString().equals(name)) {
@@ -101,16 +96,44 @@ public class AssetsManager {
     /**
      * This method is usually used to get Tile
      * from tile code used in a CSV map file.
-     * This Tile is then used to construct in-game Map.
+     * The Tile is then used to construct in-game Map.
      *
      * @param code code of the Tile
      * @return Tile corresponding to the code
      */
     public static Tile getTile(String code) {
-        return tileMap.get(code);
+        return tileTypes.stream().filter(t -> t.getCode().equals(code)).findFirst().orElse(null);
     }
 
+    /**
+     * Get Tile from all tile types from the given name
+     * @param name name of the Tile
+     * @return Tile corresponding to the name
+     */
     public static Tile getTileFromName(String name) {
-        return tileMap.values().stream().filter(t -> t.getName().equals(name)).findFirst().orElseGet(null);
+        return tileTypes.stream().filter(t -> t.getName().equals(name)).findFirst().orElse(null);
+    }
+
+
+    private static void loadImages(String folder, JsonArray data) {
+        images = new HashMap<>();
+        for (JsonElement el : data) {
+            String name = el.getAsJsonObject().get("name").getAsString();
+            images.put(name, ResourcesUtils.loadAsset(folder + "/" + name));
+        }
+    }
+
+    private static void loadTileTypes(JsonArray json) {
+        tileTypes = new LinkedList<>();
+        // Loop each tile
+        json.forEach(_t -> {
+                    // parse tile
+                    JsonObject t = _t.getAsJsonObject();
+                    String code = t.get("code").getAsString();
+                    String filename = t.get("filename").getAsString();
+                    boolean hasHitbox = t.get("hasHitbox").getAsBoolean();
+                    tileTypes.add(new Tile(filename, code, hasHitbox));
+                }
+        );
     }
 }

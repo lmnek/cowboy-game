@@ -1,5 +1,6 @@
 package cvut.gartnkry.control.collisions;
 
+import cvut.gartnkry.control.AppLogger;
 import cvut.gartnkry.control.Settings;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.Prop;
@@ -21,6 +22,9 @@ import static cvut.gartnkry.control.Settings.HITBOX_PADDING;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+/**
+ * Class with static methods used for handling collision between player, props and entities.
+ */
 public class CollisionManager {
     private static final double PROPS_RADIUS = 50 * Settings.SCALE;
     private static final int TILES_RADIUS = 3;
@@ -31,78 +35,114 @@ public class CollisionManager {
     private static Player player;
     private static HitboxInfo hbInfo;
 
+    /**
+     * Load references from model.
+     */
     public static void initialize() {
         tileMap = Model.getInstance().getMap().getTileMap();
         player = Model.getInstance().getPlayer();
         hbInfo = player.getHitboxInfo();
     }
 
+    /**
+     * Handle collisions between: player/tiles, player/props, player/entities, player/nonactive voids.
+     */
     public static void handleCollisions() {
+        // Load current player velocities
         player.computeVelocities();
         velocityX = player.getVelocityX();
         velocityY = player.getVelocityY();
 
+        // Players position in next tick
         Rectangle playerRec = player.getHitboxRec();
+        // Check collisions around player only in this rectangle
         Rectangle activeRec = new Rectangle(playerRec.getX() - PROPS_RADIUS / 2,
                 playerRec.getY() - PROPS_RADIUS / 2, PROPS_RADIUS, PROPS_RADIUS);
 
+        // Handle all needed collisions
         handleTilesCollision(playerRec);
         handlePropsCollision(activeRec);
         handleEntitiesCollision(playerRec);
         handleNonActiveVoidsCollision(playerRec);
 
+        // Set new velocities after colliding
         player.setVelocityX(velocityX);
         player.setVelocityY(velocityY);
     }
 
+    /**
+     * Check collisions between player and tiles around him.
+     *
+     * @param playerRec Player walking hitbox rectangle
+     */
     private static void handleTilesCollision(Rectangle playerRec) {
-        int startX = max((int) (playerRec.getX() / View.pixelTileSize) - 1, 0);
-        int startY = max((int) (playerRec.getY() / View.pixelTileSize) - 1, 0);
-        int endX = min(startX + TILES_RADIUS, tileMap[0].length);
-        int endY = min(startY + TILES_RADIUS, tileMap.length);
+        // Compute indexes of 3x3 tiles around player to check
+        final int startX = max((int) (playerRec.getX() / View.pixelTileSize) - 1, 0);
+        final int startY = max((int) (playerRec.getY() / View.pixelTileSize) - 1, 0);
+        final int endX = min(startX + TILES_RADIUS, tileMap[0].length);
+        final int endY = min(startY + TILES_RADIUS, tileMap.length);
+        // Loop tiles
         for (int x = startX; x < endX; x++) {
             for (int y = startY; y < endY; y++) {
                 Tile tile = tileMap[y][x];
                 if (tile.hasHitbox()) {
-                    checkPlayerCollision(new Rectangle(x * View.pixelTileSize, y * View.pixelTileSize, View.pixelTileSize, View.pixelTileSize));
+                    // Collision between player and tile with hitbox
+                    if (checkPlayerCollision(new Rectangle(x * View.pixelTileSize, y * View.pixelTileSize, View.pixelTileSize, View.pixelTileSize))) {
+                        AppLogger.info(() -> "Player collided with tile: " + tile.getName());
+                    }
                 }
             }
         }
     }
 
+    /**
+     * Check collisions between player/props and bullets/props.
+     *
+     * @param activeRec Active rectangle around player to check
+     */
     private static void handlePropsCollision(Rectangle activeRec) {
         LinkedList<Bullet> bullets = Model.getInstance().getBullets();
+        // Loop all props
         for (Prop p : Model.getInstance().getProps()) {
             Rectangle pRec = p.getHitboxRec();
-            // close to the player?
+            // On screen and not an item?
             if (p.isActive() && p.getClass() != PropItem.class) {
+                // Check player collision
                 if (activeRec.getBoundsInParent().intersects(pRec.getBoundsInParent()) && checkPlayerCollision(pRec)) {
-                    // Player collided
+                    AppLogger.fine(() -> "Player collided with prop: " + p.getName());
                     if (p.getName().equals("Cactus")) {
                         player.damage(CACTUS_DAMAGE);
                     }
                 }
+                // Remove bullets if collided with a prop
                 bullets.removeIf(b -> b.getRectangle().getBoundsInParent().intersects(pRec.getBoundsInParent()));
             }
         }
     }
 
+    /**
+     * Check collisions between player/entities and bullets/entities.
+     *
+     * @param playerRec Player walking hitbox rectangle
+     */
     private static void handleEntitiesCollision(Rectangle playerRec) {
         LinkedList<Bullet> bullets = Model.getInstance().getBullets();
         Bounds playerBounds = player.getEntityHitboxRec().getBoundsInParent();
         List<Entity> entities = Model.getInstance().getEntities();
+        // Loop all entities
         entities.forEach(e -> {
             if (e.isActive()) {
                 Bounds entityBounds = e.getEntityHitboxRec().getBoundsInParent();
+                // Damage player if collided
                 if (entityBounds.intersects(e.getName().equals("Void") ? playerRec.getBoundsInParent() : playerBounds)) {
+                    AppLogger.info(() -> "Player collided with entity: " + e.getName());
                     player.damage(e.getDamage());
                 }
 
-                // bullets
+                // Remove bullet if collided with entity
                 bullets.removeIf(b -> {
                     if (b.getRectangle().getBoundsInParent().intersects(entityBounds)) {
-                        e.damage(b.getGun().getDamage());
-                        Sound.ENTITY.play();
+                        e.damage(b.getGun().getDamage()); // damage entity
                         return true;
                     }
                     return false;
@@ -111,13 +151,20 @@ public class CollisionManager {
         });
     }
 
+    /**
+     * Activate nonactive voids if player is nearby.
+     *
+     * @param playerRec Player walking hitbox rectangle
+     */
     private static void handleNonActiveVoidsCollision(Rectangle playerRec) {
         List<Entity> entities = Model.getInstance().getEntities();
         Model.getInstance().getVoids().removeIf(v -> {
+            // On screen and player nearby?
             if (v.isActive() && v.getActivateBounds().intersects(playerRec.getBoundsInParent())) {
+                // Activate void
                 v.activate();
+                Sound.VOID_OPEN.play();
                 entities.add(v);
-                Sound.VOID.play();
                 return true;
             }
             return false;
@@ -125,12 +172,19 @@ public class CollisionManager {
     }
 
 
+    /**
+     * Check player collision with given rectangle and compute new velocities if collision was detected.
+     *
+     * @param cRec Rectangle for player to collide with
+     * @return boolean whether player collided
+     */
     public static boolean checkPlayerCollision(Rectangle cRec) {
         boolean collided = true;
         Rectangle xRec = player.getHitboxRec(velocityX, 0);
         Rectangle yRec = player.getHitboxRec(0, velocityY);
         boolean collidedX = xRec.getBoundsInParent().intersects(cRec.getBoundsInParent());
         boolean collidedY = yRec.getBoundsInParent().intersects(cRec.getBoundsInParent());
+        // Collided from both directions?
         if (collidedX && collidedY) {
             double diffX, diffY;
             if (velocityX > 0) {
@@ -160,7 +214,10 @@ public class CollisionManager {
         return collided;
     }
 
-    public static double checkX(Rectangle rec, double velocity, boolean compute) {
+    /**
+     * Change players position from collision in X axis.
+     */
+    private static double checkX(Rectangle rec, double velocity, boolean compute) {
         if (!compute || player.getHitboxRec(velocity, 0).getBoundsInParent().intersects(rec.getBoundsInParent())) {
             if (velocity > 0) {
                 player.getSprite().setX(rec.getX() - hbInfo.getX() - hbInfo.getWidth() - HITBOX_PADDING);
@@ -172,7 +229,10 @@ public class CollisionManager {
         return velocity;
     }
 
-    public static double checkY(Rectangle rec, double velocity, boolean compute) {
+    /**
+     * Change players position from collision in Y axis.
+     */
+    private static double checkY(Rectangle rec, double velocity, boolean compute) {
         if (!compute || player.getHitboxRec(0, velocity).getBoundsInParent().intersects(rec.getBoundsInParent())) {
             if (velocity > 0) {
                 player.getSprite().setY(rec.getY() - hbInfo.getY() - hbInfo.getHeight() - HITBOX_PADDING);
@@ -184,6 +244,10 @@ public class CollisionManager {
         return velocity;
     }
 
+    /**
+     * Loop all items on the ground and find any that collides with player.
+     * @return PropItem
+     */
     public static PropItem getCollidedItem() {
         Bounds playerBounds = player.getEntityHitboxRec().getBoundsInParent();
         return (PropItem) Model.getInstance().getProps().stream().filter(p ->

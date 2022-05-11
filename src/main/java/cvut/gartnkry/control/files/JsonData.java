@@ -17,23 +17,36 @@ import static cvut.gartnkry.control.Settings.SCALE;
 
 
 /**
- * Class for loading saves from JSON files
+ * Class for loading and saving saves as JSON file
  */
 public class JsonData {
     private JsonObject json;
-    private String filename;
+    private final String filename;
 
+    /**
+     * Class constructor.
+     *
+     * @param filename name of the save in Json format
+     */
     public JsonData(String filename) {
         this.filename = filename;
         loadSave(filename);
     }
 
-    public String getMapFilename() {
-        return json.get("map").getAsString();
-    }
 
+    /**
+     * Get Json array from Json save file.
+     * e.g. props, entities, ...
+     *
+     * @param dataName name of array in Json
+     * @return JsonArray object
+     */
     public JsonArray getArrayData(String dataName) {
         return json.get(dataName).getAsJsonArray();
+    }
+
+    public String getMapFilename() {
+        return json.get("map").getAsString();
     }
 
     private void loadSave(String filename) {
@@ -42,7 +55,7 @@ public class JsonData {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             json = parser.parse(br).getAsJsonObject();
         } catch (IOException e) {
-            AppLogger.severe(() -> "Loading JSON save file failed: " + e.getMessage());
+            AppLogger.exception(() -> "Loading JSON save file failed: " + filename, e);
         }
     }
 
@@ -71,11 +84,15 @@ public class JsonData {
         return obj;
     }
 
+    /**
+     * Save current game Model to the same Json file as it was loaded int.
+     */
     public void saveJson() {
         Model model = Model.getInstance();
         JsonObject obj = new JsonObject();
         obj.addProperty("map", model.getMap().getFilename());
 
+        // Add player data
         JsonObject playerObj = entityToJson(model.getPlayer());
         JsonArray inventory = new JsonArray();
         model.getPlayer().getInventory().getItems().forEach(i -> {
@@ -89,9 +106,9 @@ public class JsonData {
         playerObj.add("inventory", inventory);
         playerObj.addProperty("maxHealth", model.getPlayer().getMaxHealth());
 
+        // Add entities data
         JsonArray entitiesArr = new JsonArray();
         entitiesArr.add(playerObj);
-
         model.getEntities().forEach(e -> {
             JsonObject _obj = entityToJson(e);
             if (e.getClass().equals(Void.class)) {
@@ -106,6 +123,7 @@ public class JsonData {
         });
         obj.add("entities", entitiesArr);
 
+        // Add props data
         JsonArray propsArr = new JsonArray();
         JsonArray itemsArr = new JsonArray();
         model.getProps().forEach(p -> {
@@ -120,10 +138,12 @@ public class JsonData {
         obj.add("props", propsArr);
         obj.add("items", itemsArr);
 
+        // Save the file
         try (FileWriter writer = new FileWriter(filename)) {
             writer.write(new GsonBuilder().setPrettyPrinting().create().toJson(obj));
         } catch (IOException e) {
-            AppLogger.severe(() -> "Failed to save a game to file: " + filename);
+            AppLogger.exception(() -> "Failed to save a game to file: " + filename, e);
         }
     }
+
 }

@@ -4,6 +4,9 @@ import cvut.gartnkry.control.Settings;
 import cvut.gartnkry.model.items.Gun;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Class for single bullet shot by a pistol.
+ */
 public class Bullet {
     private final Gun gun;
     private final double velocityX;
@@ -11,20 +14,28 @@ public class Bullet {
     private double X;
     private double Y;
 
-    public Bullet(int directionX, int directionY, double X, double Y, double velocity, Gun gun){
-        this.velocityX = directionX * velocity;
-        this.velocityY = directionY * velocity;
+    /**
+     * Class constructor.
+     * @param directionX direction of bullet in X axis
+     * @param directionY direction of bullet in Y axis
+     * @param X X starting coordinate
+     * @param Y Y starting coordinate
+     * @param gun Gun that shot the bullet
+     */
+    public Bullet(int directionX, int directionY, double X, double Y, Gun gun) {
+        this.velocityX = directionX * gun.getBulletVelocity();
+        this.velocityY = directionY * gun.getBulletVelocity();
         this.X = X;
         this.Y = Y;
         this.gun = gun;
     }
 
-    public void update(){
+    public void update() {
         X += velocityX;
         Y += velocityY;
     }
 
-    public Rectangle  getRectangle() {
+    public Rectangle getRectangle() {
         return new Rectangle(X, Y, Settings.SCALE, Settings.SCALE);
     }
 

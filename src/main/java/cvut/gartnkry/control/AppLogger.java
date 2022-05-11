@@ -4,9 +4,18 @@ import java.util.logging.*;
 
 import static cvut.gartnkry.control.Settings.*;
 
+// Inspiration for this class was taken from my colleague in Abra software a.s.
+/**
+ * Class for logging to console/file, using java.util.logging.
+ * The logging is wrapped by functions that insure the string is only evaluated when logging level is enabled.
+ * String is passed in by anonymous function.
+ */
 public class AppLogger {
     private static final Logger LOGGER = Logger.getGlobal();
 
+    /**
+     * Initialize logger. Set levels and handlers.
+     */
     public static void init() {
         try {
             LogManager.getLogManager().reset();
@@ -23,9 +32,10 @@ public class AppLogger {
             fileHandler.setLevel(fileLogLevel);
             LOGGER.addHandler(fileHandler);
         } catch (Exception e) {
-            warning(() -> "Unable to initialize logging:\n" + e.getLocalizedMessage());
+            exception(() -> "Unable to initialize logging: ", e);
         }
     }
+
 
     public static void severe(Message message) {
         if (LOGGER.isLoggable(Level.SEVERE)) {
@@ -59,5 +69,11 @@ public class AppLogger {
 
     public interface Message {
         String getMessage();
+    }
+    
+    public static void exception(Message message, Exception e) {
+        if (LOGGER.isLoggable(Level.SEVERE)) {
+            LOGGER.severe(message.getMessage() + "; " + e.getMessage());
+        }
     }
 }

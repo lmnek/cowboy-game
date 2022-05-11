@@ -2,6 +2,9 @@ package cvut.gartnkry.control;
 
 import java.util.logging.Level;
 
+/**
+ * Class for storing game settings as static constants.
+ */
 public class Settings {
     public static final String SAVE_FILENAME = "save3.json";
 
@@ -9,9 +12,9 @@ public class Settings {
     public static final Level consoleLogLevel = Level.FINE;
     public static final Level fileLogLevel = Level.INFO;
 
-    public static final String TITLE = "RPG";
+    public static final String TITLE = "Guns & Ghosts ";
 
-    public static final int SCALE = 6; // scale sprites
+    public static final int SCALE = 6;
     public static final int TILES_COUNT_WIDTH = 16;
     public static final int TILES_COUNT_HEIGHT = 9;
     public static final String ASSETS_FILE_FORMAT = ".png";

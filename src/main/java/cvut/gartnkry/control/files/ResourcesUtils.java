@@ -9,27 +9,30 @@ import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.text.Font;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.util.Objects;
 
 /**
- * Set of static methods that can be used by classes working with resources/assets.
+ * Set of static methods that can be used for working with files/assets in resources.
  */
 public class ResourcesUtils {
 
     /**
-     * Load, scale and return given image/asset.
-     *
+     * Load and return given image.
+     * @param path path in resources to the file
      * @return Instance of loaded Image
      */
     public static Image loadAsset(String path) {
         return loadAsset(path, 1);
     }
 
+    /**
+     * Load, scale and return given image.
+     * @param path path in resources to the file
+     * @param scale scaling for image (1 ~ no scaling)
+     * @return Instance of loaded Image
+     */
     public static Image loadAsset(String path, double scale) {
         String fullpath = "/" + path + Settings.ASSETS_FILE_FORMAT; // build relative path
         AppLogger.fine(() -> "Loading asset: " + fullpath);
@@ -40,14 +43,35 @@ public class ResourcesUtils {
     }
 
     /**
-     * @param path path in resources to the folder to read
-     * @return Buffered Reading in given folder
+     * Get reader in resources.
+     * @param path path in resources to the file
+     * @return Buffered Reader in given file
      */
     public static BufferedReader getReader(String path) {
         return new BufferedReader(new InputStreamReader(
                 Objects.requireNonNull(ResourcesUtils.class.getResourceAsStream("/" + path))));
     }
 
+    /**
+     * Get Output Stream in resources.
+     * @param path path in resources to the file
+     * @return Buffered Output Stream in given file
+     */
+    public static BufferedOutputStream getOutputStream(String path) {
+        try {
+            return new BufferedOutputStream(new FileOutputStream(
+                    (new File(Objects.requireNonNull(ResourcesUtils.class.getResource("/" + path)).toURI()))));
+        } catch (Exception e) {
+            AppLogger.exception(() -> "Failed to get writer: " + path, e);
+        }
+        return null;
+    }
+
+    /**
+     * Open and parse Json file.
+     * @param path path in resources to the Json file
+     * @return JsonElement of whole Json file
+     */
     public static JsonElement readJsonFile(String path) {
         AppLogger.fine(() -> "Loading JSON file: " + path);
         JsonParser parser = new JsonParser();
@@ -60,6 +84,14 @@ public class ResourcesUtils {
         return returnElement;
     }
 
+    /**
+     * Search all classes from json name and initialize it.
+     * It is used for props and items.
+     * Constructor has json as a parameter.
+     * @param json Json of the prop/item
+     * @param packageName name of the package in cvut.gartnkry.model
+     * @return Initialized object
+     */
     public static Object loadReflection(JsonObject json, String packageName) {
         if (!packageName.equals("")) {
             packageName += ".";
@@ -76,6 +108,12 @@ public class ResourcesUtils {
         return null;
     }
 
+    /**
+     * Load font.
+     * @param fontName name of the font file in resources/Fonts
+     * @param size Size of the font
+     * @return loaded Font
+     */
     public static Font loadFont(String fontName, int size) {
         AppLogger.fine(() -> "Loading Font: " + fontName);
         Font font = null;
@@ -93,7 +131,12 @@ public class ResourcesUtils {
         return font;
     }
 
-    public static Media loadMedia(String filename){
+    /**
+     * Load sound as Media object.
+     * @param filename name of the .wav file in resources/Sounds
+     * @return Media object
+     */
+    public static Media loadMedia(String filename) {
         AppLogger.fine(() -> "Loading sound: " + filename);
         return new Media(Objects.requireNonNull(ResourcesUtils.class.getResource("/Sounds/" + filename)).toExternalForm());
     }

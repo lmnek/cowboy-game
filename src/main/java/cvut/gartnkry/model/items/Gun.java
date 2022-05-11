@@ -11,13 +11,25 @@ public class Gun extends Item {
     private int damage;
     private int fireRate;
 
+    /**
+     * Class constructor
+     * @param json JsonObject with item data
+     */
     public Gun(JsonObject json) {
         super(json);
     }
 
+    /**
+     * Shoot from the gun ~ create a bullet
+     * @param dirX direction of bullet in X axis
+     * @param dirY direction of bullet in Y axis
+     * @param X bullet X starting coordinate
+     * @param Y bullet Y starting coordinate
+     * @return new Bullet object
+     */
     public Bullet shoot(int dirX, int dirY, double X, double Y) {
         Sound.GUN.play();
-        return new Bullet(dirX, dirY, X, Y, bulletVelocity, this);
+        return new Bullet(dirX, dirY, X, Y, this);
     }
 
     @Override
