@@ -19,7 +19,8 @@ public class Prop {
      * Class constructor.
      * Loads position and name from Json data.
      * Sets Image and hitbox info from asset configuration file.
-     * @param data JsonObject containing prop data
+     *
+     * @param data  JsonObject containing prop data
      * @param image default prop image
      */
     public Prop(JsonObject data, Image image) {
@@ -33,6 +34,7 @@ public class Prop {
      * Load position and name from Json data.
      * Set Image corresponding to the name.
      * Also sets hitbox info from asset configuration file.
+     *
      * @param data JsonObject containing prop data
      */
     public Prop(JsonObject data) {
@@ -41,6 +43,7 @@ public class Prop {
 
     /**
      * Compute where the prop will be in the next tick, according to the velocities and return its hitbox.
+     *
      * @return hitbox Rectangle
      */
     public Rectangle getHitboxRec(double velocityX, double velocityY) {
@@ -49,12 +52,12 @@ public class Prop {
                 hitboxInfo.getWidth(), hitboxInfo.getHeight());
     }
 
-    public Sprite getSprite() {
-        return sprite;
-    }
-
     public Rectangle getHitboxRec() {
         return getHitboxRec(0, 0);
+    }
+
+    public Sprite getSprite() {
+        return sprite;
     }
 
     public HitboxInfo getHitboxInfo() {

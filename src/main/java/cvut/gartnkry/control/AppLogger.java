@@ -27,7 +27,7 @@ public class AppLogger {
             handler.setLevel(consoleLogLevel);
             LOGGER.addHandler(handler);
 
-            FileHandler fileHandler = new FileHandler("log", true);
+            FileHandler fileHandler = new FileHandler("log", 1024*1024,1, true);
             fileHandler.setFormatter(new SimpleFormatter());
             fileHandler.setLevel(fileLogLevel);
             LOGGER.addHandler(fileHandler);

@@ -1,9 +1,7 @@
 package cvut.gartnkry.control;
 
 import cvut.gartnkry.AppController;
-import cvut.gartnkry.control.collisions.CollisionManager;
 import cvut.gartnkry.model.Model;
-import cvut.gartnkry.model.Sprite;
 import cvut.gartnkry.model.items.Inventory;
 import cvut.gartnkry.model.items.Item;
 import cvut.gartnkry.model.items.PropItem;
@@ -11,8 +9,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.util.HashMap;
-
-import static cvut.gartnkry.control.Settings.SCALE;
 
 /**
  * Class for handling keyboard inputs.
@@ -70,7 +66,7 @@ public class KeysEventHandler {
                 break;
             case "F":
                 AppLogger.info(() -> "Pressed F - pick up item");
-                PropItem propItem = CollisionManager.getCollidedItem();
+                PropItem propItem = AppController.getCollisionManager().getCollidedItem();
                 if (propItem != null) {
                     Item tmp = inventory.getSelectedItem();
                     Model.getInstance().getPlayer().pickupItem(propItem);
@@ -88,11 +84,6 @@ public class KeysEventHandler {
             case "R":
                 AppLogger.info(() -> "Pressed R - reload game");
                 AppController.reloadGame();
-                break;
-            case "X":
-                //TODO: remove
-                Sprite playerSprite = Model.getInstance().getPlayer().getSprite();
-                AppLogger.severe(() -> "Player position: X " + playerSprite.getX() / SCALE + ", Y " + playerSprite.getY() / SCALE);
                 break;
         }
     }

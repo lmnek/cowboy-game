@@ -6,6 +6,5 @@ module cvut.gartnkry {
     requires java.sql;
     exports cvut.gartnkry;
     exports cvut.gartnkry.control;
-    exports cvut.gartnkry.control.files;
-    exports cvut.gartnkry.view.assets;
+    exports cvut.gartnkry.view;
 }

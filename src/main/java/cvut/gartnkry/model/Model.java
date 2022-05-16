@@ -27,7 +27,7 @@ import java.util.Objects;
  * It is used for access to those objects and to call update() method on them.
  */
 public class Model {
-    private final static Model instance = new Model();
+    private static volatile Model instance = new Model();
     private JsonData data;
     private Player player;
     private ArrayList<Entity> entities;
@@ -38,13 +38,14 @@ public class Model {
     private Model() {
     }
 
-    public static Model getInstance() {
+    public synchronized static Model getInstance() {
         return instance;
     }
 
     /**
      * Initializes all objects in model from given save.
      * Should be called before using Model.
+     *
      * @param data JsonData class loaded from a save file
      */
     public void initialize(JsonData data) {

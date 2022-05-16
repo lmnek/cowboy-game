@@ -3,8 +3,8 @@
   "entities": [
     {
       "name": "Player",
-      "x": 91.48800425622913,
-      "y": 483.9248094861529,
+      "x": 50.0,
+      "y": 32.0,
       "health": 10,
       "inventory": [],
       "maxHealth": 10
@@ -32,7 +32,7 @@
       "x": 160.0,
       "y": 340.0,
       "health": 20,
-      "activated": true
+      "activated": false
     },
     {
       "name": "Void",
@@ -130,7 +130,7 @@
     {
       "name": "Gun",
       "x": 76.0,
-      "y": 564.0,
+      "y": 551.0,
       "bulletVelocity": 4.0,
       "fireRate": 15,
       "damage": 1

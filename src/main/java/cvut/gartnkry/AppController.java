@@ -23,12 +23,14 @@ import javafx.stage.Stage;
 public class AppController extends Application {
     private View view;
     private JsonData data;
+    private static CollisionManager collisionManager;
+
 
     /**
      * Main class that launches javafx app.
      */
     public static void main(String[] args) {
-        launch();
+        launch(Settings.SAVE_FILENAME);
     }
 
     /**
@@ -39,11 +41,12 @@ public class AppController extends Application {
         AppLogger.init();
         AppLogger.info(() -> "Start loading/initializing the game.");
 
-        data = new JsonData(Settings.SAVE_FILENAME);
+        String saveFilename = getParameters().getRaw().get(0);
+        data = new JsonData(saveFilename);
         Model.getInstance().initialize(data);
         view = new View(stage);
-        CollisionManager.initialize();
-        setEvents(stage);
+        setEventHandlers(stage);
+        collisionManager = new CollisionManager();
 
         Thread soundThread = new Thread(StepSoundsPlayer.getInstance());
         soundThread.start();
@@ -56,7 +59,7 @@ public class AppController extends Application {
             public void handle(long now) {
                 if (now - lastUpdate >= Settings.LOOP_INTERVAL) {
                     view.render();
-                    CollisionManager.handleCollisions();
+                    collisionManager.handleCollisions();
                     Model.getInstance().update();
                     updateActiveProps();
                     lastUpdate = now;
@@ -91,18 +94,19 @@ public class AppController extends Application {
     public static void reloadGame() {
         Model.getInstance().reinitialize();
         UI.getInstance().redraw();
-        CollisionManager.initialize();
+        collisionManager = new CollisionManager();
     }
 
     /**
-     * Set all required events.
+     * Set all required event handlers - events from keyboard.
      */
-    private void setEvents(Stage stage) {
-        // player movement - W A S D
+    private void setEventHandlers(Stage stage) {
+        // Keyboard inputs
         stage.getScene().setOnKeyPressed(KeysEventHandler::onKeyPressed);
         stage.getScene().setOnKeyReleased(KeysEventHandler::onKeyReleased);
         stage.getScene().setOnKeyTyped(KeysEventHandler::onKeyTyped);
 
+        // When game is closed
         stage.setOnCloseRequest(t -> {
             data.saveJson();
             Model.getInstance().getMap().saveMap();
@@ -111,6 +115,10 @@ public class AppController extends Application {
             Platform.exit();
             System.exit(0);
         });
+    }
+
+    public static CollisionManager getCollisionManager() {
+        return collisionManager;
     }
 
 }

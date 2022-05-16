@@ -1,0 +1,43 @@
+{
+  "map": "map2.csv",
+  "entities": [
+    {
+      "name": "Player",
+      "x": 100,
+      "y": 75.72462776536904,
+      "health": 10,
+      "inventory": [
+      ],
+      "maxHealth": 10
+    },
+    {
+      "name": "Ghost",
+      "x": 5,
+      "y": 200,
+      "health": 10
+    }
+  ],
+  "props": [
+    {
+      "name": "Cactus",
+      "x": 75.0,
+      "y": 36.0
+    }
+  ],
+  "items": [
+    {
+      "name": "Gun",
+      "x": 97,
+      "y": 200,
+      "bulletVelocity": 4.0,
+      "fireRate": 15,
+      "damage": 1
+    },
+    {
+      "name": "Bottle",
+      "x": 50,
+      "y": 200,
+      "heal": 1
+    }
+  ]
+}

@@ -8,8 +8,6 @@ import cvut.gartnkry.view.assets.Animation;
 import cvut.gartnkry.view.assets.AssetsManager;
 import cvut.gartnkry.view.assets.Sound;
 
-import java.util.Random;
-
 /**
  * Ghost enemy class inheriting from Entity.
  * Ghost will follow player's position.

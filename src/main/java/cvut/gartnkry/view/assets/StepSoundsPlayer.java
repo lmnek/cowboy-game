@@ -26,7 +26,7 @@ public class StepSoundsPlayer implements Runnable {
 
     /**
      * Class constructor.
-     * Init attributes and load stepping sounds.
+     * Initialize attributes and load stepping sounds.
      */
     public StepSoundsPlayer() {
         stop = false;

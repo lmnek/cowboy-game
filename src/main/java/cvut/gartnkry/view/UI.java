@@ -1,6 +1,5 @@
 package cvut.gartnkry.view;
 
-import cvut.gartnkry.control.AppLogger;
 import cvut.gartnkry.control.files.ResourcesUtils;
 import cvut.gartnkry.model.Model;
 import cvut.gartnkry.model.entities.Player;

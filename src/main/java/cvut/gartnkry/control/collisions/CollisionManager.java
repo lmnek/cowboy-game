@@ -23,7 +23,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 /**
- * Class with static methods used for handling collision between player, props and entities.
+ * Class with methods used for handling collision between player, props and entities.
  */
 public class CollisionManager {
     private static final double PROPS_RADIUS = 50 * Settings.SCALE;
@@ -36,9 +36,10 @@ public class CollisionManager {
     private static HitboxInfo hbInfo;
 
     /**
+     * Class constructor.
      * Load references from model.
      */
-    public static void initialize() {
+    public CollisionManager(){
         tileMap = Model.getInstance().getMap().getTileMap();
         player = Model.getInstance().getPlayer();
         hbInfo = player.getHitboxInfo();
@@ -47,7 +48,7 @@ public class CollisionManager {
     /**
      * Handle collisions between: player/tiles, player/props, player/entities, player/nonactive voids.
      */
-    public static void handleCollisions() {
+    public void handleCollisions() {
         // Load current player velocities
         player.computeVelocities();
         velocityX = player.getVelocityX();
@@ -75,7 +76,7 @@ public class CollisionManager {
      *
      * @param playerRec Player walking hitbox rectangle
      */
-    private static void handleTilesCollision(Rectangle playerRec) {
+    private void handleTilesCollision(Rectangle playerRec) {
         // Compute indexes of 3x3 tiles around player to check
         final int startX = max((int) (playerRec.getX() / View.pixelTileSize) - 1, 0);
         final int startY = max((int) (playerRec.getY() / View.pixelTileSize) - 1, 0);
@@ -88,7 +89,7 @@ public class CollisionManager {
                 if (tile.hasHitbox()) {
                     // Collision between player and tile with hitbox
                     if (checkPlayerCollision(new Rectangle(x * View.pixelTileSize, y * View.pixelTileSize, View.pixelTileSize, View.pixelTileSize))) {
-                        AppLogger.info(() -> "Player collided with tile: " + tile.getName());
+                        AppLogger.fine(() -> "Player collided with tile: " + tile.getName());
                     }
                 }
             }
@@ -100,7 +101,7 @@ public class CollisionManager {
      *
      * @param activeRec Active rectangle around player to check
      */
-    private static void handlePropsCollision(Rectangle activeRec) {
+    private void handlePropsCollision(Rectangle activeRec) {
         LinkedList<Bullet> bullets = Model.getInstance().getBullets();
         // Loop all props
         for (Prop p : Model.getInstance().getProps()) {
@@ -125,7 +126,7 @@ public class CollisionManager {
      *
      * @param playerRec Player walking hitbox rectangle
      */
-    private static void handleEntitiesCollision(Rectangle playerRec) {
+    private void handleEntitiesCollision(Rectangle playerRec) {
         LinkedList<Bullet> bullets = Model.getInstance().getBullets();
         Bounds playerBounds = player.getEntityHitboxRec().getBoundsInParent();
         List<Entity> entities = Model.getInstance().getEntities();
@@ -135,7 +136,7 @@ public class CollisionManager {
                 Bounds entityBounds = e.getEntityHitboxRec().getBoundsInParent();
                 // Damage player if collided
                 if (entityBounds.intersects(e.getName().equals("Void") ? playerRec.getBoundsInParent() : playerBounds)) {
-                    AppLogger.info(() -> "Player collided with entity: " + e.getName());
+                    AppLogger.fine(() -> "Player collided with entity: " + e.getName());
                     player.damage(e.getDamage());
                 }
 
@@ -156,7 +157,7 @@ public class CollisionManager {
      *
      * @param playerRec Player walking hitbox rectangle
      */
-    private static void handleNonActiveVoidsCollision(Rectangle playerRec) {
+    private void handleNonActiveVoidsCollision(Rectangle playerRec) {
         List<Entity> entities = Model.getInstance().getEntities();
         Model.getInstance().getVoids().removeIf(v -> {
             // On screen and player nearby?
@@ -178,7 +179,7 @@ public class CollisionManager {
      * @param cRec Rectangle for player to collide with
      * @return boolean whether player collided
      */
-    public static boolean checkPlayerCollision(Rectangle cRec) {
+    public boolean checkPlayerCollision(Rectangle cRec) {
         boolean collided = true;
         Rectangle xRec = player.getHitboxRec(velocityX, 0);
         Rectangle yRec = player.getHitboxRec(0, velocityY);
@@ -217,7 +218,7 @@ public class CollisionManager {
     /**
      * Change players position from collision in X axis.
      */
-    private static double checkX(Rectangle rec, double velocity, boolean compute) {
+    private double checkX(Rectangle rec, double velocity, boolean compute) {
         if (!compute || player.getHitboxRec(velocity, 0).getBoundsInParent().intersects(rec.getBoundsInParent())) {
             if (velocity > 0) {
                 player.getSprite().setX(rec.getX() - hbInfo.getX() - hbInfo.getWidth() - HITBOX_PADDING);
@@ -232,7 +233,7 @@ public class CollisionManager {
     /**
      * Change players position from collision in Y axis.
      */
-    private static double checkY(Rectangle rec, double velocity, boolean compute) {
+    private double checkY(Rectangle rec, double velocity, boolean compute) {
         if (!compute || player.getHitboxRec(0, velocity).getBoundsInParent().intersects(rec.getBoundsInParent())) {
             if (velocity > 0) {
                 player.getSprite().setY(rec.getY() - hbInfo.getY() - hbInfo.getHeight() - HITBOX_PADDING);
@@ -248,7 +249,7 @@ public class CollisionManager {
      * Loop all items on the ground and find any that collides with player.
      * @return PropItem
      */
-    public static PropItem getCollidedItem() {
+    public PropItem getCollidedItem() {
         Bounds playerBounds = player.getEntityHitboxRec().getBoundsInParent();
         return (PropItem) Model.getInstance().getProps().stream().filter(p ->
                 (p.isActive() && p.getClass() == PropItem.class && playerBounds.intersects(p.getHitboxRec().getBoundsInParent()))
